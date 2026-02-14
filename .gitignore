@@ -18,6 +18,7 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+nul
 
 # LaTeX build artifacts
 paper/*.aux
