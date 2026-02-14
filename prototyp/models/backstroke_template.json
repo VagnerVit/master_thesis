@@ -1,0 +1,571 @@
+{
+  "style": "backstroke",
+  "version": "1.0",
+  "generated_at": "2026-01-14T20:09:09.474827+00:00",
+  "annotation_type": "2D_cam",
+  "num_samples": 18234,
+  "num_sequences": 2026,
+  "total_frames_analyzed": 583488,
+  "keypoint_format": "base",
+  "num_keypoints": 48,
+  "joint_definitions": {
+    "left_elbow": {
+      "indices": [
+        20,
+        11,
+        12
+      ]
+    },
+    "right_elbow": {
+      "indices": [
+        39,
+        30,
+        31
+      ]
+    },
+    "left_shoulder": {
+      "indices": [
+        21,
+        4,
+        20
+      ]
+    },
+    "right_shoulder": {
+      "indices": [
+        21,
+        23,
+        39
+      ]
+    },
+    "left_knee": {
+      "indices": [
+        13,
+        3,
+        10
+      ]
+    },
+    "right_knee": {
+      "indices": [
+        32,
+        22,
+        29
+      ]
+    },
+    "left_hip": {
+      "indices": [
+        42,
+        0,
+        13
+      ]
+    },
+    "right_hip": {
+      "indices": [
+        42,
+        0,
+        32
+      ]
+    },
+    "body_alignment": {
+      "indices": [
+        1,
+        41,
+        0
+      ]
+    },
+    "left_arm_extension": {
+      "indices": [
+        4,
+        20,
+        11
+      ]
+    },
+    "right_arm_extension": {
+      "indices": [
+        23,
+        39,
+        30
+      ]
+    }
+  },
+  "joint_statistics": {
+    "left_elbow": {
+      "mean": 156.36,
+      "std": 32.51,
+      "min": 0.1,
+      "max": 180.0,
+      "median": 170.1
+    },
+    "right_elbow": {
+      "mean": 148.07,
+      "std": 37.03,
+      "min": 0.24,
+      "max": 180.0,
+      "median": 163.39
+    },
+    "left_shoulder": {
+      "mean": 136.74,
+      "std": 34.68,
+      "min": 0.5,
+      "max": 179.98,
+      "median": 142.58
+    },
+    "right_shoulder": {
+      "mean": 136.96,
+      "std": 32.88,
+      "min": 0.97,
+      "max": 179.98,
+      "median": 143.32
+    },
+    "left_knee": {
+      "mean": 160.2,
+      "std": 28.36,
+      "min": 0.9,
+      "max": 180.0,
+      "median": 169.04
+    },
+    "right_knee": {
+      "mean": 158.27,
+      "std": 30.96,
+      "min": 0.59,
+      "max": 180.0,
+      "median": 170.17
+    },
+    "left_hip": {
+      "mean": 91.89,
+      "std": 54.35,
+      "min": 0.06,
+      "max": 179.94,
+      "median": 88.72
+    },
+    "right_hip": {
+      "mean": 87.12,
+      "std": 54.29,
+      "min": 0.07,
+      "max": 179.93,
+      "median": 90.35
+    },
+    "body_alignment": {
+      "mean": 169.51,
+      "std": 17.33,
+      "min": 2.32,
+      "max": 180.0,
+      "median": 173.93
+    },
+    "left_arm_extension": {
+      "mean": 123.29,
+      "std": 45.75,
+      "min": 0.13,
+      "max": 180.0,
+      "median": 135.11
+    },
+    "right_arm_extension": {
+      "mean": 123.01,
+      "std": 41.07,
+      "min": 0.11,
+      "max": 180.0,
+      "median": 133.38
+    }
+  },
+  "view_statistics": {
+    "Side_water_level": {
+      "left_elbow": {
+        "mean": 160.44,
+        "std": 29.87,
+        "min": 1.91,
+        "max": 180.0,
+        "median": 173.26
+      },
+      "right_elbow": {
+        "mean": 156.48,
+        "std": 29.18,
+        "min": 7.1,
+        "max": 180.0,
+        "median": 170.11
+      },
+      "left_shoulder": {
+        "mean": 138.02,
+        "std": 40.52,
+        "min": 5.82,
+        "max": 179.97,
+        "median": 156.21
+      },
+      "right_shoulder": {
+        "mean": 135.95,
+        "std": 31.64,
+        "min": 1.21,
+        "max": 179.98,
+        "median": 146.05
+      },
+      "left_knee": {
+        "mean": 161.21,
+        "std": 18.29,
+        "min": 88.5,
+        "max": 180.0,
+        "median": 164.99
+      },
+      "right_knee": {
+        "mean": 160.21,
+        "std": 21.22,
+        "min": 81.17,
+        "max": 180.0,
+        "median": 168.4
+      },
+      "left_hip": {
+        "mean": 95.43,
+        "std": 79.58,
+        "min": 0.1,
+        "max": 179.92,
+        "median": 145.47
+      },
+      "right_hip": {
+        "mean": 82.91,
+        "std": 79.45,
+        "min": 0.09,
+        "max": 179.9,
+        "median": 33.06
+      },
+      "body_alignment": {
+        "mean": 173.79,
+        "std": 5.68,
+        "min": 123.58,
+        "max": 180.0,
+        "median": 175.19
+      },
+      "left_arm_extension": {
+        "mean": 107.84,
+        "std": 63.15,
+        "min": 0.18,
+        "max": 179.98,
+        "median": 133.7
+      },
+      "right_arm_extension": {
+        "mean": 121.48,
+        "std": 47.62,
+        "min": 0.14,
+        "max": 179.94,
+        "median": 141.61
+      }
+    },
+    "Side_underwater": {
+      "left_elbow": {
+        "mean": 158.32,
+        "std": 32.68,
+        "min": 0.82,
+        "max": 180.0,
+        "median": 172.89
+      },
+      "right_elbow": {
+        "mean": 154.63,
+        "std": 31.81,
+        "min": 2.74,
+        "max": 180.0,
+        "median": 169.53
+      },
+      "left_shoulder": {
+        "mean": 140.11,
+        "std": 43.51,
+        "min": 0.5,
+        "max": 179.98,
+        "median": 158.89
+      },
+      "right_shoulder": {
+        "mean": 140.41,
+        "std": 31.93,
+        "min": 0.97,
+        "max": 179.98,
+        "median": 151.32
+      },
+      "left_knee": {
+        "mean": 161.11,
+        "std": 18.59,
+        "min": 78.16,
+        "max": 180.0,
+        "median": 165.02
+      },
+      "right_knee": {
+        "mean": 160.08,
+        "std": 21.36,
+        "min": 76.62,
+        "max": 180.0,
+        "median": 168.3
+      },
+      "left_hip": {
+        "mean": 95.57,
+        "std": 74.61,
+        "min": 0.06,
+        "max": 179.94,
+        "median": 128.26
+      },
+      "right_hip": {
+        "mean": 84.54,
+        "std": 74.52,
+        "min": 0.07,
+        "max": 179.93,
+        "median": 50.23
+      },
+      "body_alignment": {
+        "mean": 173.59,
+        "std": 5.97,
+        "min": 118.78,
+        "max": 180.0,
+        "median": 175.14
+      },
+      "left_arm_extension": {
+        "mean": 112.49,
+        "std": 61.1,
+        "min": 0.13,
+        "max": 180.0,
+        "median": 136.99
+      },
+      "right_arm_extension": {
+        "mean": 119.49,
+        "std": 50.68,
+        "min": 0.11,
+        "max": 179.97,
+        "median": 140.72
+      }
+    },
+    "Front": {
+      "left_elbow": {
+        "mean": 143.38,
+        "std": 34.8,
+        "min": 0.1,
+        "max": 180.0,
+        "median": 155.63
+      },
+      "right_elbow": {
+        "mean": 123.9,
+        "std": 44.59,
+        "min": 0.24,
+        "max": 180.0,
+        "median": 133.49
+      },
+      "left_shoulder": {
+        "mean": 155.32,
+        "std": 17.62,
+        "min": 58.66,
+        "max": 179.92,
+        "median": 156.14
+      },
+      "right_shoulder": {
+        "mean": 158.24,
+        "std": 15.91,
+        "min": 45.04,
+        "max": 179.96,
+        "median": 158.83
+      },
+      "left_knee": {
+        "mean": 141.84,
+        "std": 48.29,
+        "min": 0.9,
+        "max": 180.0,
+        "median": 163.72
+      },
+      "right_knee": {
+        "mean": 138.53,
+        "std": 50.1,
+        "min": 0.59,
+        "max": 180.0,
+        "median": 161.48
+      },
+      "left_hip": {
+        "mean": 100.61,
+        "std": 25.64,
+        "min": 3.4,
+        "max": 179.13,
+        "median": 96.15
+      },
+      "right_hip": {
+        "mean": 78.82,
+        "std": 25.11,
+        "min": 4.71,
+        "max": 178.42,
+        "median": 81.14
+      },
+      "body_alignment": {
+        "mean": 153.1,
+        "std": 32.51,
+        "min": 2.32,
+        "max": 180.0,
+        "median": 164.51
+      },
+      "left_arm_extension": {
+        "mean": 129.48,
+        "std": 26.94,
+        "min": 0.73,
+        "max": 179.97,
+        "median": 131.46
+      },
+      "right_arm_extension": {
+        "mean": 119.24,
+        "std": 33.55,
+        "min": 0.17,
+        "max": 180.0,
+        "median": 120.94
+      }
+    },
+    "Side_above_water": {
+      "left_elbow": {
+        "mean": 164.21,
+        "std": 25.2,
+        "min": 1.28,
+        "max": 180.0,
+        "median": 172.78
+      },
+      "right_elbow": {
+        "mean": 158.2,
+        "std": 26.75,
+        "min": 2.11,
+        "max": 180.0,
+        "median": 167.26
+      },
+      "left_shoulder": {
+        "mean": 120.86,
+        "std": 36.6,
+        "min": 1.47,
+        "max": 179.92,
+        "median": 123.84
+      },
+      "right_shoulder": {
+        "mean": 120.08,
+        "std": 44.41,
+        "min": 1.06,
+        "max": 179.79,
+        "median": 129.22
+      },
+      "left_knee": {
+        "mean": 162.75,
+        "std": 17.66,
+        "min": 74.22,
+        "max": 180.0,
+        "median": 166.81
+      },
+      "right_knee": {
+        "mean": 161.36,
+        "std": 21.34,
+        "min": 49.77,
+        "max": 180.0,
+        "median": 169.73
+      },
+      "left_hip": {
+        "mean": 79.94,
+        "std": 47.02,
+        "min": 3.61,
+        "max": 179.55,
+        "median": 71.27
+      },
+      "right_hip": {
+        "mean": 98.55,
+        "std": 47.45,
+        "min": 4.35,
+        "max": 179.72,
+        "median": 106.94
+      },
+      "body_alignment": {
+        "mean": 174.17,
+        "std": 5.18,
+        "min": 114.96,
+        "max": 180.0,
+        "median": 175.17
+      },
+      "left_arm_extension": {
+        "mean": 131.57,
+        "std": 37.35,
+        "min": 0.76,
+        "max": 179.91,
+        "median": 142.45
+      },
+      "right_arm_extension": {
+        "mean": 124.03,
+        "std": 44.55,
+        "min": 0.45,
+        "max": 179.78,
+        "median": 135.78
+      }
+    },
+    "Aerial": {
+      "left_elbow": {
+        "mean": 155.64,
+        "std": 34.8,
+        "min": 0.28,
+        "max": 180.0,
+        "median": 167.16
+      },
+      "right_elbow": {
+        "mean": 147.49,
+        "std": 38.3,
+        "min": 0.29,
+        "max": 180.0,
+        "median": 158.71
+      },
+      "left_shoulder": {
+        "mean": 129.87,
+        "std": 15.37,
+        "min": 91.24,
+        "max": 179.89,
+        "median": 127.79
+      },
+      "right_shoulder": {
+        "mean": 130.49,
+        "std": 19.98,
+        "min": 70.21,
+        "max": 179.91,
+        "median": 128.46
+      },
+      "left_knee": {
+        "mean": 173.34,
+        "std": 13.83,
+        "min": 3.81,
+        "max": 180.0,
+        "median": 177.28
+      },
+      "right_knee": {
+        "mean": 170.5,
+        "std": 19.36,
+        "min": 1.16,
+        "max": 180.0,
+        "median": 175.75
+      },
+      "left_hip": {
+        "mean": 88.28,
+        "std": 6.56,
+        "min": 59.0,
+        "max": 122.4,
+        "median": 88.17
+      },
+      "right_hip": {
+        "mean": 90.38,
+        "std": 7.32,
+        "min": 60.01,
+        "max": 120.37,
+        "median": 91.07
+      },
+      "body_alignment": {
+        "mean": 172.81,
+        "std": 4.64,
+        "min": 45.45,
+        "max": 179.97,
+        "median": 173.91
+      },
+      "left_arm_extension": {
+        "mean": 133.86,
+        "std": 15.3,
+        "min": 61.24,
+        "max": 179.77,
+        "median": 134.87
+      },
+      "right_arm_extension": {
+        "mean": 130.32,
+        "std": 22.14,
+        "min": 0.79,
+        "max": 179.81,
+        "median": 132.79
+      }
+    }
+  },
+  "thresholds": {
+    "minor_deviation": 10.0,
+    "moderate_deviation": 20.0,
+    "severe_deviation": 30.0
+  }
+}

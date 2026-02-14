@@ -1,0 +1,29 @@
+Aplikace pro analýzu plavecké techniky z videa s využitím pose estimation a ML
+
+Uživatel nahraje video svého plavání → pose estimation, extrahuje klíčové body těla → aplikace vypočítá biomechanické metriky (úhly kloubů, rotace trupu, symetrie záběru) → ML přes RAG přístup s odbornou literaturou o plavecké biomechanice vygeneruje personalizovanou zpětnou vazbu a doporučení cviků → druhá součást aplikace generuje personalizované tréninkové plány na základě zjištěných slabých stránek a úrovně plavce.
+
+Na trhu existuje velmi málo dostupných nástrojů pro analýzu plavecké techniky z videa a ty které existují jsou drahé. Autor aktivně závodí v triatlonu, což mu umožní testovat a ladit aplikaci na reálných datech.
+
+cvičící appka pro dětí a mírně pokročilý
+
+indiviualovaný video jako feedback - uložiště
+dokument
+
+
+platební metoda
+cílová skupina
+
+gdpr videí
+nějaká záštita
+
+následný feedback
+
+
+Pro Projects
+název česky / název anglicky 
+jazyk
+popis
+klíčová slova
+
+pokyny pro vypracování
+todo plány

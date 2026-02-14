@@ -1,0 +1,73 @@
+{
+  "style": "freestyle",
+  "version": "2.1",
+  "description": "Reference values validated against SwimXYZ dataset (583k frames)",
+  "sources": [
+    "Maglischo, E. W. (2003). Swimming Fastest",
+    "Chollet, D. et al. (2000). A new index of coordination",
+    "SwimXYZ Dataset (2026). 18237 samples, 2026 sequences"
+  ],
+  "joints": {
+    "left_elbow": {
+      "optimal_min": 90,
+      "optimal_max": 140,
+      "phase": "catch/pull",
+      "description": "Elbow flexion during underwater pull phase",
+      "name_cs": "levý loket"
+    },
+    "right_elbow": {
+      "optimal_min": 90,
+      "optimal_max": 140,
+      "phase": "catch/pull",
+      "description": "Elbow flexion during underwater pull phase",
+      "name_cs": "pravý loket"
+    },
+    "left_shoulder": {
+      "optimal_min": 140,
+      "optimal_max": 180,
+      "phase": "recovery/entry",
+      "description": "Shoulder angle during arm recovery",
+      "name_cs": "levé rameno"
+    },
+    "right_shoulder": {
+      "optimal_min": 140,
+      "optimal_max": 180,
+      "phase": "recovery/entry",
+      "description": "Shoulder angle during arm recovery",
+      "name_cs": "pravé rameno"
+    },
+    "left_knee": {
+      "optimal_min": 150,
+      "optimal_max": 180,
+      "phase": "kick",
+      "description": "Knee should stay relatively straight during flutter kick",
+      "name_cs": "levé koleno"
+    },
+    "right_knee": {
+      "optimal_min": 150,
+      "optimal_max": 180,
+      "phase": "kick",
+      "description": "Knee should stay relatively straight during flutter kick",
+      "name_cs": "pravé koleno"
+    },
+    "left_hip": {
+      "optimal_min": 160,
+      "optimal_max": 180,
+      "phase": "streamline",
+      "description": "Hip angle for horizontal body position",
+      "name_cs": "levý kyčel"
+    },
+    "right_hip": {
+      "optimal_min": 160,
+      "optimal_max": 180,
+      "phase": "streamline",
+      "description": "Hip angle for horizontal body position",
+      "name_cs": "pravý kyčel"
+    }
+  },
+  "thresholds": {
+    "minor_deviation": 10,
+    "moderate_deviation": 20,
+    "severe_deviation": 30
+  }
+}

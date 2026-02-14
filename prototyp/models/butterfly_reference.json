@@ -1,0 +1,72 @@
+{
+  "style": "butterfly",
+  "version": "1.0",
+  "description": "Reference values from SwimXYZ dataset for butterfly",
+  "sources": [
+    "SwimXYZ Dataset (2026). 18234 samples, 2026 sequences",
+    "Maglischo, E. W. (2003). Swimming Fastest"
+  ],
+  "joints": {
+    "left_elbow": {
+      "optimal_min": 90,
+      "optimal_max": 170,
+      "phase": "pull",
+      "description": "Elbow bent during keyhole pull pattern",
+      "name_cs": "levý loket"
+    },
+    "right_elbow": {
+      "optimal_min": 90,
+      "optimal_max": 170,
+      "phase": "pull",
+      "description": "Elbow bent during keyhole pull pattern",
+      "name_cs": "pravý loket"
+    },
+    "left_shoulder": {
+      "optimal_min": 140,
+      "optimal_max": 180,
+      "phase": "recovery",
+      "description": "High shoulder position during simultaneous arm recovery",
+      "name_cs": "levé rameno"
+    },
+    "right_shoulder": {
+      "optimal_min": 140,
+      "optimal_max": 180,
+      "phase": "recovery",
+      "description": "High shoulder position during simultaneous arm recovery",
+      "name_cs": "pravé rameno"
+    },
+    "left_knee": {
+      "optimal_min": 150,
+      "optimal_max": 180,
+      "phase": "kick",
+      "description": "Relatively straight during dolphin kick",
+      "name_cs": "levé koleno"
+    },
+    "right_knee": {
+      "optimal_min": 150,
+      "optimal_max": 180,
+      "phase": "kick",
+      "description": "Relatively straight during dolphin kick",
+      "name_cs": "pravé koleno"
+    },
+    "left_hip": {
+      "optimal_min": 160,
+      "optimal_max": 180,
+      "phase": "undulation",
+      "description": "Hip angle during body undulation",
+      "name_cs": "levý kyčel"
+    },
+    "right_hip": {
+      "optimal_min": 160,
+      "optimal_max": 180,
+      "phase": "undulation",
+      "description": "Hip angle during body undulation",
+      "name_cs": "pravý kyčel"
+    }
+  },
+  "thresholds": {
+    "minor_deviation": 10,
+    "moderate_deviation": 20,
+    "severe_deviation": 30
+  }
+}

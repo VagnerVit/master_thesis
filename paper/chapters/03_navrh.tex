@@ -1,0 +1,60 @@
+%---------------------------------------------------------------
+\chapter{Návrh řešení}
+\label{ch:navrh}
+%---------------------------------------------------------------
+
+\section{Architektura systému}
+\label{sec:architektura}
+% TODO: Vue.js 3 + FastAPI + Celery + Redis + PostgreSQL
+% - Diagram architektury (figure)
+% - Upload flow: video + úroveň + pohled + styl → WebSocket progress → výsledky
+% - Asynchronní zpracování (Celery workers)
+
+\section{Výběr modelu pro odhad pózy}
+\label{sec:vyber_modelu}
+% TODO: Porovnání MediaPipe vs RTMPose vs ViTPose
+% - Důvody výběru (přesnost, rychlost, fine-tuning schopnosti)
+% - Tabulka: model × AP × FPS × parametry
+
+\section{Ragdoll constraints}
+\label{sec:ragdoll}
+% TODO: Post-processing vrstva po pose estimation
+% - Limity rotace kloubů (loket 0-150°, koleno 0-170°, atd.)
+% - Filtrování fyzikálně nemožných póz (artefakty z okluzí, reflexů)
+% - Temporální vyhlazení (výkyvy mezi framy)
+% - Detekce záměny levá/pravá strana
+% - Důležitost pro podvodní záběry
+
+\section{Biomechanické metriky}
+\label{sec:metriky}
+% TODO: Úhly kloubů, rotace trupu, frekvence/délka záběru, fáze záběru
+% - Tabulka: metrika × úroveň × optimální rozsah × práh chyby
+% - 3 úrovně: začátečník / mírně pokročilý / expert
+
+\section{Referenční systém}
+\label{sec:referencni_system}
+% TODO: 3 úrovně × pohledy × styly
+% - Generování referenčních vzorů ze SwimXYZ
+% - DTW porovnání (vysvětlení algoritmu)
+
+\section{Porovnávací metoda}
+\label{sec:porovnavaci_metoda}
+% TODO: DTW + pravidlový systém + skóre 0-100
+% - Detekce cyklů záběru
+% - Výpočet odchylek od reference
+% - Mapování odchylek na konkrétní chyby
+% - Generování feedbacku v češtině
+
+\section{Diskuse alternativních přístupů}
+\label{sec:diskuse_alternativ}
+% TODO: RAG/LLM přístup — proč jsme se rozhodli PROTI
+% - Comendant 2024 (RAG coaching for swimming)
+% - Talking Tennis (biomechanics → LLM)
+% - BoxingPro (IoT → LLM)
+% Důvody PROTI:
+% - Závislost na externích API (single point of failure)
+% - Nedeterministické výstupy (stejný vstup → různý feedback)
+% - Latence a náklady na inference
+% - Nemožnost plně fungovat offline
+% - Obtížná reprodukovatelnost experimentů
+% Trade-offs: vyšší flexibilita LLM vs. konzistence a kontrola pravidlového systému

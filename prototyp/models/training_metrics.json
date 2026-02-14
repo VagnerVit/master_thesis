@@ -1,0 +1,16 @@
+{
+  "style": "freestyle",
+  "multi_style": true,
+  "best_epoch": 27,
+  "best_val_acc": 0.9973943460879497,
+  "test_acc": 0.9967061485227575,
+  "test_per_class": {
+    "freestyle": 0.9978706414692574,
+    "backstroke": 1.0,
+    "breaststroke": 0.9974713867447431,
+    "butterfly": 0.9914825658770295
+  },
+  "total_epochs": 27,
+  "training_time_minutes": 36.87723906437556,
+  "timestamp": "2026-01-13T21:43:23.377073+00:00"
+}

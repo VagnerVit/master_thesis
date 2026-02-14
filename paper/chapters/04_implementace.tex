@@ -1,0 +1,33 @@
+%---------------------------------------------------------------
+\chapter{Implementace}
+\label{ch:implementace}
+%---------------------------------------------------------------
+
+\section{Předzpracování videa}
+\label{sec:predzpracovani}
+% TODO: OpenCV, normalizace FPS, resize, detekce plavce
+% - VideoCapture pipeline
+% - Frame extraction a buffering
+% - Normalizace rozlišení a FPS
+
+\section{ML pipeline}
+\label{sec:ml_pipeline}
+% TODO: Pose estimation → ragdoll → biomechanics → comparison → feedback
+% - Diagram pipeline (figure)
+% - ONNX inference
+% - Popis každého kroku
+
+\section{Webová aplikace}
+\label{sec:web_app}
+% TODO: Backend (FastAPI), frontend (Vue.js), WebSocket progress, Celery workers
+% - REST API endpointy
+% - Asynchronní zpracování
+% - Frontend: upload, progress, výsledky, video overlay, historie
+% - Databázový model (PostgreSQL)
+
+\section{Referenční databáze}
+\label{sec:referencni_db}
+% TODO: Struktura, generování referenčních vzorů
+% - Formát uložení (JSON)
+% - Generování z SwimXYZ datasetu
+% - Sliding window, normalizace

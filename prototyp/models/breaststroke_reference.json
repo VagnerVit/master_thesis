@@ -1,0 +1,72 @@
+{
+  "style": "breaststroke",
+  "version": "1.0",
+  "description": "Reference values from SwimXYZ dataset for breaststroke",
+  "sources": [
+    "SwimXYZ Dataset (2026). 18234 samples, 2026 sequences",
+    "Maglischo, E. W. (2003). Swimming Fastest"
+  ],
+  "joints": {
+    "left_elbow": {
+      "optimal_min": 90,
+      "optimal_max": 180,
+      "phase": "pull/recovery",
+      "description": "Wide range - bent during pull, extended during glide",
+      "name_cs": "levý loket"
+    },
+    "right_elbow": {
+      "optimal_min": 90,
+      "optimal_max": 180,
+      "phase": "pull/recovery",
+      "description": "Wide range - bent during pull, extended during glide",
+      "name_cs": "pravý loket"
+    },
+    "left_shoulder": {
+      "optimal_min": 120,
+      "optimal_max": 180,
+      "phase": "recovery",
+      "description": "Shoulder angle during arm recovery",
+      "name_cs": "levé rameno"
+    },
+    "right_shoulder": {
+      "optimal_min": 120,
+      "optimal_max": 180,
+      "phase": "recovery",
+      "description": "Shoulder angle during arm recovery",
+      "name_cs": "pravé rameno"
+    },
+    "left_knee": {
+      "optimal_min": 90,
+      "optimal_max": 180,
+      "phase": "kick",
+      "description": "Wide range - bent during recovery, extended during kick",
+      "name_cs": "levé koleno"
+    },
+    "right_knee": {
+      "optimal_min": 90,
+      "optimal_max": 180,
+      "phase": "kick",
+      "description": "Wide range - bent during recovery, extended during kick",
+      "name_cs": "pravé koleno"
+    },
+    "left_hip": {
+      "optimal_min": 160,
+      "optimal_max": 180,
+      "phase": "streamline",
+      "description": "Hip angle for streamlined position",
+      "name_cs": "levý kyčel"
+    },
+    "right_hip": {
+      "optimal_min": 160,
+      "optimal_max": 180,
+      "phase": "streamline",
+      "description": "Hip angle for streamlined position",
+      "name_cs": "pravý kyčel"
+    }
+  },
+  "thresholds": {
+    "minor_deviation": 15,
+    "moderate_deviation": 25,
+    "severe_deviation": 40
+  }
+}

@@ -1,0 +1,46 @@
+%---------------------------------------------------------------
+\chapter{Rešerše}
+\label{ch:reserse}
+%---------------------------------------------------------------
+
+\section{Biomechanika plavání}
+\label{sec:biomechanika}
+% TODO: Styly, metriky, co dělá dobrého plavce
+% Zdroje: Maglischo 2003, Craig & Pendergast 1979, Barbosa 2011
+% - 4 plavecké styly (kraul, znak, prsa, motýlek)
+% - Klíčové metriky: SR, SL, V = SR × SL, IdC, úhly kloubů, rotace trupu
+% - Fáze záběru: catch, pull, push, recovery
+% - Nejčastější chyby: dropped elbow (61.3% dle Barden & Kell 2014), špatná rotace trupu
+
+\section{Odhad lidské pózy}
+\label{sec:pose_estimation}
+% TODO: Architektury: OpenPose → HRNet → ViTPose → RTMPose
+% Zdroje: Xu 2022 (ViTPose), Jiang 2023 (RTMPose), Einfalt 2018/2019
+% - Evoluce: bottom-up vs top-down
+% - ViTPose: Vision Transformer, škálovatelný 20M-1B params
+% - RTMPose: 75.8% AP COCO, 90+ FPS CPU, 430+ FPS GPU
+% - Plavecky-specifické: Einfalt (Augsburg), domain-specific challenges
+
+\section{Datasety pro plaveckou analýzu}
+\label{sec:datasety}
+% TODO: SwimXYZ, Augsburg, SwimmerNET, CADDY
+% Zdroje: Fiche 2023 (SwimXYZ), Giulietti 2023 (SwimmerNET)
+% - SwimXYZ: syntetický, 11,520 videí, 3.4M snímků, 48 keypointů
+% - Augsburg: reálný, 4 styly, na žádost
+% - SwimmerNET: podvodní, kraul, 2,021 snímků
+% - Tabulka srovnání datasetů
+
+\section{Strojové učení ve sportovní analýze}
+\label{sec:ml_sport}
+% TODO: Existující systémy, co chybí
+% Diskuse RAG/LLM přístupu: Comendant 2024, Talking Tennis, BoxingPro
+% Argumentace proč ML pipeline místo LLM:
+% - Závislost na ext. API, nedeterminismus, latence, náklady, offline, reprodukovatelnost
+% - Porovnání trade-offs: pravidlový systém vs. LLM-generated feedback
+
+\section{Podvodní výzvy}
+\label{sec:podvodni_vyzvy}
+% TODO: Refrakce, bubliny, viditelnost
+% - Optické artefakty pod vodou
+% - Problémy s detekcí pózy (okluze, reflexy)
+% - Existující přístupy: SwimmerNET, DeepLabCut

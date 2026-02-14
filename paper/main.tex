@@ -1,0 +1,204 @@
+%% SwimAth — Diplomová práce
+%% Analýza plavecké techniky z videa s využitím pose estimation a strojového učení
+%% Autor: Bc. Vít Vagner
+%% Kompilace: xelatex main.tex && bibtex main && xelatex main.tex && xelatex main.tex
+
+\documentclass[12pt, a4paper, twoside]{report}
+
+% --- Encoding & Language ---
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{czech}
+\setotherlanguage{english}
+
+% --- Page geometry ---
+\usepackage[
+    top=30mm,
+    bottom=30mm,
+    inner=35mm,
+    outer=25mm,
+    headheight=15pt
+]{geometry}
+
+% --- Typography ---
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{microtype}
+\usepackage{parskip}
+
+% --- Headers & Footers ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\leftmark}
+\fancyhead[RO]{\rightmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Graphics & Floats ---
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{float}
+\usepackage{subcaption}
+
+% --- Tables ---
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+
+% --- Math ---
+\usepackage{amsmath, amssymb}
+
+% --- Code Listings ---
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color[gray]{0.5},
+    tabsize=4,
+    captionpos=b
+}
+
+% --- Colors & Links ---
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue!60!black,
+    urlcolor=blue!70!black,
+    pdfauthor={Vít Vagner},
+    pdftitle={Analýza plavecké techniky z videa s využitím pose estimation a strojového učení},
+}
+
+% --- Bibliography ---
+\usepackage[numbers,sort&compress]{natbib}
+\bibliographystyle{plainnat}
+
+% --- Abbreviations ---
+\usepackage{acronym}
+
+% --- Misc ---
+\usepackage{enumitem}
+\usepackage{pdfpages}
+
+% ====================================================
+% METADATA
+% ====================================================
+\title{Analýza plavecké techniky z videa s~využitím pose estimation a~strojového učení}
+\author{Bc.~Vít Vagner}
+\date{2027}
+
+% ====================================================
+% DOCUMENT
+% ====================================================
+\begin{document}
+
+% --- Title Page ---
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Large České vysoké učení technické v~Praze\\[4pt]
+    Fakulta informačních technologií}
+
+    \vspace{3cm}
+
+    {\LARGE\bfseries Analýza plavecké techniky z~videa\\[6pt]
+    s~využitím pose estimation\\[6pt]
+    a~strojového učení}
+
+    \vspace{2cm}
+
+    {\Large Diplomová práce}
+
+    \vspace{2cm}
+
+    {\large Bc.~Vít Vagner}
+
+    \vfill
+
+    {\large
+    Vedoucí práce: TODO\\[12pt]
+    Katedra: TODO\\[6pt]
+    Studijní program: TODO\\[6pt]
+    2027
+    }
+\end{titlepage}
+
+% --- Declaration ---
+\chapter*{Prohlášení}
+\addcontentsline{toc}{chapter}{Prohlášení}
+
+TODO: Vložit schválený text prohlášení z~FIT ČVUT.
+
+\vspace{2cm}
+\noindent V~Praze dne \today \hfill Bc.~Vít Vagner
+
+% --- Acknowledgments ---
+\chapter*{Poděkování}
+\addcontentsline{toc}{chapter}{Poděkování}
+
+TODO: Doplnit poděkování.
+
+% --- Abstracts ---
+\chapter*{Abstrakt}
+\addcontentsline{toc}{chapter}{Abstrakt}
+
+Tato diplomová práce představuje SwimAth, webový systém pro automatickou analýzu plavecké techniky z~videa. Systém kombinuje moderní metody odhadu lidské pózy (ViTPose/RTMPose) fine-tuned na plaveckých datech s~biomechanickou analýzou a~personalizovaným feedbackem podle úrovně plavce. Pipeline zpracovává nahraný videozáznam, extrahuje klíčové body těla, filtruje je přes ragdoll constraints, vypočítává biomechanické metriky (úhly kloubů, rotace trupu, frekvence a~délka záběru) a~porovnává je s~referenčními vzory pro tři úrovně plavců pomocí Dynamic Time Warping. Výstupem je skóre techniky, detekce konkrétních chyb a~personalizovaná doporučení ke zlepšení. Práce zahrnuje benchmark pose estimation modelů na syntetickém datasetu SwimXYZ, fine-tuning vybraného modelu, návrh a~implementaci kompletního webového pipeline a~vyhodnocení na reálných videích.
+
+\paragraph{Klíčová slova:}
+analýza plavecké techniky, odhad lidské pózy, počítačové vidění, strojové učení, biomechanika plavání, ViTPose, RTMPose, Dynamic Time Warping
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+This master thesis presents SwimAth, a~web-based system for automated swimming technique analysis from video. The system combines modern human pose estimation methods (ViTPose/RTMPose) fine-tuned on swimming data with biomechanical analysis and personalized feedback based on swimmer skill level. The pipeline processes uploaded video recordings, extracts body keypoints, filters them through ragdoll constraints, computes biomechanical metrics (joint angles, trunk rotation, stroke rate and length), and compares them with reference patterns for three skill levels using Dynamic Time Warping. The output includes a~technique score, detection of specific errors, and personalized improvement recommendations. The thesis includes a~benchmark of pose estimation models on the synthetic SwimXYZ dataset, fine-tuning of the selected model, design and implementation of a~complete web pipeline, and evaluation on real-world videos.
+
+\paragraph{Keywords:}
+swimming technique analysis, human pose estimation, computer vision, machine learning, swimming biomechanics, ViTPose, RTMPose, Dynamic Time Warping
+
+% --- Abbreviations ---
+\chapter*{Seznam zkratek}
+\addcontentsline{toc}{chapter}{Seznam zkratek}
+
+\begin{acronym}[ONNX]
+    \acro{CV}{Computer Vision -- počítačové vidění}
+    \acro{COCO}{Common Objects in Context}
+    \acro{DTW}{Dynamic Time Warping}
+    \acro{FPS}{Frames Per Second}
+    \acro{GPU}{Graphics Processing Unit}
+    \acro{IdC}{Index of Coordination}
+    \acro{LSTM}{Long Short-Term Memory}
+    \acro{ML}{Machine Learning -- strojové učení}
+    \acro{ONNX}{Open Neural Network Exchange}
+    \acro{PE}{Pose Estimation -- odhad pózy}
+    \acro{SL}{Stroke Length -- délka záběru}
+    \acro{SR}{Stroke Rate -- frekvence záběru}
+\end{acronym}
+
+% --- Table of Contents ---
+\tableofcontents
+\listoffigures
+\listoftables
+
+% --- Main Content ---
+\mainmatter
+
+\include{chapters/01_uvod}
+\include{chapters/02_reserse}
+\include{chapters/03_navrh}
+\include{chapters/04_implementace}
+\include{chapters/05_experimenty}
+\include{chapters/06_zaver}
+
+% --- Bibliography ---
+\bibliography{references}
+
+% --- Appendices ---
+\appendix
+\include{chapters/appendix_A}
+
+\end{document}
