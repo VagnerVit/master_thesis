@@ -1,0 +1,37 @@
+% Prevalence of biomechanical errors in elite front crawl swimmers (Virag et al., 2014)
+\begin{tikzpicture}
+\begin{axis}[
+    xbar,
+    width=11cm,
+    height=6.5cm,
+    xlabel={Prevalence (\%)},
+    xmin=0,
+    xmax=75,
+    ytick=data,
+    yticklabels={
+        {Incorrect hand entry},
+        {Asymmetric kick},
+        {Head position},
+        {Dropped elbow (recovery)},
+        {Dropped elbow (pull-through)}
+    },
+    yticklabel style={font=\small, anchor=east},
+    xlabel style={font=\small},
+    nodes near coords,
+    nodes near coords style={font=\small, anchor=west},
+    every axis plot/.append style={fill=blue!40, draw=blue!60},
+    bar width=14pt,
+    enlarge y limits=0.15,
+    xmajorgrids=true,
+    grid style={gray!20},
+    tick align=outside,
+]
+\addplot coordinates {
+    (30.6, 0)
+    (37.1, 1)
+    (46.8, 2)
+    (53.2, 3)
+    (61.3, 4)
+};
+\end{axis}
+\end{tikzpicture}

@@ -244,7 +244,8 @@ E. VYHODNOCENÍ A DIPLOMKA (4-6 týdnů)
 - Craig & Pendergast (1979) — V = SR × SL vztah · PAYWALL (LWW) · [PubMed](https://pubmed.ncbi.nlm.nih.gov/530025/)
 - Psycharakis & Sanders (2010) — body roll review · PAYWALL (Taylor & Francis) · [ResearchGate preprint](https://www.researchgate.net/publication/282148298_Body_roll_in_swiming_A_review)
 - Chollet et al. (2000) — Index of Coordination (IdC) · PAYWALL (Thieme) · [ResearchGate preprint](https://www.researchgate.net/publication/12632597_A_New_Index_of_Coordination_for_the_Crawl_Description_and_Usefulness)
-- Barden & Kell (2014) — prevalence biomechanických chyb (dropped elbow 61.3%) · [PMC open access](https://pmc.ncbi.nlm.nih.gov/articles/PMC4000476/)
+- Virag et al. (2014) — prevalence biomechanických chyb (dropped elbow 61.3%) · [PMC open access](https://pmc.ncbi.nlm.nih.gov/articles/PMC4000476/)
+- Barden & Kell (2014) — vztah stroke parametrů a critical swimming speed
 - Barbosa et al. (2011) — Biomechanics of Competitive Swimming Strokes · [IntechOpen open access](https://www.intechopen.com/chapters/19665)
 
 ### Pose estimation
@@ -372,5 +373,76 @@ python scripts/download_dataset.py --dataset swimxyz --style freestyle --all-par
 
 ---
 
-_Last Updated: 2026-02-14_
+## DTW rešerše (únor 2026)
+
+### Rozhodnutí
+**DTW zůstává hlavní metodou** pro porovnávání plavecké techniky s referenčními šablonami.
+
+### Doporučená konfigurace
+- **DTW-D** (dependent multivariate) — jeden warping path pro všechny klouby, zachovává inter-joint koordinaci
+- **Sakoe-Chiba band** constraint — zamezí patologickým zarovnáním, `r` ≈ 15% délky cyklu
+- **Segmentace** na jednotlivé záběry před DTW (ne celé kolo najednou)
+- **DBA** (DTW Barycenter Averaging) pro konstrukci referenčních šablon z expertních záběrů
+
+### Benchmark baseline (pro diplomku)
+Porovnat DTW-D proti: Euclidean distance (baseline), LCSS (robustnost vůči šumu)
+
+### Známé limitace DTW
+- O(N²) komplexita — pro jednotlivé záběry (100–300 samples) není problém
+- Citlivost na šum — řešit Butterworth filtrem před DTW
+- Není metrika (nesplňuje trojúhelníkovou nerovnost)
+- Bez constraintu produkuje nesmyslné warping paths
+
+### Klíčové zdroje pro citaci
+- Sakoe & Chiba (1978) — originální DTW paper
+- Keogh et al. — "Everything you know about DTW is wrong" (UCR)
+- Shokoohi-Yekta et al. (2017) — DTW-D vs DTW-I pro multivariate (Springer Data Mining)
+- S-WFDTW (2025, Scientific Reports) — fitness scoring s BlazePose, analogický use case
+- PMC 2025 — paddle stroke klasifikace s DTW v reálném čase
+- PMC 2024 — optimal warping path selection pro gait analysis
+- Cuturi & Blondel (ICML 2017) — Soft-DTW (diferencovatelná varianta, pro případnou integraci s DL)
+
+### Alternativy (diskuze v diplomce, neimplementovat)
+- LCSS, EDR, MSM — robustnější vůči šumu, ale méně literatury v biomechanice
+- ROCKET/TCN/Transformer — black box, žádný interpretovatelný warping path
+- Soft-DTW — zajímavé pro budoucí práci (DL loss funkce)
+- FastDTW — studie z 2020 ukázala, že je často pomalejší než constrained DTW
+
+---
+
+## Klasifikace stylu — rešerše (únor 2026)
+
+### Stav
+Stávající LSTM v `prototyp/training/models/style_classifier.py` = proof-of-concept (99.67% na SwimXYZ). V diplomce nebude prezentován jako finální řešení — slouží jen jako výchozí bod. Finální model bude zvolen na základě rešerše metod.
+
+### Zkoumané architektury a trade-offs
+| Architektura | Výhody | Nevýhody | Použití v diplomce |
+|---|---|---|---|
+| BiLSTM + Attention | Temporální kontext obou směrů, interpretovatelné attention váhy, osvědčený na keypointech | Sekvenční inference (nelze paralelizovat) | **Zvolená architektura** |
+| GRU/BiGRU | Méně parametrů, rychlejší trénink | Kratší paměť než LSTM | Ablation experiment |
+| TCN (dilatované konvoluce) | Paralelizovatelný, exponenciální receptive field | Méně přirozený pro temporální data | Non-recurrent baseline |
+| InceptionTime | Multi-scale, SOTA na benchmarcích | Složitější architektura, overkill pro 4 třídy | Diskuze v rešerši |
+| Transformer | Globální kontext, attention | Vyžaduje velké datasety, zbytečná složitost pro krátké sekvence | Diskuze v rešerši |
+| ROCKET/MiniROCKET | Špičková přesnost, rychlý trénink | **Black box** — náhodná jádra, neinterpretovatelné, závislost na 3rd party | **Odmítnuto** |
+
+### Best practices pro klasifikaci z keypointů
+- Z-normalizace per-joint (nezávislost na absolutní pozici/velikosti)
+- BiLSTM preferován nad unidirectional — offline klasifikace, plný kontext
+- Attention pooling místo last-hidden-state — identifikuje klíčové fáze záběru
+- Dropout 0.3 + weight decay proti overfittingu na syntetická data
+
+### Domain gap: syntetická vs. reálná data
+- SwimXYZ je syntetický → model se učí "čisté" pohyby bez šumu PE
+- Při nasazení na reálná data (s šumem z ViTPose/RTMPose) očekávat pokles accuracy
+- Mitigace: augmentace šumem při tréninku, fine-tuning na reálných datech
+
+### Experimentální plán (kapitola 5)
+1. BiLSTM + Attention vs. TCN — rekurence vs. konvoluce (dva odlišné principy)
+2. Ablace: GRU místo LSTM, bez attention, unidirectional
+3. Vliv délky sekvence (16, 32, 64 framů)
+4. Cross-domain: trénink na SwimXYZ, test na reálných datech
+
+---
+
+_Last Updated: 2026-02-20_
 _Status: Prototyp Phase 0-2 kompletní. Diplomka ve fázi plánování._

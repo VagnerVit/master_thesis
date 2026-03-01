@@ -10,6 +10,8 @@
 \usepackage{polyglossia}
 \setdefaultlanguage{czech}
 \setotherlanguage{english}
+\usepackage{csquotes}
+\newcommand{\uv}[1]{\enquote{#1}}
 
 % --- Page geometry ---
 \usepackage[
@@ -48,6 +50,12 @@
 
 % --- Math ---
 \usepackage{amsmath, amssymb}
+
+% --- TikZ & pgfplots ---
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{patterns, positioning, arrows.meta}
 
 % --- Code Listings ---
 \usepackage{listings}
@@ -185,7 +193,8 @@ swimming technique analysis, human pose estimation, computer vision, machine lea
 \listoftables
 
 % --- Main Content ---
-\mainmatter
+\clearpage
+\pagenumbering{arabic}
 
 \include{chapters/01_uvod}
 \include{chapters/02_reserse}

@@ -1,0 +1,98 @@
+% IdC coordination modes: catch-up, opposition, superposition
+\begin{tikzpicture}[
+    phase A/.style={fill=blue!30},
+    phase B/.style={fill=orange!50},
+    phase C/.style={fill=red!40},
+    phase D/.style={fill=green!30},
+    brace/.style={decorate, decoration={brace, amplitude=4pt, mirror}},
+]
+
+\newcommand{\drawarms}[5]{%
+    % #1 = y offset, #2-#5 = phase boundaries for right arm (as fractions of total width)
+    % Left arm phases
+    \pgfmathsetmacro{\tw}{12}  % total width in cm
+    \node[anchor=east, font=\small] at (-0.3, #1+0.35) {Right arm};
+    \node[anchor=east, font=\small] at (-0.3, #1-0.35) {Left arm};
+}
+
+\pgfmathsetmacro{\tw}{12}
+\pgfmathsetmacro{\bh}{0.5}  % bar height
+
+% ============ Catch-up (IdC < 0%) ============
+\node[anchor=east, font=\bfseries\small] at (-0.3, 2.8) {Catch-up};
+\node[anchor=east, font=\small, text=gray] at (-0.3, 2.4) {$IdC < 0\,\%$};
+
+% Right arm
+\draw[phase A] (0, 2.5) rectangle (2.4, 2.5+\bh) node[midway, font=\scriptsize] {A};
+\draw[phase B] (2.4, 2.5) rectangle (5.0, 2.5+\bh) node[midway, font=\scriptsize] {B};
+\draw[phase C] (5.0, 2.5) rectangle (7.2, 2.5+\bh) node[midway, font=\scriptsize] {C};
+\draw[phase D] (7.2, 2.5) rectangle (12, 2.5+\bh) node[midway, font=\scriptsize] {D};
+
+% Left arm (delayed — gap between C_right end and B_left start)
+\draw[phase D] (0, 1.8) rectangle (1.5, 1.8+\bh) node[midway, font=\scriptsize] {D};
+\draw[phase A] (1.5, 1.8) rectangle (4.2, 1.8+\bh) node[midway, font=\scriptsize] {A};
+\draw[phase B] (4.2, 1.8) rectangle (6.0, 1.8+\bh) node[midway, font=\scriptsize] {};
+\draw[phase B] (4.2, 1.8) rectangle (8.2, 1.8+\bh) node[midway, font=\scriptsize] {B};
+% fix: redraw B properly
+\draw[phase B] (4.2, 1.8) rectangle (8.2, 1.8+\bh) node[midway, font=\scriptsize] {B};
+\draw[phase C] (8.2, 1.8) rectangle (10.5, 1.8+\bh) node[midway, font=\scriptsize] {C};
+\draw[phase D] (10.5, 1.8) rectangle (12, 1.8+\bh) node[midway, font=\scriptsize] {D};
+
+% Gap annotation
+\draw[<->, thick, red!70!black] (7.2, 1.65) -- node[below, font=\scriptsize, red!70!black] {gap} (8.2, 1.65);
+
+% ============ Opposition (IdC = 0%) ============
+\node[anchor=east, font=\bfseries\small] at (-0.3, 0.8) {Opposition};
+\node[anchor=east, font=\small, text=gray] at (-0.3, 0.4) {$IdC = 0\,\%$};
+
+% Right arm
+\draw[phase A] (0, 0.5) rectangle (2.4, 0.5+\bh) node[midway, font=\scriptsize] {A};
+\draw[phase B] (2.4, 0.5) rectangle (5.0, 0.5+\bh) node[midway, font=\scriptsize] {B};
+\draw[phase C] (5.0, 0.5) rectangle (7.2, 0.5+\bh) node[midway, font=\scriptsize] {C};
+\draw[phase D] (7.2, 0.5) rectangle (12, 0.5+\bh) node[midway, font=\scriptsize] {D};
+
+% Left arm (B starts exactly when C_right ends)
+\draw[phase D] (0, -0.2) rectangle (1.5, -0.2+\bh) node[midway, font=\scriptsize] {D};
+\draw[phase A] (1.5, -0.2) rectangle (4.2, -0.2+\bh) node[midway, font=\scriptsize] {A};
+\draw[phase B] (4.2, -0.2) rectangle (7.2, -0.2+\bh) node[midway, font=\scriptsize] {B};
+\draw[phase C] (7.2, -0.2) rectangle (10.0, -0.2+\bh) node[midway, font=\scriptsize] {C};
+\draw[phase D] (10.0, -0.2) rectangle (12, -0.2+\bh) node[midway, font=\scriptsize] {D};
+
+% Alignment line
+\draw[dashed, gray] (7.2, 0.4) -- (7.2, -0.3);
+
+% ============ Superposition (IdC > 0%) ============
+\node[anchor=east, font=\bfseries\small] at (-0.3, -1.2) {Superposition};
+\node[anchor=east, font=\small, text=gray] at (-0.3, -1.6) {$IdC > 0\,\%$};
+
+% Right arm
+\draw[phase A] (0, -1.5) rectangle (2.4, -1.5+\bh) node[midway, font=\scriptsize] {A};
+\draw[phase B] (2.4, -1.5) rectangle (5.0, -1.5+\bh) node[midway, font=\scriptsize] {B};
+\draw[phase C] (5.0, -1.5) rectangle (7.2, -1.5+\bh) node[midway, font=\scriptsize] {C};
+\draw[phase D] (7.2, -1.5) rectangle (12, -1.5+\bh) node[midway, font=\scriptsize] {D};
+
+% Left arm (B starts BEFORE C_right ends — overlap)
+\draw[phase D] (0, -2.2) rectangle (1.5, -2.2+\bh) node[midway, font=\scriptsize] {D};
+\draw[phase A] (1.5, -2.2) rectangle (3.5, -2.2+\bh) node[midway, font=\scriptsize] {A};
+\draw[phase B] (3.5, -2.2) rectangle (6.2, -2.2+\bh) node[midway, font=\scriptsize] {B};
+\draw[phase C] (6.2, -2.2) rectangle (9.0, -2.2+\bh) node[midway, font=\scriptsize] {C};
+\draw[phase D] (9.0, -2.2) rectangle (12, -2.2+\bh) node[midway, font=\scriptsize] {D};
+
+% Overlap annotation
+\fill[red!20, opacity=0.5] (5.0, -2.2) rectangle (6.2, -1.5+\bh);
+\draw[<->, thick, red!70!black] (5.0, -2.35) -- node[below, font=\scriptsize, red!70!black] {overlap} (6.2, -2.35);
+
+% Legend
+\node[phase A, minimum width=0.6cm, minimum height=0.3cm, draw, thin] at (2.0, -3.2) {};
+\node[font=\scriptsize, anchor=west] at (2.4, -3.2) {A: entry/catch};
+\node[phase B, minimum width=0.6cm, minimum height=0.3cm, draw, thin] at (5.0, -3.2) {};
+\node[font=\scriptsize, anchor=west] at (5.4, -3.2) {B: pull};
+\node[phase C, minimum width=0.6cm, minimum height=0.3cm, draw, thin] at (7.2, -3.2) {};
+\node[font=\scriptsize, anchor=west] at (7.6, -3.2) {C: push};
+\node[phase D, minimum width=0.6cm, minimum height=0.3cm, draw, thin] at (9.5, -3.2) {};
+\node[font=\scriptsize, anchor=west] at (9.9, -3.2) {D: recovery};
+
+% Time axis
+\draw[-{Stealth}, thick] (0, -2.8) -- (12.3, -2.8) node[right, font=\small] {$t$};
+
+\end{tikzpicture}

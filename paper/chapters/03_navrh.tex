@@ -27,23 +27,241 @@
 
 \section{Biomechanické metriky}
 \label{sec:metriky}
-% TODO: Úhly kloubů, rotace trupu, frekvence/délka záběru, fáze záběru
-% - Tabulka: metrika × úroveň × optimální rozsah × práh chyby
-% - 3 úrovně: začátečník / mírně pokročilý / expert
+
+Systém extrahuje z~odhadnutých keypointů sadu biomechanických metrik, které kvantifikují kvalitu techniky kraulu. Metriky jsou rozděleny do~šesti kategorií: kloubové úhly, parametry záběrového cyklu, rotace trupu, koordinace paží, symetrie a~pozice těla (\textit{streamline}). Pro každou metriku jsou definovány optimální rozsahy odděleně pro tři úrovně plavců.
+
+\subsection{Úrovně plavců}
+\label{subsec:urovne}
+
+Systém rozlišuje tři úrovně plavců:
+\begin{enumerate}
+    \item \textbf{Dítě} (8--14 let) --- rostoucí organismus, kratší končetiny, nezralá motorická koordinace. Biomechanické prahy vycházejí z~pediatrické literatury~\cite{jerszynski2013,barbosa2019,santos2023}.
+    \item \textbf{Plavec} --- dospělý pravidelný plavec, regionální závodní úroveň, 50--75\,\% světového rekordu~\cite{schnitzler2021}.
+    \item \textbf{Kompetitivní} --- závodní plavec, národní/mezinárodní úroveň, nad 75\,\% světového rekordu~\cite{schnitzler2021}.
+\end{enumerate}
+
+Klasifikace dospělých (plavec, kompetitivní) vychází ze~Schnitzlera et~al.~\cite{schnitzler2021}. Kategorie \uv{dítě} je definována věkem a~vychází z~pediatrické plavecké literatury --- biomechanické prahy nelze jednoduše odvodit z~procenta světového rekordu kvůli vývojovým rozdílům v~antropometrii a~motorické koordinaci. Dolní hranice 8~let odpovídá minimálnímu věku pro systematický nácvik techniky (Jerszyński et~al.~\cite{jerszynski2013} zahrnovali děti od~8~let). Horní hranice 14~let přibližně odpovídá PHV (\textit{peak height velocity}) --- přechodu na~dospělou biomechaniku. Pro plavce 15+ let s~dětskou antropometrií systém doporučuje kategorii plavec s~rozšířenou tolerancí.
+
+Systém aktuálně nemá samostatnou kategorii pro dospělého začátečníka. Dospělý začátečník by měl použít kategorii plavec, která má nejširší tolerance u~dospělých --- kategorie dítě je nevhodná kvůli odlišné antropometrii, síle a~rozsahu pohybu.
+
+S~rostoucí úrovní se zpřísňují tolerance odchylek od~optimálního rozsahu: pro úhel loktu dítě $\pm 25°$, plavec $\pm 15°$, kompetitivní $\pm 8°$; pro ostatní kloubové úhly (rameno, koleno, kyčel, body alignment) dítě $\pm 30°$, plavec $\pm 15°$, kompetitivní $\pm 8°$. Širší tolerance pro děti reflektují vyšší variabilitu pohybu rostoucího organismu a~nedostatek pediatrických 3D kinematických dat (viz níže).
+
+\subsection{Kloubové úhly}
+\label{subsec:kloubove_uhly}
+
+Kloubové úhly se počítají jako úhel tří keypointů v~rovině, kde prostřední bod je vrchol úhlu (vertex). Z~bočního pohledu kamery poskytují informaci o~technice záběru, kopání a~pozici těla.
+
+\paragraph{Úhel loktu.} Měří se mezi ramenem, loktem a~zápěstím. Protože optimální úhel loktu se výrazně liší podle fáze záběru, systém ho hodnotí odděleně pro každou fázi cyklu. Při vstupu ruky do~vody (\textit{catch}) by paže měla být téměř natažená ($140$--$170°$). Během propulzní fáze (\textit{pull-through}) nastává maximální flexe --- při správné technice \textit{high elbow catch} přibližně $80$--$100°$~\cite{maglischo2003}. Ve~fázi \textit{push} se loket opět natahuje ($140$--$175°$ u~kompetitivních plavců), čímž se maximalizuje délka propulzní dráhy~\cite{cappaert1996}. Při přenosu paže nad vodou (\textit{recovery}) by loket měl zůstat výše než zápěstí ($80$--$120°$). Virag et~al.~\cite{virag2014} zjistili, že \textit{dropped elbow} je nejčastější biomechanická chyba kraulu --- vyskytuje se u~$61{,}3\,\%$ ramen při \textit{pull-through} a~u~$53{,}2\,\%$ při \textit{recovery}, a~to i~u~elitních závodních plavců. U~dětí (8--14 let) jsou rozsahy výrazně širší --- Jerszyński et~al.~\cite{jerszynski2013} měřili minimální úhel loktu pod vodou u~11 začínajících dětí (8--13 let) a~pozorovali hodnoty 130--156° (front crawl), což naznačuje, že děti nedosahují \textit{high elbow catch} srovnatelného s~dospělými. Protože per-phase hodnocení závisí na~správné detekci fáze záběru, systém pro každý záběr počítá \textit{phase confidence} skóre; při nízké spolehlivosti detekce fáze se per-phase metriky potlačí a~reportují se pouze celkové agregáty (celkový DTW, $SR$, body roll).
+
+\paragraph{Úhel kolene.} Měří se mezi kyčlí, kolenem a~kotníkem. Efektivní kop vychází z~kyčlí s~téměř nataženou nohou ($150$--$180°$). Přílišné ohýbání kolene ($<130°$) indikuje neefektivní \uv{šlapací} kop, který zvyšuje odpor~\cite{maglischo2003}.
+
+\paragraph{Úhel kyčle.} Měří se mezi ramenem, kyčlí a~kolenem. Hodnota blízká $180°$ značí horizontální polohu těla s~nízkým odporem.
+
+\paragraph{Pozice vstupu ruky.} Virag et~al.~\cite{virag2014} identifikovali nesprávnou pozici vstupu ruky jako chybu s~prevalencí $45{,}2\,\%$. Ruka by měla vstupovat do~vody vpředu před ramenem, laterálně od~hlavy a~mediálně od~ramene. Detekuje se jako normalizovaná vzdálenost zápěstí od~osy ramene při vstupu do~vody. Překřížení středové osy těla (\textit{crossover entry}) zvyšuje riziko impingementu ramene.
+
+\subsection{Parametry záběrového cyklu}
+\label{subsec:stroke_params}
+
+\paragraph{Frekvence záběru ($SR$).} Počet kompletních záběrových cyklů za minutu, detekovaný z~periodicity trajektorie zápěstí. Chollet et~al.~\cite{chollet2000} měřili $SR$ u~tří skupin plavců: nejlepší dosahovali $49{,}5 \pm 4{,}3$ cyklů/min při tempu 100\,m, nejslabší $44{,}8 \pm 4{,}6$. Schnitzler et~al.~\cite{schnitzler2021} potvrdili u~kompetitivních plavců při maximálním tempu $54{,}1 \pm 4{,}0$ cyklů/min. Rozsah $SR$ pro kompetitivní plavce (35--65 cyklů/min) je záměrně širší než pro plavce (30--50), protože elitní plavci adaptují frekvenci záběru dramaticky podle závodní vzdálenosti --- od~56--67 cyklů/min při sprintu 50\,m po~35--48 při 1500\,m~\cite{staunton2025}.
+
+\paragraph{Délka záběru ($SL$).} Vzdálenost uražená za jeden cyklus, počítaná jako $SL = v / SR$. Kompetitivní plavci udržují $SL > 2{,}0$\,m i~při vysoké frekvenci, zatímco děti typicky dosahují $1{,}0$--$2{,}0$\,m~\cite{barbosa2019,santos2023}. Santos et~al.~\cite{santos2023} a~Barbosa et~al.~\cite{barbosa2019} uvádějí $SL$ $1{,}55$--$1{,}93$\,m u~dětí 11--13 let --- kratší $SL$ odpovídá kratším končetinám a~nižší síle záběru, přičemž děti kompenzují vyšším $SR$. V~literatuře se rovněž používá \textit{Stroke Index} ($SI = v \times SL$) jako míra efektivity, avšak výpočet vyžaduje absolutní rychlost plavce, kterou z~videa bez kalibrace kamery nelze spolehlivě určit. SI proto v~systému neimplementujeme. Obdobně $SL = v / SR$ vyžaduje absolutní rychlost --- bez kalibrace kamery nebo uživatelského vstupu (délka bazénu a~čas úseku) se $SL$ nehodnotí.
+
+\subsection{Rotace trupu}
+\label{subsec:rotace}
+
+Rotace trupu kolem podélné osy těla (\textit{body roll}) je klíčová pro efektivitu kraulu. Psycharakis a~Sanders~\cite{psycharakis2010} v~přehledovém článku shrnuli, že ramena se rotují výrazně více než kyčle: celkový rozsah rotace ramen (ze strany na stranu) u~národních plavců činí $106{,}6 \pm 8{,}4°$, zatímco rotace kyčlí pouze $50{,}4 \pm 12{,}3°$. Virag et~al.~\cite{virag2014} doporučují optimální rotaci přibližně $45°$ na každou stranu --- hodnoty výrazně nižší nebo vyšší jsou považovány za chybu. Zajímavým zjištěním je, že rychlejší plavci rotují rameny méně ($P < 0{,}05$), což naznačuje, že rotace je primárně funkcí individuální techniky a~ne nutně indikátorem úrovně~\cite{psycharakis2010}.
+
+\subsection{Koordinace paží --- Index of Coordination}
+\label{subsec:idc}
+
+Index of Coordination (IdC) definovaný Cholletem et~al.~\cite{chollet2000} měří časový vztah mezi propulzními fázemi levé a~pravé paže vyjádřený jako procento záběrového cyklu. Záporný IdC (\textit{catch-up}) znamená mezeru v~propulzi, nulový IdC (\textit{opposition}) hladké navázání a~kladný IdC (\textit{superposition}) překryv propulzních fází. Chollet et~al.~\cite{chollet2000} zjistili, že IdC roste s~rychlostí ($-7{,}6\,\%$ při tempu 800\,m vs.\ $-0{,}9\,\%$ při sprintu 50\,m) i~s~úrovní plavce ($-6{,}07\,\%$ u~nejslabších vs.\ $-1{,}76\,\%$ u~nejlepších). Pouze nejlepší plavci dosahují superpozice ($+2{,}53\,\%$) při sprintu. Schnitzler et~al.~\cite{schnitzler2021} a~Matsuda et~al.~\cite{matsuda2014} tyto výsledky potvrdili a~rozšířili na další úrovně plavců.
+
+\subsection{Přehled metrik a~prahů}
+
+Tabulka~\ref{tab:metriky_prahy} shrnuje primární metriky s~optimálními rozsahy pro každou úroveň plavce. Hodnoty vycházejí z~výše citované literatury a~slouží jako základ pro pravidlový systém detekce chyb.
+
+\begin{table}[htbp]
+\centering
+\caption{Optimální rozsahy primárních biomechanických metrik pro tři úrovně plavců kraulu. Tolerance odchylek pro úhel loktu: dítě $\pm 25°$, plavec $\pm 15°$, kompetitivní $\pm 8°$; pro ostatní kloubové úhly: dítě $\pm 30°$, plavec $\pm 15°$, kompetitivní $\pm 8°$. Metriky označené~$\dagger$ mají prahy pro děti odvozeny extrapolací z~dospělé literatury (pediatrická 3D kinematická data neexistují).}
+\label{tab:metriky_prahy}
+\small
+\begin{tabular}{llccc}
+\toprule
+\textbf{Metrika} & \textbf{Jednotka} & \textbf{Dítě} & \textbf{Plavec} & \textbf{Kompetitivní} \\
+\midrule
+Úhel loktu --- catch & $°$ & 100--170 & 130--170 & 140--170 \\
+Úhel loktu --- pull-through & $°$ & 80--160 & 80--120 & 80--100 \\
+Úhel loktu --- push & $°$ & 80--170 & 120--170 & 140--175 \\
+Úhel loktu --- recovery & $°$ & 50--160 & 70--130 & 80--120 \\
+Úhel ramene$^\dagger$ & $°$ & 110--180 & 130--180 & 140--180 \\
+Úhel kolene (kop)$^\dagger$ & $°$ & 120--180 & 140--180 & 150--180 \\
+Úhel kyčle (streamline)$^\dagger$ & $°$ & 130--180 & 150--180 & 160--180 \\
+Rotace ramen (per side) & $°$ & 10--60 & 30--55 & 30--55 \\
+Body alignment$^\dagger$ & $°$ & 140--180 & 160--180 & 170--180 \\
+Frekvence záběru & cykly/min & 40--60 & 30--50 & 35--65 \\
+Hand entry position$^\dagger$ & norm. & 0,1--1,2 & 0,3--0,9 & 0,3--0,8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Sekundární biomechanické metriky (implementace ve~druhé fázi). Metriky označené~$\dagger$ mají prahy pro děti odvozeny extrapolací.}
+\label{tab:metriky_sekundarni}
+\small
+\begin{tabular}{llccc}
+\toprule
+\textbf{Metrika} & \textbf{Jednotka} & \textbf{Dítě} & \textbf{Plavec} & \textbf{Kompetitivní} \\
+\midrule
+Délka záběru ($SL$) & m/cyklus & 1,0--2,0 & 1,5--2,2 & 2,0--2,6 \\
+Index of Coordination & \% & nehodnotí se\textsuperscript{*} & $-8$ až $0$ & $-4$ až $+5$ \\
+Asymetrie kloubů (L/R)$^\dagger$ & $°$ & $< 30$ & $< 15$ & $< 8$ \\
+Asymetrie body roll$^\dagger$ & $°$ & $< 25$ & $< 12$ & $< 8$ \\
+Rotace kyčlí (per side)$^\dagger$ & $°$ & 5--40 & 15--35 & 20--35 \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\textsuperscript{*} IdC se pro kategorii dítě nevyhodnocuje --- koordinace paží je u~dětí nezralá a~vysoce variabilní (SD 6--9\,\%), absolutní hodnota nemá výpovědní hodnotu. Hodnotí se pouze konzistence ($\sigma_{\mathrm{IdC}}$ napříč cykly). Barbosa et~al.~\cite{barbosa2021review} v~přehledovém článku potvrzují, že IdC u~dětí vykazuje vysokou variabilitu.
+\end{table}
+
+Odchylky od~optimálního rozsahu jsou klasifikovány do~tří úrovní závažnosti: \textit{minor} (odchylka menší než polovina tolerance), \textit{moderate} (odchylka v~rámci tolerance) a~\textit{severe} (odchylka přesahuje toleranci). Tento systém umožňuje generovat odstupňovanou zpětnou vazbu --- dítě dostává upozornění pouze na~závažné odchylky, zatímco kompetitivní plavec je informován i~o~drobných nedostatcích.
+
+\paragraph{Korelační struktura metrik.} Některé metriky sdílejí společný failure mode --- jedno biomechanické selhání generuje dvě detekované chyby. Úhel kyčle a~body alignment jsou geometricky vázány (pokles kyčlí způsobí odchylku v~obou metrikách), asymetrie body roll kauzálně ovlivňuje asymetrii kloubových úhlů, a~úhel ramene je mechanicky svázán s~úhlem loktu při \textit{catch}. U~redundantních párů systém reportuje primární metriku a~sekundární uvádí jako doplňkovou informaci. Dále systém implementuje kombinovaná pravidla (\textit{combined rules}): současný výskyt \textit{crossover entry} a~\textit{dropped elbow} (asociace $P = 0{,}009$, Virag et~al.~\cite{virag2014}) zvyšuje závažnost a~identifikuje společnou příčinu; nedostatečný body roll ($< 25°$ per side) v~kombinaci s~nízkou flexí loktu při \textit{catch} ($< 120°$) se reportuje jako jeden problém s~rotací trupu jakožto příčinou.
+
+\paragraph{Limitace pediatrických prahů.} Pro kategorii \uv{dítě} existují přímá kinematická data pouze pro úhel loktu~\cite{jerszynski2013} a~stroke parametry $SR$/$SL$~\cite{barbosa2019,santos2023}. U~ostatních metrik (rameno, koleno, kyčel, body alignment, hand entry, body roll) jsou prahy odvozeny extrapolací z~dospělé literatury s~rozšířenou tolerancí $\pm 30°$. Pediatrická 3D kinematická data pro tyto metriky v~současnosti neexistují~\cite{psycharakis2010}. Jerszyński et~al.~\cite{jerszynski2013} ($n=11$) zahrnují pouze začátečníky --- vzorek nereprezentuje celé spektrum 8--14 let (chybí talentovaní dětští plavci s~vyspělou technikou). Kategorie dítě proto funguje jako \textit{conservative estimation mode}: široké tolerance minimalizují falešně pozitivní detekce za~cenu nižšího recall, přičemž systém identifikuje pouze výrazné odchylky. Validace na~dětské populaci je nezbytná a~je součástí plánovaného experimentálního protokolu (kapitola~\ref{ch:experimenty}).
+
+\paragraph{Plánovaná validace.} Precision a~recall detekce chyb budou validovány pomocí expert annotation protokolu (2~nezávislí trenéři, minimálně 50~záběrů, 7~typů chyb dle Virag et~al.~\cite{virag2014}) s~vyhodnocením inter-rater reliability (Cohen's $\kappa$). Pro metriky s~extrapolovanými prahy (kategorie dítě) bude provedena threshold sensitivity analysis --- posun prahu o~$\pm 10°$ a~vyhodnocení podílu záběrů se~změněnou klasifikací. Detaily protokolu jsou uvedeny v~kapitole~\ref{ch:experimenty}.
+
+Pravidlový systém metrik doplňuje DTW porovnání s~referenční šablonou (sekce~\ref{sec:porovnavaci_metoda}). Metriky poskytují interpretovatelnou zpětnou vazbu o~konkrétních chybách (\uv{loket o~15° nízko při záběru}), zatímco DTW skóre kvantifikuje celkovou podobnost techniky s~referencí a~lokalizuje odchylky temporálně i~per-joint. Kloub s~nadprůměrným DTW cost a~současně detekovanou chybou z~pravidlového systému získává vysokou prioritu pro zpětnou vazbu.
+
+\subsection{Limitace 2D projekce}
+\label{subsec:limitace_2d}
+
+Všechny metriky jsou počítány z~2D keypointů, tedy z~projekce trojrozměrného pohybu do~roviny kamery. To přináší systematické zkreslení závislé na~pohledu kamery. Z~bočního pohledu jsou dobře měřitelné úhly v~sagitální rovině (loket, koleno, kyčel), avšak rotace trupu je viditelná pouze jako vertikální posuv ramen, nikoli jako skutečný úhel rotace. Naopak z~frontálního pohledu je spolehlivě měřitelná rotace trupu a~symetrie, ale úhel loktu při podvodním záběru probíhá převážně v~sagitální rovině a~jeho frontální projekce měří odlišnou veličinu.
+
+Podvodní záběry navíc trpí refrakcí na~rozhraní voda/vzduch, která deformuje pozice keypointů, a~vyšší chybovostí pose estimation kvůli bublinám a~nízkému kontrastu. Systém proto pro každou kombinaci pohledu a~metriky rozlišuje, zda je metrika primární (spolehlivá z~daného pohledu), sekundární (orientační) nebo nedostupná. Metriky s~nízkým confidence skóre z~pose estimation nejsou hodnoceny.
 
 \section{Referenční systém}
 \label{sec:referencni_system}
-% TODO: 3 úrovně × pohledy × styly
-% - Generování referenčních vzorů ze SwimXYZ
-% - DTW porovnání (vysvětlení algoritmu)
+
+Referenční systém definuje \uv{ideální} průběh pohybu, se kterým se technika analyzovaného plavce porovnává. Referenční šablony jsou konstruovány zvlášť pro kombinace plaveckého stylu, pohledu kamery a~úrovně plavce.
+
+\subsection{Segmentace záběrů}
+
+Před porovnáním je nutné kontinuální sekvenci keypointů rozdělit na jednotlivé záběrové cykly. Segmentace se provádí detekcí periodického signálu --- typicky vertikální pozice ruky nebo úhel ramene, které vykazují výraznou periodicitu. Každý detekovaný cyklus odpovídá jednomu kompletnímu záběru (catch $\rightarrow$ pull $\rightarrow$ push $\rightarrow$ recovery).
+
+Segmentace je nezbytná, protože DTW funguje optimálně na sekvencích srovnatelné délky. Porovnávání celých kol (stovky záběrů) by vedlo k~neúměrné výpočetní zátěži a~ztrátě lokální informace o~jednotlivých záběrech.
+
+\subsection{Konstrukce referenčních šablon}
+
+Referenční šablony se generují z~dat datasetu SwimXYZ metodou DTW Barycenter Averaging (DBA)~\cite{petitjean2011dba}. Tato metoda iterativně zpřesňuje průměrnou sekvenci --- v~každé iteraci zarovná všechny trénovací záběry pomocí DTW k~aktuální šabloně a~vypočte vážený průměr zarovnaných bodů. Výsledkem je šablona, která reprezentuje typický průběh pohybu dané skupiny a~zachovává temporální strukturu záběru.
+
+Pro každou kombinaci úrovně (dítě, plavec, kompetitivní), stylu (kraul, znak, prsa, motýlek) a~pohledu kamery (boční, přední, podvodní) se generuje samostatná šablona. Spolu se~šablonou se ukládá per-frame, per-joint směrodatná odchylka (\textit{variance envelope}) z~trénovacích záběrů zarovnaných k~šabloně, která umožňuje kontextualizovat per-joint DTW cost jako z-skóre vůči populační variabilitě.
 
 \section{Porovnávací metoda}
 \label{sec:porovnavaci_metoda}
-% TODO: DTW + pravidlový systém + skóre 0-100
-% - Detekce cyklů záběru
-% - Výpočet odchylek od reference
-% - Mapování odchylek na konkrétní chyby
-% - Generování feedbacku v češtině
+
+Jádrem analýzy techniky je porovnání segmentovaných záběrů plavce s~referenční šablonou. Tato sekce zdůvodňuje volbu konkrétní konfigurace porovnávací metody.
+
+\subsection{Volba DTW-D}
+
+Pro porovnávání trajektorií kloubů používáme DTW-D (\textit{dependent} multivariate DTW) se~sdíleným warping path pro všechny klouby současně~\cite{shokoohi2017}. Alternativou by byl přístup DTW-I, kde se pro každý kloub hledá nezávislé zarovnání.
+
+DTW-D volíme proto, že koordinace mezi klouby je při plavání biomechanicky významná --- rameno, loket a~zápěstí se pohybují jako kinematický řetězec a~jejich vzájemné časování je součástí správné techniky. DTW-I by mohlo zarovnat loket do~fáze \textit{pull}, zatímco rameno do~fáze \textit{recovery}, což je biomechanicky nesmyslné. Společný warping path tuto konzistenci vynucuje.
+
+\subsection{Volba Sakoe-Chiba constraintu}
+\label{subsec:sakoe_chiba}
+
+Warping path omezujeme Sakoe-Chiba bandem~\cite{sakoe1978} s~šířkou $r$ nastavenou na přibližně 15\,\% délky segmentovaného záběru. Tato volba je motivována následujícími důvody:
+
+\begin{enumerate}
+    \item \textbf{Výpočetní efektivita.} Constraint snižuje složitost z~$O(N^2)$ na $O(N \cdot r)$. Pro typický záběr o~délce 200 framů a~$r = 30$ se počet vyhodnocených buněk snižuje ze~40\,000 na přibližně 6\,000.
+
+    \item \textbf{Prevence patologických zarovnání.} Bez omezení může DTW namapovat celou fázi \textit{catch} na jediný frame reference, což zkresluje výslednou vzdálenost a~znemožňuje lokalizaci chyb.
+
+    \item \textbf{Rovnoměrná variabilita záběru.} Plavecký záběr je periodický pohyb, jehož jednotlivé fáze (catch, pull, push, recovery) vykazují přibližně srovnatelnou variabilitu tempa. Rovnoměrný band Sakoe-Chiba tomuto charakteru odpovídá.
+
+    \item \textbf{Jednoduchost a~reprodukovatelnost.} Sakoe-Chiba band má jediný hyperparametr~$r$, jehož vliv lze snadno vyhodnotit citlivostní analýzou (viz kapitola~\ref{ch:experimenty}).
+\end{enumerate}
+
+\paragraph{Proč ne Itakura parallelogram.}
+Itakura parallelogram je užší na krajích sekvence a~širší uprostřed, což implicitně předpokládá, že variabilita tempa je největší ve~středních fázích pohybu. Při plavání tomu tak není --- plavec může mít rychlejší \textit{catch} a~pomalejší \textit{recovery} nebo naopak. Itakura by nespravedlivě omezil legitimní variabilitu na přechodech mezi fázemi záběru.
+
+\paragraph{Proč ne Weighted DTW.}
+Weighted DTW (WDTW) nahrazuje pevný cutoff měkkou penalizací za~vzdálenost od~diagonály. Ačkoli je teoreticky elegantnější, přidává hyperparametr pro tvar váhové funkce bez jasného benefitu oproti Sakoe-Chiba bandu. V~biomechanické literatuře je Sakoe-Chiba standardem, což usnadňuje srovnatelnost výsledků.
+
+\subsection{Předzpracování}
+
+Před výpočtem DTW se provádějí dva kroky:
+\begin{itemize}
+    \item \textbf{Butterworth low-pass filtr} odstraňuje vysokofrekvenční šum z~pose estimation (třes keypointů mezi framy). DTW páruje všechny body včetně šumu, a~proto je filtrace nezbytná pro kvalitu zarovnání.
+    \item \textbf{Z-normalizace} jednotlivých kloubových trajektorií zajišťuje, že se porovnává tvar pohybu, nikoli absolutní úhly. Dva plavci se stejnou technikou, ale odlišnou flexibilitou, tak dostanou srovnatelné DTW vzdálenosti.
+\end{itemize}
+
+Z-normalizace je vědomé designové rozhodnutí s~explicitním trade-off: odstraňuje amplitudový signál potřebný pro detekci absolutních odchylek. Plavec s~loktem na~$85°$ (správná technika) a~plavec s~loktem na~$140°$ (\textit{dropped elbow}) mají po~z-normalizaci identické trajektorie, pokud je temporální tvar stejný. DTW komponenta proto nemůže detekovat absolutní odchylky od~biomechanických norem --- tuto roli přebírá pravidlový systém, který operuje na~nenormalizovaných datech (sekce~\ref{sec:metriky}). Pro budoucí práci navrhujeme hybrid normalizaci, která normalizuje temporální osu (min-max), ale zachovává amplitudu kloubových úhlů.
+
+\subsection{Lokalizace chyb a~skóre}
+
+DTW warping path umožňuje pro každý kloub určit jeho příspěvek k~celkové DTW vzdálenosti (\textit{per-joint cost}). Klouby s~nadprůměrným příspěvkem jsou identifikovány jako problematické a~mapovány na konkrétní biomechanické chyby (např. \uv{levý loket o~13° níže při záběru než reference}). Pro fázovou lokalizaci se warping path zpětně mapuje na fáze referenční šablony a~per-joint cost se rozloží na příspěvky jednotlivých fází (\textit{per-phase cost}), čímž systém identifikuje, zda je odchylka lokalizována např.\ ve~fázi \textit{pull} nebo \textit{recovery}.
+
+Celková DTW vzdálenost je normalizována na skóre 0--100: maximum (skóre 0) odpovídá 95.~percentilu DTW vzdáleností z~trénovací sady (empirický strop, nikoli teoretické maximum), minimum (skóre 100) odpovídá nulové vzdálenosti. Formálně: $\text{skóre} = \max(0,\; 100 \times (1 - d_{\text{DTW}} / p_{95}))$, kde $p_{95}$ je 95.~percentil trénovacích vzdáleností. Prahy pro hodnocení (výborný, dobrý, k~zlepšení) jsou definovány zvlášť pro každou úroveň plavce --- dítě má vyšší toleranci odchylek než kompetitivní plavec (viz sekce~\ref{sec:metriky}).
+
+\subsection{Proč ne jiné metody}
+
+\begin{itemize}
+    \item \textbf{Euklidovská vzdálenost} --- vyžaduje přesně zarovnané sekvence stejné délky. Jakýkoli rozdíl v~tempu záběru vede k~chybnému porovnání odpovídajících fází, proto slouží pouze jako baseline.
+    \item \textbf{Longest Common Subsequence (LCSS)} --- přeskakuje nepárované body, čímž je robustnější vůči šumu, ale ztrácí informaci o~amplitudě odchylek. Pro zpětnou vazbu typu \uv{loket o~X° níže} je kvantifikace amplitudy nezbytná.
+\end{itemize}
+
+\section{Klasifikace plaveckého stylu}
+\label{sec:klasifikace_stylu}
+
+Automatická klasifikace plaveckého stylu je prvním krokem analytického pipeline --- před analýzou techniky je nutné určit, který ze~čtyř stylů (kraul, znak, prsa, motýlek) plavec provádí, aby se zvolila odpovídající referenční šablona a~sada biomechanických pravidel.
+
+\subsection{Formulace problému}
+
+Vstupem klasifikátoru je sekvence keypointů o~rozměru $N \times K \times 3$, kde $N$ je počet snímků (délka okna), $K$ počet kloubů a~3 dimenze odpovídají souřadnicím $(x, y, z)$. Výstupem je jedna ze~čtyř tříd plaveckého stylu. Sekvence keypointů jsou před klasifikací normalizovány z-normalizací per-joint, čímž se eliminuje závislost na absolutní pozici a~velikosti plavce.
+
+\subsection{Zvolená architektura: BiLSTM s~attention}
+\label{subsec:bilstm_attention}
+
+Na základě rešerše metod klasifikace časových řad (sekce~\ref{subsec:klasifikace_casovych_rad}) volíme architekturu BiLSTM s~attention poolingem. Tato volba je motivována následujícími důvody:
+
+\begin{enumerate}
+    \item \textbf{Temporální charakter dat.} Trajektorie kloubů jsou inherentně sekvenční --- pořadí fází záběru nese klíčovou diskriminativní informaci. Rekurentní sítě modelují temporální závislosti přirozeněji než konvoluční přístupy.
+
+    \item \textbf{Obousměrné zpracování.} Klasifikace je offline úloha --- celá sekvence je k~dispozici najednou. BiLSTM zpracovává sekvenci v~obou směrech, čímž každý časový krok má kontext z~celého záběru. To je důležité zejména pro rozlišení stylů s~podobným začátkem pohybu (např. kraul vs.\ znak v~rané fázi \textit{catch}).
+
+    \item \textbf{Interpretovatelnost přes attention.} Attention mechanismus~\cite{bahdanau2015attention} přiřazuje váhy jednotlivým časovým krokům, čímž identifikuje, které fáze záběru jsou pro klasifikaci rozhodující. Vizualizace attention vah umožňuje ověřit, že model se rozhoduje na základě biomechanicky relevantních fází.
+
+    \item \textbf{Efektivita pro daný rozsah úlohy.} Čtyři třídy se zásadně odlišují v~průběhu pohybu (symetrický vs.\ alternující, horizontální vs.\ vertikální vlnění). Složitější architektury (Transformer, InceptionTime) nepřinášejí pro takto odlišné třídy měřitelný benefit.
+\end{enumerate}
+
+Hyperparametry architektury --- hidden size, počet vrstev, dropout rate a~typ attention (additivní Bahdanau vs.\ dot-product) --- budou určeny experimentálně v~kapitole~\ref{ch:experimenty}. Vstupní sekvence keypointů o~rozměru $N \times K \times 3$ se před vstupem do~sítě linearizuje na $N \times (K \cdot 3)$.
+
+\subsection{Zdůvodnění výběru vůči alternativám}
+
+\paragraph{GRU místo LSTM.}
+GRU má méně parametrů a~rychlejší trénink, avšak na delších sekvencích může mít omezenější expresivitu. GRU bude porovnán jako ablační experiment v~kapitole~\ref{ch:experimenty}.
+
+\paragraph{Temporal Convolutional Network.}
+TCN~\cite{bai2018tcn} reprezentuje zásadně odlišný přístup --- konvoluční místo rekurentního. Dilatované konvoluce efektivně zachycují temporální vzory a~jsou plně paralelizovatelné. TCN bude porovnán jako non-recurrent baseline, čímž experiment srovná dva odlišné principy modelování sekvencí (rekurence vs.\ konvoluce).
+
+\paragraph{ROCKET/MiniROCKET.}
+Přes špičkové výsledky na benchmarcích neposkytuje přístup založený na náhodných konvolučních jádrech per-phase interpretaci potřebnou pro lokalizaci biomechanických chyb (viz sekce~\ref{subsubsec:rocket}).
+
+\paragraph{Transformer.}
+Self-attention mechanismus modeluje globální závislosti, avšak za~cenu kvadratické složitosti a~potřeby většího objemu trénovacích dat. Pro krátké sekvence ($N = 32$ framů) a~čtyři dobře separovatelné třídy je Transformer zbytečně složitá architektura.
+
+\subsection{Experimentální plán}
+\label{subsec:exp_plan_klasifikace}
+
+Srovnání architektur bude provedeno v~kapitole~\ref{ch:experimenty} ve~dvou hlavních experimentech:
+\begin{enumerate}
+    \item \textbf{BiLSTM + Attention vs.\ TCN} --- srovnání rekurentního a~konvolučního principu na stejných datech se~stejným předzpracováním.
+    \item \textbf{Ablační studie} --- vliv jednotlivých komponent: unidirectional vs.\ bidirectional, s~attention vs.\ bez attention, LSTM vs.\ GRU, délka sekvence (16, 32, 64 framů).
+\end{enumerate}
 
 \section{Diskuse alternativních přístupů}
 \label{sec:diskuse_alternativ}

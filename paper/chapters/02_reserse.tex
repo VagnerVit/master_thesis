@@ -5,12 +5,100 @@
 
 \section{Biomechanika plavání}
 \label{sec:biomechanika}
-% TODO: Styly, metriky, co dělá dobrého plavce
-% Zdroje: Maglischo 2003, Craig & Pendergast 1979, Barbosa 2011
-% - 4 plavecké styly (kraul, znak, prsa, motýlek)
-% - Klíčové metriky: SR, SL, V = SR × SL, IdC, úhly kloubů, rotace trupu
-% - Fáze záběru: catch, pull, push, recovery
-% - Nejčastější chyby: dropped elbow (61.3% dle Barden & Kell 2014), špatná rotace trupu
+
+Soutěžní plavání zahrnuje čtyři styly --- kraul (volný způsob), znak, prsa a~motýlek --- z~nichž každý má odlišnou biomechaniku. Seřazeny podle maximální dosažitelné rychlosti: kraul je nejrychlejší, následuje motýlek, znak a~prsa. Základní vztah mezi rychlostí a~technikou poprvé formalizovali Craig a~Pendergast~\cite{craig1979}:
+\begin{equation}
+    v = SR \times SL
+    \label{eq:v_sr_sl}
+\end{equation}
+kde $v$ je rychlost plavce, $SR$ (\textit{stroke rate}) je frekvence záběrů a~$SL$ (\textit{stroke length}) je vzdálenost uražená za jeden záběrový cyklus. Tento zdánlivě jednoduchý vztah má zásadní implikaci: rychlejší plavání lze dosáhnout buď zvýšením frekvence, nebo prodloužením záběru, avšak tyto dvě veličiny jsou vzájemně závislé --- zvyšování frekvence typicky zkracuje délku záběru. Elitní plavci se od rekreačních liší právě schopností udržet vysokou délku záběru i~při rostoucí frekvenci.
+
+\subsection{Klíčové biomechanické metriky}
+\label{subsec:metriky}
+
+\paragraph{Frekvence záběru a~délka záběru.}
+Vztah $v = SR \times SL$ (rovnice~\ref{eq:v_sr_sl}) je polynomický --- při nízké rychlosti plavci zvyšují $SL$, od určitého bodu začnou kompenzovat zvyšováním $SR$ na úkor $SL$~\cite{craig1979}. Individuální křivka $SR$--$SL$ je jedním z~klíčových ukazatelů technické úrovně plavce.
+
+\paragraph{Stroke Index.}
+Stroke Index ($SI = v \times SL$) je estimátor propulzivní efektivity~\cite{barbosa2011}. Vyšší hodnota znamená, že plavec dosahuje vyšší rychlosti při menším počtu záběrů, což implikuje efektivnější přenos síly do~propulze.
+
+\paragraph{Intra-cyclic velocity variation.}
+Proměnlivost rychlosti v~rámci jednoho záběrového cyklu ($dV$) odráží efektivitu záběru --- nižší variace znamená plynulejší a~energeticky úspornější plavání. Profil $dV$ je specifický pro každý styl: u~kraulu jsou oscilace nejmenší, u~prsou největší kvůli výrazné brzdné fázi.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{dv_profiles.png}
+    \caption{Profily intra-cyclic velocity variation pro čtyři plavecké styly: kraul (A), znak (B), prsa (C) a~motýlek (D). Převzato z~\cite{barbosa2011}, CC~BY~3.0.}
+    \label{fig:dv_profiles}
+\end{figure}
+
+\paragraph{Index of Coordination.}
+Chollet et al.~\cite{chollet2000} navrhli Index of Coordination (IdC), který kvantifikuje časovou koordinaci levé a~pravé paže v~kraulu. IdC je definován jako časový rozdíl mezi koncem propulzivní fáze jedné paže a~začátkem propulzivní fáze druhé paže, vyjádřený jako procento doby celého cyklu. Rozlišují se tři režimy koordinace:
+\begin{itemize}
+    \item \textit{catch-up} ($IdC < 0\,\%$) --- mezi propulzemi obou paží existuje pauza,
+    \item \textit{opposition} ($IdC = 0\,\%$) --- propulze se plynule střídají bez pauzy,
+    \item \textit{superposition} ($IdC > 0\,\%$) --- propulzivní fáze se překrývají.
+\end{itemize}
+Elitní sprinteři dosahují $IdC$ v~rozmezí $0\,\%$ až $+2{,}5\,\%$, zatímco plavci nižší úrovně typicky $-7\,\%$ až $-9\,\%$~\cite{chollet2000}. IdC se posouvá směrem k~superpozici s~rostoucí rychlostí.
+
+\begin{figure}[htbp]
+    \centering
+    \resizebox{\textwidth}{!}{\input{figures/idc_coordination.tex}}
+    \caption{Tři režimy koordinace paží v~kraulu podle Index of Coordination. Fáze A--D odpovídají entry/catch, pull, push a~recovery. Podle~\cite{chollet2000}.}
+    \label{fig:idc_coordination}
+\end{figure}
+
+\paragraph{Rotace trupu.}
+Psycharakis a~Sanders~\cite{psycharakis2010} provedli systematický přehled studií rotace trupu (\textit{body roll}) v~kraulu. Celkový rozsah rotace ramen činí přibližně $107°$ a~boků přibližně $50°$. Asymetrie kolem $8°$ mezi preferovanou a~nepreferovanou stranou je běžná a~koreluje se~stranou nádechu. Nedostatečná rotace omezuje rozsah záběru a~zvyšuje odpor, zatímco nadměrná rotace narušuje stabilitu a~hydrodynamický profil.
+
+\subsection{Fáze záběru}
+\label{subsec:faze_zaberu}
+
+Záběrový cyklus kraulu se tradičně dělí na čtyři fáze~\cite{chollet2000}:
+\begin{enumerate}
+    \item \textbf{Entry a~catch} (fáze A) --- ruka vstupuje do~vody a~hledá záběrovou pozici,
+    \item \textbf{Pull} (fáze B) --- tažná fáze, ruka se pohybuje pod tělem dozadu,
+    \item \textbf{Push} (fáze C) --- tlačná fáze, ruka dokončuje záběr směrem k~boku,
+    \item \textbf{Recovery} (fáze D) --- přenos paže vzduchem zpět do~výchozí pozice.
+\end{enumerate}
+Propulzivní fáze (B~+~C) tvoří přibližně $43$--$49\,\%$ celého cyklu v~závislosti na rychlosti~\cite{chollet2000}. Zbývající čas zabírají nepropulzivní fáze entry/catch a~recovery. V~kraulu zajišťují paže $85$--$90\,\%$ celkové propulze, zatímco kopání nohama přispívá pouze $10$--$15\,\%$~\cite{barbosa2011}. Nohy plní primárně stabilizační funkci --- udržují tělo v~hydrodynamické poloze a~kompenzují rotaci trupu.
+
+\begin{figure}[htbp]
+    \centering
+    \resizebox{\textwidth}{!}{\input{figures/stroke_phases.tex}}
+    \caption{Fáze záběrového cyklu kraulu v~bočním pohledu. Propulzivní fáze B~(pull) a~C~(push) jsou zvýrazněny. Podle~\cite{chollet2000, barbosa2011}.}
+    \label{fig:stroke_phases}
+\end{figure}
+
+\subsection{Nejčastější biomechanické chyby}
+\label{subsec:chyby}
+
+Virag et al.~\cite{virag2014} provedli systematickou studii prevalence biomechanických chyb u~elitních soutěžních plavců v~kraulu. Mezi nejčastější chyby patří:
+\begin{itemize}
+    \item \textbf{Dropped elbow při pull-through} ($61{,}3\,\%$) --- loket klesá pod úroveň ruky během záběru, čímž se snižuje efektivní záběrová plocha a~propulzivní síla.
+    \item \textbf{Dropped elbow při recovery} ($53{,}2\,\%$) --- nízký loket během přenosu paže vzduchem zvyšuje odpor a~narušuje symetrii záběru.
+    \item \textbf{Špatná pozice hlavy} ($46{,}8\,\%$) --- oči směřují vpřed místo dolů, což způsobuje pokles boků a~zvýšený čelní odpor.
+\end{itemize}
+Tyto chyby se vyskytují i~u~elitních plavců a~jsou vzájemně provázané --- například nízký loket při recovery typicky vede k~suboptimálnímu entry, což kaskádově ovlivňuje celou záběrovou fázi.
+
+\begin{figure}[htbp]
+    \centering
+    \input{figures/biomech_errors.tex}
+    \caption{Prevalence nejčastějších biomechanických chyb u~elitních kraulových plavců. Data podle~\cite{virag2014}.}
+    \label{fig:biomech_errors}
+\end{figure}
+
+\subsection{Implikace pro automatickou analýzu}
+\label{subsec:implikace_automaticka_analyza}
+
+Popsané biomechanické metriky se zásadně liší v~nárocích na automatickou detekci z~videa:
+\begin{itemize}
+    \item $SR$, $SL$ a~$v$ --- měřitelné z~jakéhokoliv bočního záběru prostým sledováním periodicity pohybu a~pozice plavce v~bazénu.
+    \item $IdC$ --- vyžaduje podvodní video s~dostatečným rozlišením pro přesné určení timingu propulzivních fází obou paží.
+    \item Rotace trupu --- optimálně měřitelná z~frontálního nebo zadního pohledu, kde je rotace přímo viditelná.
+    \item Dropped elbow --- spolehlivá detekce vyžaduje buď 3D rekonstrukci pózy, nebo vícekamerový setup, protože z~jediného 2D pohledu může být úhel loktu okluzí zakrytý.
+\end{itemize}
+Tato hierarchie obtížnosti automatizace přímo ovlivňuje návrh systému --- metriky měřitelné z~jedné kamery tvoří základ zpětné vazby, zatímco složitější metriky vyžadují pokročilejší setup a~slouží jako rozšíření pro budoucí verze.
 
 \section{Odhad lidské pózy}
 \label{sec:pose_estimation}
@@ -37,6 +125,135 @@
 % Argumentace proč ML pipeline místo LLM:
 % - Závislost na ext. API, nedeterminismus, latence, náklady, offline, reprodukovatelnost
 % - Porovnání trade-offs: pravidlový systém vs. LLM-generated feedback
+
+\subsection{Klasifikace časových řad z~keypointů}
+\label{subsec:klasifikace_casovych_rad}
+
+Trajektorie kloubů extrahované z~videa tvoří vícerozměrné časové řady --- sekvence souřadnic $N$~snímků $\times$ $K$~kloubů $\times$ 3 dimenze (x, y, z). Automatická klasifikace plaveckého stylu je předpokladem pro výběr správné referenční šablony a~následnou analýzu techniky. Tato sekce shrnuje metody klasifikace časových řad aplikovatelné na data z~pose estimation.
+
+\subsubsection{Rekurentní neuronové sítě}
+\label{subsubsec:rnn}
+
+Klasické rekurentní neuronové sítě (RNN) zpracovávají sekvence prvek po prvku a~udržují skrytý stav, který akumuluje informaci z~předchozích kroků. Hlavním problémem je \emph{mizející gradient} --- při zpětné propagaci přes mnoho časových kroků gradienty exponenciálně klesají, čímž síť ztrácí schopnost učit se dlouhodobé závislosti.
+
+\paragraph{Long Short-Term Memory (LSTM).}
+Hochreiter a~Schmidhuber~\cite{hochreiter1997lstm} tento problém řeší zavedením \emph{cell state} --- oddělené paměťové buňky řízené třemi bránami (forget, input, output). Forget gate rozhoduje, jakou část předchozího stavu zapomenout; input gate určuje, jaká nová informace se uloží; output gate filtruje, co se předá do~skrytého stavu. Konstantní chybový tok přes cell state umožňuje učení závislostí přes stovky časových kroků.
+
+\paragraph{Gated Recurrent Unit (GRU).}
+Cho et al.~\cite{cho2014gru} navrhli zjednodušenou variantu se~dvěma bránami (reset a~update), která sloučí cell state a~skrytý stav do~jednoho vektoru. GRU má méně parametrů než LSTM a~na krátkých sekvencích dosahuje srovnatelné přesnosti, avšak na delších sekvencích může být expresivita omezenější.
+
+\paragraph{Bidirectional varianty.}
+Pro offline klasifikaci, kde je k~dispozici celá sekvence najednou, lze použít obousměrné varianty (BiLSTM, BiGRU). Síť zpracovává sekvenci v~obou směrech a~výsledné skryté stavy se spojí, čímž každý časový krok má kontext z~celé sekvence. V~biomechanických aplikacích, kde záleží na celé trajektorii pohybu, je obousměrné zpracování přirozenou volbou.
+
+\subsubsection{Konvoluční přístupy}
+\label{subsubsec:konvolucni}
+
+\paragraph{1D CNN.}
+Jednorozměrné konvoluční sítě~\cite{kiranyaz2021_1dcnn} aplikují filtry podél časové osy a~detekují lokální temporální vzory (např. fázi záběru). Oproti RNN jsou plně paralelizovatelné, avšak standardní konvoluce mají omezené receptive field a~pro zachycení dlouhodobých závislostí vyžadují hluboké architektury.
+
+\paragraph{Temporal Convolutional Network (TCN).}
+Bai et al.~\cite{bai2018tcn} ukázali, že konvoluční architektury s~\emph{dilatovanými konvolucemi} mohou dosahovat srovnatelné nebo lepší přesnosti než RNN na řadě benchmarkových úloh. TCN používá exponenciálně rostoucí dilataci (1, 2, 4, 8, \ldots), čímž receptive field roste exponenciálně s~hloubkou sítě při konstantním počtu parametrů na vrstvu. Kauzální padding zajišťuje, že výstup v~čase~$t$ závisí pouze na vstupech $\leq t$, což je výhodné pro real-time aplikace. Pro offline klasifikaci lze kauzalitu relaxovat.
+
+\paragraph{InceptionTime.}
+Ismail Fawaz et al.~\cite{ismailfawaz2020inceptiontime} navrhli multi-scale konvoluční architekturu kombinující filtry různých délek v~každém bloku. Dosahuje state-of-the-art výsledků na standardních benchmarcích klasifikace časových řad (UCR/UEA archive). Vyšší architekturální složitost je však obtížněji zdůvodnitelná pro jednodušší úlohy s~malým počtem tříd.
+
+\subsubsection{Klasické metody}
+\label{subsubsec:klasicke}
+
+\paragraph{kNN-DTW.}
+Nejjednodušší a~historicky nejsilnější baseline pro klasifikaci časových řad je 1-nearest-neighbor klasifikátor s~DTW vzdáleností (kNN-DTW). Bagnall et al.~\cite{bagnall2017bakeoff} v~rozsáhlém srovnání na UCR archive ukázali, že kNN-DTW zůstává konkurenceschopný i~vůči moderním deep learning metodám. Pro plaveckou klasifikaci by kNN-DTW mohl klasifikovat styl přímo z~DTW vzdáleností vstupní sekvence k~referenčním šablonám jednotlivých stylů --- systém již DTW infrastrukturu využívá pro porovnávání techniky. Hlavní nevýhodou je absence naučené reprezentace a~lineární závislost inference času na velikosti trénovací sady.
+
+\paragraph{Random Forest na ručních příznacích.}
+Alternativní baseline spočívá v~extrakci statistických příznaků z~keypointových sekvencí (průměr, směrodatná odchylka, minimum, maximum per kloub) a~jejich klasifikaci pomocí Random Forest. Tento přístup je interpretovatelný --- důležitost příznaků přímo ukazuje, které klouby a~statistiky jsou pro rozlišení stylů rozhodující. Omezením je ztráta temporální informace při agregaci sekvence na vektor příznaků.
+
+\subsubsection{Attention a~Transformer}
+\label{subsubsec:attention}
+
+\paragraph{Attention pooling nad RNN.}
+Mechanismus attention~\cite{bahdanau2015attention} přiřazuje každému časovému kroku váhu podle jeho relevance pro klasifikaci. Místo použití posledního skrytého stavu RNN se výstup počítá jako vážený průměr všech skrytých stavů. Hlavní výhodou je interpretovatelnost --- attention váhy vizualizují, které fáze sekvence (např. fáze \textit{catch} nebo \textit{pull}) jsou pro rozhodování nejdůležitější.
+
+\paragraph{Transformer.}
+Architektura založená výhradně na self-attention mechanismu~\cite{vaswani2017attention} umožňuje modelovat globální závislosti bez rekurence. Pro klasifikaci časových řad se však Transformer potýká s~omezeními: vyžaduje větší objemy trénovacích dat než RNN, positional encoding pro krátké sekvence nepřináší zásadní benefit a~kvadratická složitost self-attention je pro krátké sekvence zbytečná režie.
+
+\subsubsection{Přístupy založené na náhodných jádrech}
+\label{subsubsec:rocket}
+
+ROCKET (\textit{RandOm Convolutional KErnel Transform})~\cite{dempster2020rocket} a~jeho varianta MiniROCKET generují tisíce náhodných konvolučních jader s~různými délkami, dilatacemi a~biasy, transformují vstupní sekvenci na vektor příznaků a~klasifikují lineárním klasifikátorem (ridge regression). Na benchmarcích UCR/UEA dosahují špičkové přesnosti při zlomku výpočetního času oproti deep learning metodám.
+
+Přes vynikající empirické výsledky má tento přístup zásadní omezení pro analýzu plavecké techniky: náhodně generovaná jádra nemají biomechanický význam --- nelze je mapovat na konkrétní fáze záběru ani na specifické chyby (např. \textit{dropped elbow}, \textit{crossover entry}). ROCKET je navržen pro obecné TSC benchmarky, kde stačí globální klasifikační přesnost. Pro systém zpětné vazby je však nezbytná per-phase interpretace --- identifikace, \emph{která} fáze záběru a~\emph{který} kloub přispívají k~chybné klasifikaci. Tuto lokalizaci ROCKET ze své podstaty neposkytuje.
+
+\subsubsection{Grafové neuronové sítě}
+\label{subsubsec:gnn}
+
+Skeleton data z~pose estimation mají přirozenou grafovou strukturu --- klouby tvoří uzly a~kosti hrany. Yan et al.~\cite{yan2018stgcn} navrhli Spatial Temporal Graph Convolutional Network (ST-GCN), kde prostorová konvoluce na skeleton grafu agreguje informaci od sousedních kloubů a~temporální konvoluce modeluje vývoj podél časové osy. ST-GCN je state-of-the-art architekturou pro skeleton-based action recognition a~přirozeně zachycuje kinematické řetězce (rameno--loket--zápěstí).
+
+Pro účely této práce má však grafový přístup omezení: plný efekt prostorové konvoluce vyžaduje 3D keypointy, zatímco z~jedné 2D kamery je prostorová struktura grafu degradovaná projekcí. Navíc pro čtyři dobře separovatelné třídy plaveckých stylů je ST-GCN architekturálně předimenzovaný. Grafové sítě zůstávají zajímavou alternativou pro budoucí rozšíření s~multi-view setupem a~3D rekonstrukcí pózy.
+
+\subsubsection{Augmentace trénovacích dat}
+\label{subsubsec:augmentace}
+
+Augmentace keypointových sekvencí je důležitá pro zlepšení generalizace klasifikátoru, zejména při omezeném množství trénovacích dat. Iwana a~Uchida~\cite{iwana2021augmentation} systematicky vyhodnotili augmentační techniky pro klasifikaci časových řad a~identifikovali následující kategorie relevantní pro skeleton data:
+\begin{itemize}
+    \item \textbf{Temporální:} náhodný ořez (\textit{random crop}), časové roztažení (\textit{time warping}), perturbace rychlosti.
+    \item \textbf{Prostorové:} přidání šumu ke~souřadnicím kloubů (\textit{joint jitter}), náhodné vynechání keypointů (\textit{keypoint dropout}) simulující okluze, zrcadlení levá/pravá strana.
+\end{itemize}
+Augmentace je zvláště relevantní pro dataset SwimXYZ, který je syntetický --- augmentace pomáhá překlenout \textit{domain gap} k~reálným datům z~podvodních kamer.
+
+\section{Metody porovnávání časových řad}
+\label{sec:porovnavani_casovych_rad}
+
+Trajektorie kloubů extrahované z~videa tvoří vícerozměrné časové řady --- pro každý kloub sekvenci úhlů v~čase. Porovnání techniky plavce s~referenčním vzorem je tedy problém měření podobnosti dvou časových řad. Klíčovou komplikací je, že plavci provádějí záběry různým tempem: fáze \textit{catch} může být u~jednoho plavce rychlejší a~\textit{recovery} pomalejší. Metoda porovnávání musí tolerovat tyto časové deformace.
+
+\subsection{Dynamic Time Warping}
+\label{subsec:dtw}
+
+Dynamic Time Warping (DTW) je algoritmus pro měření podobnosti dvou časových řad, které se mohou lišit v~rychlosti průběhu. Byl původně navržen pro rozpoznávání řeči~\cite{sakoe1978} a~od té doby se stal standardní metodou v~biomechanice, analýze chůze i~sportovní analýze.
+
+Pro dvě časové řady $X = (x_1, \ldots, x_N)$ a~$Y = (y_1, \ldots, y_M)$ algoritmus nejprve sestaví matici lokálních vzdáleností $C \in \mathbb{R}^{N \times M}$, kde $C(n,m) = \|x_n - y_m\|$. Poté dynamickým programováním vypočte akumulovanou matici nákladů:
+\begin{equation}
+    D(n,m) = C(n,m) + \min \begin{cases}
+        D(n-1, m) \\
+        D(n-1, m-1) \\
+        D(n, m-1)
+    \end{cases}
+\end{equation}
+s~počáteční podmínkou $D(1,1) = C(1,1)$. Optimální zarovnání (\textit{warping path}) se získá zpětným průchodem z~$D(N,M)$ do~$D(1,1)$. DTW vzdálenost je pak $\text{DTW}(X,Y) = D(N,M)$.
+
+Výpočetní složitost je $O(N \cdot M)$, což pro sekvence stejné délky odpovídá $O(N^2)$.
+
+\subsection{Varianty DTW}
+\label{subsec:dtw_varianty}
+
+\paragraph{Sakoe-Chiba band.}
+Bez omezení může warping path produkovat patologická zarovnání --- například namapovat celou fázi záběru na jediný frame reference. Sakoe-Chiba band~\cite{sakoe1978} omezuje warping path na pásmo šířky $r$ kolem diagonály matice: povoleny jsou pouze buňky $(n,m)$ splňující $|n - m| \leq r$. Tím se snižuje výpočetní složitost na $O(N \cdot r)$ a~zároveň se zamezí nerealistickým zarovnáním.
+
+\paragraph{Itakura parallelogram.}
+Itakura~\cite{itakura1975} navrhl alternativní omezení ve tvaru kosočtverce, které je užší na krajích sekvence a~širší uprostřed. Vynucuje omezení sklonu warping path, čímž zabraňuje příliš strmým nebo plochým úsekům zarovnání.
+
+\paragraph{Derivative Dynamic Time Warping (DDTW).}
+Keogh a~Pazzani~\cite{keogh2001ddtw} navrhli variantu, která místo porovnávání absolutních hodnot porovnává první derivace (rychlosti změny), čímž se zaměřuje na tvar pohybu nezávisle na amplitudě. Nevýhodou je zesilování šumu způsobené diferencováním.
+
+\paragraph{Soft-DTW.}
+Cuturi a~Blondel~\cite{cuturi2017softdtw} navrhli diferencovatelnou relaxaci DTW, kde je operace $\min$ nahrazena operací \textit{soft-min}. Výsledná funkce je diferencovatelná a~lze ji použít jako ztrátovou funkci při trénování neuronových sítí. Složitost zůstává $O(N^2)$.
+
+\paragraph{Multivariate DTW.}
+Pro vícerozměrná data existují dva přístupy~\cite{shokoohi2017}: DTW-I (\textit{independent}) počítá DTW zvlášť pro každou dimenzi s~nezávislými warping paths, zatímco DTW-D (\textit{dependent}) hledá jediný warping path přes všechny dimenze současně. Shokoohi-Yekta et al. ukázali, že DTW-D je vhodnější, pokud je koordinace mezi dimenzemi biomechanicky významná.
+
+\subsection{Alternativní metody}
+\label{subsec:alternativni_metody}
+
+\paragraph{Euklidovská vzdálenost} porovnává sekvence bod po bodu ($O(N)$), ale vyžaduje přesně zarovnané sekvence stejné délky. Jakýkoli časový posun vede k~chybnému porovnání --- pro biomechanická data s~přirozenou variabilitou tempa je nevhodná jako primární metoda, slouží však jako baseline.
+
+\paragraph{Longest Common Subsequence (LCSS)} počítá nejdelší společnou podsekvenci pod prahem tolerance $\epsilon$. Na rozdíl od DTW nepáruje všechny body --- body bez shody přeskakuje, čímž je robustnější vůči šumu a~odlehlým hodnotám. Nevýhodou je ztráta informace o~amplitudě odchylek, která je nezbytná pro kvantitativní zpětnou vazbu.
+
+\subsection{DTW v~biomechanice a~sportu}
+\label{subsec:dtw_biomechanika}
+
+DTW je nejpoužívanější metodou pro porovnávání pohybových vzorů v~biomechanice. V~analýze chůze poskytuje výrazně přesnější synchronizaci než metody založené na euklidovské vzdálenosti díky schopnosti zachytit lokální fázové posuny mezi jednotlivými kroky.
+
+Guo et al.~\cite{guo2025swfdtw} navrhli systém Similarity-Weighted Full DTW (S-WFDTW) pro hodnocení fitness cvičení, který kombinuje vylepšený DTW s~adaptivními prahy a~klouzavým oknem s~pose estimation modelem BlazePose. Systém poskytuje kvantitativní skóre a~zpětnou vazbu v~reálném čase --- přístup přímo analogický analýze plavecké techniky.
+
+V~oblasti vodních sportů byl DTW úspěšně nasazen pro klasifikaci záběrů pádlem z~dat inerciálních senzorů v~reálném čase s~latencí 16--17\,ms~\cite{paddle2025}, což potvrzuje praktickou použitelnost metody i~ve vodním prostředí.
 
 \section{Podvodní výzvy}
 \label{sec:podvodni_vyzvy}
