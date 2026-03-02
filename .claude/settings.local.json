@@ -5,7 +5,9 @@
       "Bash(git checkout:*)",
       "Bash(awk*)",
       "mcp__playwright__browser_navigate",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(bibtex main:*)",
+      "Bash(xelatex:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

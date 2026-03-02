@@ -5,10 +5,12 @@
 
 ### Cílové kategorie plavců (aktualizováno 2026-03-02)
 
-| Kategorie     | Věk  | Popis                                              | Min. plavců | Status dat                       |
-| ------------- | ---- | -------------------------------------------------- | ----------- | -------------------------------- |
-| **Dítě**      | 8–14 | Plavecký kurz, dětský oddíl                        | 5           | ❌ Nemáme — hlavní blocker        |
-| **Pokročilý** | 15+  | Od rekreačních po závodní (triatlonisté, oddíloví) | 8–10        | ⚠️ Částečně (SwimXYZ syntetický) |
+| Kategorie     | Věk  | Popis                                              | Min. plavců | Ideálně | Status dat                       |
+| ------------- | ---- | -------------------------------------------------- | ----------- | ------- | -------------------------------- |
+| **Dítě**      | 8–14 | Plavecký kurz, dětský oddíl                        | 5           | 8–10    | ❌ Nemáme — hlavní blocker        |
+| **Pokročilý** | 15+  | Od rekreačních po závodní (triatlonisté, oddíloví) | 8–10        | 12+     | ⚠️ Částečně (SwimXYZ syntetický) |
+
+> **Počty reflektují:** Potřebu rozmanitosti plavců — každý plavec je nezávislý vzorek. Data slouží k referenčním šablonám a validaci, plavce pro šablony nelze použít pro validaci.
 
 > Kategorie „Profesionál" = budoucí rozšíření, neimplementujeme v diplomce.
 

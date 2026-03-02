@@ -151,12 +151,14 @@ Dětská biomechanická data jsou **hlavní blocker** pro kategorii Dítě (8–
 
 ## 3. Kategorie plavců a minimální počty
 
-| Úroveň        | Věk  | Popis                                                                                 | Min. plavců | Účel               | SR range    |
-| ------------- | ---- | ------------------------------------------------------------------------------------- | ----------- | ------------------ | ----------- |
-| **Dítě**      | 8–14 | Plavecký kurz nebo dětský oddíl, rostoucí organismus                                  | 5           | Šablony + validace | 40–65 c/min |
-| **Pokročilý** | 15+  | Aktivně plavající dospělý — od rekreačních po závodní (triatlonisté, oddíloví plavci) | 8–10        | Šablony + validace | 30–65 c/min |
+| Úroveň        | Věk  | Popis                                                                                 | Min. plavců | Ideálně | Účel               | SR range    |
+| ------------- | ---- | ------------------------------------------------------------------------------------- | ----------- | ------- | ------------------ | ----------- |
+| **Dítě**      | 8–14 | Plavecký kurz nebo dětský oddíl, rostoucí organismus                                  | 5           | 8–10    | Šablony + validace | 40–65 c/min |
+| **Pokročilý** | 15+  | Aktivně plavající dospělý — od rekreačních po závodní (triatlonisté, oddíloví plavci) | 8–10        | 12+     | Šablony + validace | 30–65 c/min |
 
-**Celkem: min. 13–15 plavců**
+**Celkem: min. 13–15 plavců (ideálně 20+)**
+
+> **Proč více plavců:** Každý plavec je nezávislý vzorek. Data slouží k vytvoření referenčních šablon a k validaci systému — čím více různých plavců, tím spolehlivější výsledky. Plavce použité pro šablony nesmím použít pro validaci (nezávislost testovacích dat).
 
 > **Poznámka**: Kategorie „Profesionál" (národní/mezinárodní úroveň) je plánována jako budoucí rozšíření — v diplomce neimplementujeme vlastní šablony pro tuto úroveň, ale diskutujeme jako možnost.
 
@@ -241,10 +243,10 @@ Dětská biomechanická data jsou **hlavní blocker** pro kategorii Dítě (8–
 
 ### Must-have (bez toho diplomka není obhajitelná)
 
-1. **13–15 reálných videí plavců** (side-view kraul, 2 kategorie) pro validaci
-2. **5 dětských plavců** (8–14 let) pro kategorii Dítě (šablony + validace)
-3. **8–10 pokročilých plavců** (15+) pro kategorii Pokročilý (validace + reálné šablony)
-4. **Hodnocení trenérem** alespoň u 8 plavců (ground truth)
+1. **20+ reálných videí plavců** (side-view kraul, 2 kategorie) pro šablony a validaci
+2. **5–10 dětských plavců** (8–14 let) pro kategorii Dítě (referenční šablony + validace)
+3. **8–12 pokročilých plavců** (15+) pro kategorii Pokročilý (validace + reálné šablony)
+4. **Hodnocení trenérem** alespoň u 8 plavců (ground truth — systém říká X, shoduje se to s trenérem?)
 5. **Side-view** jako primární pohled kamery
 
 ### Should-have (výrazně zvýší kvalitu)
@@ -299,13 +301,17 @@ Systém z videa automaticky extrahuje pózu plavce a měří kloubové úhly —
 **Proč hledám i dětské plavce (8–14 let):**
 V celé biomechanické literatuře existuje prakticky jedno jediné měření kloubových úhlů u dětí při kraulu — vzorek 11 dětí. To je příliš málo na spolehlivé referenční hodnoty. Frekvence záběru dětí je výrazně vyšší než u dospělých (46–56 vs. 30–50 cyklů/min) a variabilita pohybu je zásadně větší — referenční šablony z dospělých dat na děti nefungují. Bez reálných dětských záběrů nemůžu kategorii Dítě v systému validovat.
 
+**K čemu data použiju:**
+
+Model trénuji na syntetickém datasetu (počítačem generovaní plavci). Data od vás použiji k **validaci** — ověření, že systém správně detekuje techniku i na reálných záběrech. Čím více různých plavců, tím spolehlivější validace — každý plavec je nezávislý vzorek.
+
 **Konkrétní otázky:**
 
 1. Kolik plavců přibližně máte v databázi?
 2. Zahrnuje i **dětské plavce** (8–14 let)?
 3. Z jakých úhlů kamery jsou záběry? (boční / čelní / podvodní?)
 4. Jaké je rozlišení a FPS vašich kamer?
-5. Existují k videím anotace nebo hodnocení trenérem? (= ground truth pro validaci)
+5. Existují k videím anotace nebo hodnocení trenérem? (= ground truth pro validaci — systém říká "dropped elbow" → shoduje se to s trenérem?)
 
 Jsem flexibilní a rád se přizpůsobím tomu, co je k dispozici. Případně bych rád přijel osobně a probral detaily.
 
@@ -328,13 +334,22 @@ vit.vagner@memos.cz
 - Vít Vágner, FIT ČVUT, diplomka na automatickou analýzu plavecké techniky z videa
 - Sám aktivně závodím v triatlonu — osobní motivace
 
-**Co potřebuji a proč:**
+**K čemu data použiju** (vysvětlit srozumitelně):
+
+- Model trénuju na **syntetickém datasetu** (počítačem generovaní plavci s perfektními anotacemi) — to už mám (SwimXYZ, 11 520 videí)
+- Reálná data od ní potřebuji ke **dvěma věcem**:
+  1. **Referenční vzory pro děti** — "jak má vypadat správná technika dítěte". Z počítačových dat dětské vzory nelze vytvořit (SwimXYZ obsahuje jen dospělé modely). Potřebuji nahrát skutečné děti, z videí systém extrahuje pózu a vytvoří referenční šablonu.
+  2. **Validace systému** — ověření, že to funguje na reálných plavcích. Systém řekne "loket o 15° níž při záběru" → shoduje se to s tím, co vidí trenér?
+- Nepotřebuji tisíce videí — **stačí desítky kvalitních záběrů od různých plavců**
+
+**Co potřebuji:**
 
 1. **Natočit videa plavců ze dvou cílových skupin**: děti (8–14) a pokročilí dospělí (15+)
 2. **Hlavně kraul**, side-view (boční pohled kolmo na dráhu) + ideálně front-view
 3. **Proč děti:** V celé biomechanické literatuře existuje prakticky jediné měření kloubových úhlů u dětí při kraulu (11 dětí). Děti mají výrazně vyšší frekvenci záběru (46–56 cyklů/min vs. 30–50 u dospělých) a mnohem větší variabilitu pohybu — referenční data z dospělých jednoduše nelze použít. Bez reálných dětských záběrů nemůžu dětskou kategorii validovat.
-4. Technicky: min. HD rozlišení, 30+ FPS, min. 10 záběrových cyklů od plavce (~30s plavání)
-5. Od každého plavce potřebuji metadata: věk, pohlaví, kolik let plave, tréninková frekvence
+4. **Kolik dětí:** Ideálně **8–10 dětí** (min. 5). Každé dítě je nezávislý vzorek — potřebuji dostatečnou rozmanitost, abych vytvořil spolehlivé referenční vzory a měl nezávislá data pro validaci.
+5. Technicky: min. HD rozlišení, 30+ FPS, min. 10 záběrových cyklů od plavce (~30s plavání)
+6. Od každého plavce potřebuji metadata: věk, pohlaví, kolik let plave, tréninková frekvence
 
 **Co konkrétně měřím:**
 
@@ -352,10 +367,11 @@ vit.vagner@memos.cz
 - Jaký je jejich GDPR proces pro natáčení studentů? Mají šablonu souhlasu?
 - Mají už existující záběry z kurzů?
 - Byl by možný přístup k bazénu na 1–2 natáčecí sessions?
+- **Mohl by trenér k videím dát stručné hodnocení techniky?** (např. "dropped elbow", "nedostatečná rotace") — slouží jako ground truth pro validaci, zda systém detekuje správné chyby
 
 **Co můžu nabídnout**:
 
-- **Analýzu techniky pro jejich studenty** jako protislužbu — automatický report s kloubovými úhly, detekcí chyb a doporučeními pro každého plavce
+- **Analýzu techniky pro jejich studenty** jako protislužbu — automatický report s biomechanickými metrikami pro každého plavce (kloubové úhly, frekvence záběru, rotace trupu, porovnání s referenčními hodnotami pro danou věkovou kategorii)
 - Citaci a poděkování v diplomce
 - Sdílení výsledků výzkumu
 
@@ -376,7 +392,7 @@ Dobrý den,
 
 jmenuji se Vít Vágner a jsem student magisterského programu na FIT ČVUT. Kontakt na Vás jsem dostal od Mgr. Macase — píši diplomovou práci na automatickou analýzu plavecké techniky z videa pomocí pose estimation a strojového učení.
 
-Data z plaveckého flumu by pro můj výzkum byla ideální — **konstantní rychlost plavce** znamená kontrolované podmínky, což výrazně zjednodušuje porovnávání mezi plavci a eliminuje variabilitu způsobenou zrychlováním/zpomalováním. Zároveň flume typicky umožňuje boční i podvodní pohled, což pokrývá klíčové metriky:
+Data z plaveckého flumu by pro můj výzkum byla ideální — **konstantní rychlost plavce** znamená kontrolované podmínky, což výrazně zjednodušuje porovnávání mezi plavci a eliminuje variabilitu způsobenou zrychlováním/zpomalováním. Model trénuji na syntetickém datasetu (SwimXYZ) a data z flumu bych použil k **validaci** — ověření, že systém funguje správně na reálných záběrech z profesionálního setupu. Zároveň flume typicky umožňuje boční i podvodní pohled, což pokrývá klíčové metriky:
 
 - Z **bočního pohledu** měřím úhel loktu ve 4 fázích záběru, úhel kolene, polohu těla ve vodě, frekvenci a délku záběru
 - Z **podvodního pohledu** měřím průběh tahu pod vodou (catch → pull → push) a trajektorii ruky
@@ -421,7 +437,7 @@ Paní Daguano mi potvrdila, že **European Aquatics poskytuje národním federac
 1. **Využívá Český svaz tuto službu?** Pokud ano, bylo by možné získat přístup k části těchto záběrů pro akademický výzkum?
 2. **Disponuje svaz vlastními záznamy** z tréninků SCM nebo z kvalifikačních závodů?
 
-**Co konkrétně potřebuji:** Závodní záběry kraulistů z bočního pohledu (side-view). Z těchto záběrů systém měří úhly kloubů, frekvenci záběru a koordinaci paží — potřebuji je k validaci automatické detekce na závodních plavcích. Ideálně HD rozlišení, 30+ FPS.
+**Co konkrétně potřebuji a k čemu:** Závodní záběry kraulistů z bočního pohledu (side-view). Model trénuji na syntetickém datasetu — závodní záběry od vás poslouží k **validaci na kompetitivní úrovni plavců** (ověření, že systém správně detekuje techniku i u závodních plavců). Z těchto záběrů systém měří úhly kloubů, frekvenci záběru a koordinaci paží. Ideálně HD rozlišení, 30+ FPS.
 
 Jsem připraven podepsat dohodu o nakládání s daty. Sám aktivně závodím v triatlonu, takže je to pro mě i osobní téma.
 
@@ -445,7 +461,7 @@ My name is Vít Vágner and I am a master's student in Software Engineering at t
 
 I am writing my thesis on automated swimming technique analysis from video. The system uses pose estimation models to extract body keypoints from video and then computes biomechanical metrics — specifically trunk rotation (shoulder roll typically 60–110° total range), elbow angle across all four stroke phases, and inter-arm coordination timing. These metrics are compared against reference templates to detect technique errors automatically.
 
-**Why real-world data is critical:** My current training data is synthetic (SwimXYZ dataset — computer-generated swimmers with perfect keypoint annotations). Real pool environments introduce noise that synthetic data cannot replicate — water surface reflections, refraction effects underwater, partial occlusions by lane ropes and splash. Without real-world validation data, I cannot reliably quantify how well the system performs in practice.
+**Why real-world data is critical:** My model is trained on synthetic data (SwimXYZ dataset — computer-generated swimmers with perfect keypoint annotations). I need real-world data for **validation and testing** — to verify that the system works correctly on real swimmers in real pool conditions. Real pool environments introduce noise that synthetic data cannot replicate — water surface reflections, refraction effects underwater, partial occlusions by lane ropes and splash. Your multi-camera setup would also allow me to validate how the system generalises across different camera angles. Without real-world validation data, I cannot reliably quantify how well the system performs in practice.
 
 **What I would need:**
 

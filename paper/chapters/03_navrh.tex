@@ -12,9 +12,37 @@
 
 \section{Výběr modelu pro odhad pózy}
 \label{sec:vyber_modelu}
-% TODO: Porovnání MediaPipe vs RTMPose vs ViTPose
-% - Důvody výběru (přesnost, rychlost, fine-tuning schopnosti)
-% - Tabulka: model × AP × FPS × parametry
+
+Na~základě rešerše HPE architektur (sekce~\ref{subsec:pe_architektury}) a~plavecky-specifických přístupů (sekce~\ref{subsec:pe_plavani}) systém využívá dva kandidátní modely: RTMPose-m~\cite{jiang2023rtmpose} a~ViTPose-B~\cite{xu2022vitpose}. Oba modely budou benchmarkovány na~datasetu SwimXYZ a~výsledný model zvolen na~základě experimentů v~kapitole~\ref{ch:experimenty}. MediaPipe/BlazePose~\cite{blazepose2020} slouží jako baseline pro srovnání s~prototypovou implementací.
+
+RTMPose-m dosahuje 75,8\,\% AP na~COCO při 430+ FPS na~GPU, což splňuje požadavky na~real-time zpracování videa. ViTPose-B dosahuje srovnatelné přesnosti (75,8\,\% AP) s~výrazně lepšími vlastnostmi pro fine-tuning díky Vision Transformer backbone předtrénovanému na~rozsáhlých datasetech. Fiche et~al.~\cite{fiche2023swimxyz} demonstrovali fine-tuning ViTPose-L na~SwimXYZ s~nárůstem PCK@10 z~67\,\% na~85\,\% po~pouhých 5~epochách, což potvrzuje schopnost transfer learningu překlenout domain gap mezi suchozemskými a~plaveckými daty.
+
+\subsection{Strategie fine-tuningu}
+\label{subsec:finetune_strategie}
+
+Fine-tuning předtrénovaných modelů na~plavecká data využívá dvoustupňový postup popsaný v~sekci~\ref{subsubsec:transfer_learning}:
+
+\begin{enumerate}
+    \item \textbf{Fáze~1 --- trénink výstupní hlavy} (3~epochy): Backbone (ViT encoder nebo CSPNeXt) je zmražen, trénuje se pouze keypoint head s~learning rate $10^{-3}$. Výstupní vrstva je nahrazena novou pro 48~keypointů (SwimXYZ Base formát místo 17~COCO keypointů). Tato fáze rychle adaptuje výstupní vrstvu na~nový skelet plavce, aniž by narušila naučené vizuální reprezentace.
+
+    \item \textbf{Fáze~2 --- celý model} (5--10~epoch): Odmrazí se celý model. Backbone se trénuje s~$10$--$100\times$ nižším learning rate než hlava ($10^{-5}$), čímž se zabraňuje catastrophic forgetting~\cite{yosinski2014transferable}. Celý model se jemně doladí na~plaveckou doménu --- model se učí vizuální příznaky specifické pro vodní prostředí (reflexy, bubliny, horizontální poloha těla).
+\end{enumerate}
+
+\subsection{Příprava datasetu pro fine-tuning}
+
+SwimXYZ anotace ve~formátu CSV je nutné převést do~COCO JSON formátu, který vyžaduje framework MMPose. Konverze zahrnuje extrakci framů z~videí do~jednotlivých snímků, přeformátování 48 keypointů do~COCO konvence (\texttt{[x, y, visibility]} pro každý kloub) a~výpočet bounding boxů z~viditelných keypointů. Rozdělení na~trénovací a~validační sadu odpovídá splitu používanému pro klasifikátor (70/15/15 na~úrovni sekvencí).
+
+\subsection{Augmentace pro odhad pózy}
+
+Standardní augmentační pipeline pro top-down pose estimation zahrnuje horizontální zrcadlení (s~prohozením levých a~pravých keypointů), náhodnou transformaci bounding boxu (škálování, rotace, translace) a~barevné perturbace (jas, kontrast, saturace). Pro plaveckou doménu se doplňuje Gaussovské rozostření simulující podvodní optické podmínky a~CoarseDropout simulující okluze bublinami.
+
+\subsection{Evaluační metriky}
+
+Evaluace fine-tunovaného modelu používá PCK (\textit{Percentage of Correct Keypoints}) při prazích 5\,\% a~10\,\% normalizační délky (konzistentně s~experimenty Fiche et~al.~\cite{fiche2023swimxyz}) a~COCO AP (průměrná přesnost přes~prahové hodnoty OKS $0{,}50$:$0{,}95$). Cross-view evaluace (trénink na~side-view, test na~front-view) měří míru generalizace modelu napříč pohledy kamery.
+
+\subsection{Export modelu}
+
+Finální model se exportuje do~formátu ONNX pro produkční inferenci ve~webové aplikaci, čímž se eliminuje závislost na~trénovacím frameworku (MMPose/PyTorch) při nasazení.
 
 \section{Ragdoll constraints}
 \label{sec:ragdoll}
@@ -251,14 +279,70 @@ Přes špičkové výsledky na benchmarcích neposkytuje přístup založený na
 \paragraph{Transformer.}
 Self-attention mechanismus modeluje globální závislosti, avšak za~cenu kvadratické složitosti a~potřeby většího objemu trénovacích dat. Pro krátké sekvence ($N = 32$ framů) a~čtyři dobře separovatelné třídy je Transformer zbytečně složitá architektura.
 
+\subsection{Tréninková pipeline klasifikátoru}
+\label{subsec:treninkov_pipeline}
+
+Tato sekce specifikuje konkrétní trénovací konfiguraci pro klasifikátor plaveckého stylu --- volby předzpracování, augmentace, optimalizace a~evaluace vycházejí z~obecných principů popsaných v~sekci~\ref{subsec:metodologie_treninku}.
+
+\subsubsection{Příprava dat}
+
+Dataset SwimXYZ se dělí na trénovací (70\,\%), validační (15\,\%) a~testovací (15\,\%) sadu na úrovni celých video sekvencí (nikoli framů ani sliding windows), čímž se zabraňuje úniku temporální informace mezi sadami. Rozdělení je deterministické (seed~42) a~identické pro všechny experimenty.
+
+Z~každé sekvence se generují vstupní okna klouzavým oknem o~délce $N = 32$ framů. Pro trénovací sadu se používá stride~16 (50\,\% překryv), čímž se přibližně zdvojnásobí počet trénovacích vzorků. Pro validační a~testovací sadu se používá stride~1, aby se model vyhodnotil na~všech možných fázích záběru.
+
+Vstupní data se normalizují per-joint z-normalizací (rovnice~\ref{eq:z_norm}) --- průměr a~směrodatná odchylka se počítají výhradně z~trénovací sady. Normalizační statistiky se ukládají jako součást modelu pro použití při inferenci na~nových datech.
+
+\subsubsection{Augmentace}
+
+Augmentace se aplikuje výhradně na~trénovací data. Zvolené techniky cílí na~překlenutí domain gap mezi syntetickými daty SwimXYZ a~reálnými záběry:
+\begin{itemize}
+    \item \textbf{Gaussovský šum} ($\sigma = 0{,}02$) --- přidání náhodného šumu k~souřadnicím kloubů simuluje lokalizační nepřesnost pose estimation modelu na~reálných záběrech, kde šum vzniká okluzemi, reflexy a~nízkou kvalitou vstupního obrazu.
+    \item \textbf{Horizontální zrcadlení} --- prohození levých a~pravých kloubů s~negací horizontální souřadnice efektivně zdvojnásobuje dataset. Kraul a~znak jsou bilaterálně symetrické styly, kde záběr levou a~pravou paží je zrcadlovým obrazem.
+    \item \textbf{Time warping} ($\sigma = 0{,}2$) --- nelineární deformace časové osy pomocí kubické interpolace simuluje přirozenou variabilitu tempa záběru --- plavec může provést fázi \textit{catch} rychleji a~\textit{recovery} pomaleji nebo naopak.
+\end{itemize}
+
+\subsubsection{Tréninková konfigurace}
+
+Volba hyperparametrů tréninku vychází z~principů popsaných v~sekci~\ref{subsubsec:optimalizace}:
+\begin{itemize}
+    \item \textbf{Optimizer:} AdamW~\cite{loshchilov2019adamw} s~learning rate $10^{-3}$ a~weight decay $10^{-4}$.
+    \item \textbf{LR scheduling:} Lineární warmup 5~epoch (lr z~$10^{-5}$ na~$10^{-3}$), poté kosínusové žíhání~\cite{loshchilov2017sgdr} k~minimu $10^{-6}$.
+    \item \textbf{Regularizace:} Dropout $0{,}3$ mezi LSTM vrstvami a~před klasifikační hlavou; gradient clipping $\|\hat{g}\| \leq 1{,}0$; layer normalization~\cite{ba2016layernorm} na~vstupu do~LSTM.
+    \item \textbf{Early stopping:} Monitorování validační chyby s~patience~10 a~minimálním zlepšením $\delta = 10^{-4}$. Model z~epochy s~nejvyšší validační přesností se ukládá jako finální~\cite{prechelt1998earlystopping}.
+    \item \textbf{Mixed precision:} Trénink s~automatickou smíšenou přesností (AMP)~\cite{micikevicius2018mixedprecision} na~GPU NVIDIA RTX~3060 (12\,GB VRAM).
+    \item \textbf{Loss funkce:} Cross-entropy loss --- standardní volba pro vícerozměrnou klasifikaci.
+\end{itemize}
+
+\subsubsection{Evaluace a~reprodukovatelnost}
+
+Evaluace klasifikátoru zahrnuje celkovou přesnost (\textit{accuracy}), per-class přesnost, recall, F1 skóre a~konfuzní matici. Balanced accuracy se používá jako primární metrika pro případ nerovnoměrného zastoupení stylů. Každý experiment je opakován 3$\times$ s~různými random seedy (42, 123, 999) a~výsledky se reportují jako $\mu \pm \sigma$. Průběh tréninku (loss, accuracy, learning rate, gradient normy) se loguje do~TensorBoard pro vizuální inspekci a~zpětnou analýzu.
+
 \subsection{Experimentální plán}
 \label{subsec:exp_plan_klasifikace}
 
-Srovnání architektur bude provedeno v~kapitole~\ref{ch:experimenty} ve~dvou hlavních experimentech:
-\begin{enumerate}
-    \item \textbf{BiLSTM + Attention vs.\ TCN} --- srovnání rekurentního a~konvolučního principu na stejných datech se~stejným předzpracováním.
-    \item \textbf{Ablační studie} --- vliv jednotlivých komponent: unidirectional vs.\ bidirectional, s~attention vs.\ bez attention, LSTM vs.\ GRU, délka sekvence (16, 32, 64 framů).
-\end{enumerate}
+Srovnání architektur bude provedeno v~kapitole~\ref{ch:experimenty}. Pro zajištění korektního porovnání sdílejí všechny experimenty identické podmínky: stejné rozdělení dat, normalizační statistiky, optimizer, scheduling a~počet epoch (nebo early stopping se~stejnými parametry).
+
+\begin{table}[htbp]
+\centering
+\caption{Plán experimentů klasifikace plaveckého stylu. Kontrolní podmínky: AdamW ($\mathrm{lr} = 10^{-3}$), warmup 5~epoch + cosine annealing, gradient clipping $1{,}0$, early stopping patience~10, seed $\{42, 123, 999\}$.}
+\label{tab:exp_plan}
+\small
+\begin{tabular}{clccl}
+\toprule
+\textbf{\#} & \textbf{Model} & \textbf{Bidir.} & \textbf{Attention} & \textbf{Poznámka} \\
+\midrule
+EXP-01 & BiLSTM  & ano & ano & navrhovaný model \\
+EXP-02 & LSTM    & ne  & ano & ablace: bez bidirectional \\
+EXP-03 & BiGRU   & ano & ano & ablace: GRU buňka \\
+EXP-04 & BiLSTM  & ano & ne  & ablace: bez attention \\
+EXP-05 & TCN     & --- & ne  & non-recurrent baseline \\
+EXP-06 & BiLSTM  & ano & ano & $N = 16$ framů \\
+EXP-07 & BiLSTM  & ano & ano & $N = 64$ framů \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Experimenty EXP-01 až EXP-05 srovnávají architektury při fixní délce sekvence ($N = 32$). EXP-06 a~EXP-07 testují citlivost na~délku vstupního okna. Doplňkové experimenty zahrnují vliv augmentace (trénink s~augmentací vs.~bez ní) a~cross-domain transfer (trénink na~SwimXYZ, evaluace na~reálných videích autora).
 
 \section{Diskuse alternativních přístupů}
 \label{sec:diskuse_alternativ}

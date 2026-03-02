@@ -264,6 +264,78 @@ Augmentace keypointových sekvencí je důležitá pro zlepšení generalizace k
 \end{itemize}
 Augmentace je zvláště relevantní pro dataset SwimXYZ, který je syntetický --- augmentace pomáhá překlenout \textit{domain gap} k~reálným datům z~podvodních kamer.
 
+\subsection{Metodologie tréninku neuronových sítí}
+\label{subsec:metodologie_treninku}
+
+Úspěšný trénink neuronových sítí pro klasifikaci časových řad vyžaduje dodržení řady metodologických principů --- od~správného rozdělení dat přes volbu optimalizačních technik po~strategie prevence přetrénování. Tato sekce shrnuje klíčové aspekty trénovací pipeline relevantní pro zpracování keypointových sekvencí.
+
+\subsubsection{Rozdělení dat a prevence úniku informací}
+\label{subsubsec:data_split}
+
+Standardní postup dělí dostupná data na tři disjunktní množiny: \textit{trénovací} (typicky 70\,\%) pro učení parametrů modelu, \textit{validační} (15\,\%) pro ladění hyperparametrů a~monitorování přetrénování, a~\textit{testovací} (15\,\%) pro finální vyhodnocení. Testovací sada se používá jednorázově na~závěr --- jakékoli rozhodování na~základě testovacích metrik během vývoje by vedlo k~optimistickému zkreslení výsledků.
+
+Pro data zpracovávaná klouzavým oknem (\textit{sliding window}) je kritické provést rozdělení \emph{před} generováním oken, nikoli po~něm. Okna se~50\,\% překryvem sdílejí polovinu framů --- pokud by okna z~téže sekvence byla přítomna v~trénovací i~testovací sadě, model by se učil rozpoznávat konkrétní sekvence místo obecných vzorů~\cite{cerda2024leakage}. Pro skeleton data z~videa musí být split proveden na~úrovni celých videí nebo plavců, čímž se zaručí, že žádná temporální informace neprosákne mezi sadami.
+
+Stejný princip platí pro normalizační statistiky --- průměr a~směrodatná odchylka se počítají výhradně z~trénovací sady a~následně se aplikují na~validační i~testovací data beze~změny.
+
+\subsubsection{Normalizace vstupních dat}
+\label{subsubsec:normalizace}
+
+Neuronové sítě konvergují rychleji a~spolehlivěji, když jsou vstupní příznaky ve~srovnatelném rozsahu. Pro keypointové sekvence se používá z-normalizace (standardizace) per-joint:
+\begin{equation}
+    \hat{x}_{k,d} = \frac{x_{k,d} - \mu_{k,d}}{\sigma_{k,d}}
+    \label{eq:z_norm}
+\end{equation}
+kde $x_{k,d}$ je souřadnice kloubu~$k$ v~dimenzi~$d$, $\mu_{k,d}$ a~$\sigma_{k,d}$ jsou průměr a~směrodatná odchylka vypočtené z~trénovací sady. Normalizace per-joint odstraňuje závislost na~absolutní pozici plavce v~záběru i~na~tělesných proporcích (výška, délka končetin), čímž se model učí rozpoznávat \emph{tvar pohybu} nezávisle na~konkrétním plavci.
+
+Alternativou je \textit{pelvis-centered normalization} --- odečtení pozice pánve od~všech kloubů v~každém framu, čímž se eliminuje translační složka. Obě metody lze kombinovat: nejprve centralizace na~pánev, poté z-normalizace reziduí.
+
+\subsubsection{Regularizační techniky}
+\label{subsubsec:regularizace}
+
+Regularizace zabraňuje přetrénování (\textit{overfitting}) --- stavu, kdy model dosahuje nízké chyby na~trénovacích datech, ale špatně generalizuje na~nová data. Pro rekurentní sítě jsou relevantní následující techniky:
+
+\paragraph{Dropout.}
+Srivastava et~al.~\cite{srivastava2014dropout} navrhli techniku, která během tréninku náhodně vynechává (nuluje) aktivace neuronů s~pravděpodobností~$p$ (typicky $0{,}2$--$0{,}5$). Tím se síť učí redundantní reprezentace a~nespokojí se s~jedinou cestou pro přenos informace. Při inferenci se dropout deaktivuje a~aktivace se škálují faktorem $(1-p)$.
+
+\paragraph{Weight decay.}
+Penalizace $L_2$ normy vah ($\lambda \sum_i w_i^2$) zabraňuje nadměrnému růstu parametrů. Loshchilov a~Hutter~\cite{loshchilov2019adamw} ukázali, že u~adaptivních optimalizérů (Adam) je vhodnější \emph{decoupled} weight decay (AdamW), kde se penalizace aplikuje přímo na~váhy místo přes gradient --- výsledný regularizační efekt je konzistentnější.
+
+\paragraph{Gradient clipping.}
+Rekurentní sítě jsou náchylné k~\emph{explodujícím gradientům} --- při zpětné propagaci přes mnoho časových kroků může gradient exponenciálně narůst, což destabilizuje trénink~\cite{pascanu2013gradient}. Gradient clipping ořezává normu gradientu na~maximální hodnotu (typicky $1{,}0$): $\hat{g} = g \cdot \min(1, c / \|g\|)$, kde $c$ je prahová hodnota. Pro LSTM a~GRU sítě je gradient clipping standardní praxí.
+
+\paragraph{Layer normalization.}
+Ba et~al.~\cite{ba2016layernorm} navrhli normalizaci aktivací přes~příznakovou dimenzi v~rámci jednoho vzorku (na~rozdíl od~batch normalization, která normalizuje přes~batch). Layer normalization je vhodnější pro rekurentní sítě, protože nezávisí na~velikosti batche a~funguje konzistentně i~při inferenci na~jednom vzorku.
+
+\subsubsection{Optimalizace a~scheduling}
+\label{subsubsec:optimalizace}
+
+\paragraph{AdamW.}
+Loshchilov a~Hutter~\cite{loshchilov2019adamw} vylepšili optimizer Adam o~decoupled weight decay. AdamW udržuje pro každý parametr adaptivní learning rate na~základě historie gradientů (první a~druhý moment), čímž stabilizuje trénink --- parametry s~řídkými gradienty se učí pomaleji a~parametry s~konzistentními gradienty rychleji. Typická konfigurace: $\mathrm{lr} = 10^{-3}$, $\beta_1 = 0{,}9$, $\beta_2 = 0{,}999$, weight decay $= 10^{-4}$.
+
+\paragraph{Learning rate scheduling.}
+Konstantní learning rate je suboptimální --- na~začátku tréninku jsou váhy náhodné a~velký learning rate způsobuje nestabilitu, zatímco na~konci tréninku je potřeba jemnější ladění. Loshchilov a~Hutter~\cite{loshchilov2017sgdr} navrhli kosínusové žíhání (\textit{cosine annealing}), kde se learning rate snižuje podle kosínusové křivky od~počáteční hodnoty k~minimu. Kombinace s~lineárním \textit{warmup} (postupné zvyšování lr z~nuly na~cílovou hodnotu v~prvních epochách) dále stabilizuje počáteční fázi tréninku, kdy odhady momentů optimalizéru ještě nejsou spolehlivé.
+
+\paragraph{Early stopping.}
+Prechelt~\cite{prechelt1998earlystopping} analyzoval strategie včasného zastavení tréninku na~základě monitorování validační chyby. Pokud se validační chyba nezlepší po~stanoveném počtu epoch (\textit{patience}, typicky 10--20), trénink se zastaví a~model z~epochy s~nejnižší validační chybou se použije jako finální. Early stopping je de~facto standardní regularizační technikou, která implicitně omezuje kapacitu modelu.
+
+\subsubsection{Transfer learning a~fine-tuning}
+\label{subsubsec:transfer_learning}
+
+Transfer learning přenáší znalosti z~modelu natrénovaného na~velkém zdrojovém datasetu do~cílové domény s~omezenými daty. Yosinski et~al.~\cite{yosinski2014transferable} ukázali, že nižší vrstvy konvolučních sítí se učí obecné příznaky (hrany, textury), zatímco vyšší vrstvy se specializují na~konkrétní úlohu. Fine-tuning spočívá v~nahrazení výstupní vrstvy předtrénovaného modelu novou vrstvou pro cílovou úlohu a~přetrénování --- buď celého modelu s~nízkým learning rate, nebo pouze nových vrstev při zmražení zbytku.
+
+Pro adaptaci na~novou vizuální doménu (např.~plavecké prostředí) se doporučuje dvoustupňový postup: v~první fázi se zmrazí backbone (encoder) a~trénuje pouze nová výstupní vrstva s~vyšším learning rate; ve~druhé fázi se odmrazí celý model a~pokračuje se s~výrazně nižším learning rate pro backbone ($10$--$100\times$ menší). Nízký learning rate zabraňuje \emph{catastrophic forgetting} --- ztrátě obecných příznakových reprezentací naučených na~zdrojovém datasetu.
+
+\subsubsection{Mixed precision training}
+\label{subsubsec:mixed_precision}
+
+Micikevicius et~al.~\cite{micikevicius2018mixedprecision} navrhli trénink se~smíšenou přesností (\textit{mixed precision}), kde se výpočetně náročné operace (konvoluce, maticové násobení) provádějí v~16bitové floating-point aritmetice (FP16), zatímco akumulace gradientů a~aktualizace vah zůstávají ve~32bitové přesnosti (FP32). Tento přístup snižuje paměťové nároky přibližně o~30\,\% a~urychluje trénink až $2\times$ na~GPU s~podporou Tensor Cores (NVIDIA Volta a~novější), bez měřitelné ztráty přesnosti modelu. \textit{Automatic Mixed Precision} (AMP) v~PyTorch automaticky volí vhodnou přesnost pro každou operaci.
+
+\subsubsection{Reprodukovatelnost experimentů}
+\label{subsubsec:reprodukovatelnost}
+
+Reprodukovatelnost výsledků vyžaduje fixaci všech zdrojů náhodnosti: seed generátoru pseudonáhodných čísel (PyTorch, NumPy, Python), deterministické chování CUDA operací a~konzistentní datový pipeline (pořadí vzorků, augmentace). Každý experiment musí být doprovázen záznamem kompletní konfigurace (hyperparametry, architektura, verze knihoven, git commit hash). Nástroje pro sledování experimentů (TensorBoard, Weights \& Biases) automatizují logování loss křivek, metrik a~hyperparametrů, čímž umožňují systematické porovnání variant --- jednotlivé experimenty jsou pak přehledně vizualizovatelné a~zpětně dohledatelné.
+
 \section{Metody porovnávání časových řad}
 \label{sec:porovnavani_casovych_rad}
 
