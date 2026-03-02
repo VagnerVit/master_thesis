@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(git rm:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(awk*)",
+      "mcp__playwright__browser_navigate",
+      "Bash(curl:*)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "filesystem"
+  ],
+  "prefersReducedMotion": true
 }

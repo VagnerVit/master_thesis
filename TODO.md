@@ -9,6 +9,7 @@
 ## Hotové
 
 ### Prototyp (Phase 0-2)
+
 - [x] SwimXYZ dataset stažen (annotations 6.7 GB + freestyle videa 75 GB)
 - [x] Dataset loader: sliding window, ~137k train samples
 - [x] Style classifier: BiLSTM + Attention, 99.67% accuracy (4 styly)
@@ -21,6 +22,7 @@
 - [x] End-to-end test: video → pose → classifier → feedback → export
 
 ### Rešerše (únor 2026)
+
 - [x] DTW rešerše — DTW-D zůstává, Sakoe-Chiba band, DBA pro šablony
 - [x] Klasifikace stylu rešerše — BiLSTM + Attention zvolena, experimentální plán navržen
 - [x] Rozhodnutí: web aplikace (ne desktop), bez LLM/RAG

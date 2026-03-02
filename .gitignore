@@ -54,6 +54,9 @@ prototyp/models/*.pth
 *.mov
 *.mkv
 
+# Playwright MCP logs
+.playwright-mcp/
+
 # Environment
 .env
 *.env

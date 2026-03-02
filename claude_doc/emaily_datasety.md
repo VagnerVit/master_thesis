@@ -188,6 +188,7 @@ Dear OTAB team,
 My name is Vít Vágner and I am a master's student in Software Engineering at the Faculty of Information Technology, Czech Technical University in Prague. My thesis research focuses on automated swimming technique analysis from video using computer vision and machine learning.
 
 I am writing to inquire about the possibility of accessing Olympic swimming competition footage for non-commercial academic research. Specifically, I would be interested in:
+
 - Swimming events (any stroke, any recent Games)
 - Multiple camera angles if available
 
@@ -248,18 +249,18 @@ Czech Technical University in Prague
 
 ## Checklist odesílání
 
-| # | Komu | Jazyk | Odesláno | Odpověď |
-|---|------|-------|----------|---------|
-| 1 | Jan Šťastný, VUT CESA | CZ | ✅ 2026-02-21 | ⏳ Bez odpovědi |
-| 2 | FTVS UK Praha (macas@) | CZ | ✅ 2026-02-21 | ✅ Macas přesměroval na Juráka (daniel.jurak@ftvs.cuni.cz) — plavání neučí, flume nefunguje, Jurák má videa |
-| 3 | BALUO UPOL | CZ | ✅ 2026-02-21 | ✅ David Prycl — kolega má databázi videí, ochoten poskytnout (ukázka: youtube.com/watch?v=ijmb06JR74o) |
-| 4 | ČSPS Zenáhlík | CZ | ✅ 2026-02-21 | ⏳ Bez odpovědi (ale EA Daguano doporučuje kontaktovat ČSPS — race analysis footage zdarma) |
-| 5 | SWIM-360 Malta | EN | ✅ 2026-02-21 | ⏳ Bez odpovědi |
-| 6 | SwimTrack / MediaEval | EN | ✅ 2026-02-21 | ⏳ Bez odpovědi |
-| 7 | PLOS One HSD | EN | ✅ 2026-02-21 | ⏳ Bez odpovědi |
-| 8 | Loughborough (Mark King) | EN | ✅ 2026-02-21 | ✅ King přesměroval na Hannah Jowitt (hannah.jowitt@aquaticsgb.com), CC Fred Yeadon |
-| 9 | OTAB | EN | ✅ 2026-02-21 | ⏳ Bez odpovědi |
-| 10 | World Aquatics | EN | ✅ 2026-02-21 | ⏳ Bez odpovědi |
-| 11 | LEN / European Aquatics | EN | ✅ 2026-02-21 | ✅ Juliana Daguano — race analysis footage zdarma pro národní federace, kontaktovat ČSPS |
-| — | IOC (images@olympic.org) | EN | ✅ 2026-02-21 | ❌ Jen screen-only přístup, žádné footage pro výzkum |
-| — | VUT CESA — Bátorová | CZ | ✅ (odpověď na Šťastného?) | ✅ Nabízí zavolat v úterý, tel. 732120614 |
+| #   | Komu                     | Jazyk | Odesláno                  | Odpověď                                                                                                    |
+| --- | ------------------------ | ----- | ------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 1   | Jan Šťastný, VUT CESA    | CZ    | ✅ 2026-02-21              | ⏳ Bez odpovědi                                                                                             |
+| 2   | FTVS UK Praha (macas@)   | CZ    | ✅ 2026-02-21              | ✅ Macas přesměroval na Juráka (daniel.jurak@ftvs.cuni.cz) — plavání neučí, flume nefunguje, Jurák má videa |
+| 3   | BALUO UPOL               | CZ    | ✅ 2026-02-21              | ✅ David Prycl — kolega má databázi videí, ochoten poskytnout (ukázka: youtube.com/watch?v=ijmb06JR74o)     |
+| 4   | ČSPS Zenáhlík            | CZ    | ✅ 2026-02-21              | ⏳ Bez odpovědi (ale EA Daguano doporučuje kontaktovat ČSPS — race analysis footage zdarma)                 |
+| 5   | SWIM-360 Malta           | EN    | ✅ 2026-02-21              | ⏳ Bez odpovědi                                                                                             |
+| 6   | SwimTrack / MediaEval    | EN    | ✅ 2026-02-21              | ⏳ Bez odpovědi                                                                                             |
+| 7   | PLOS One HSD             | EN    | ✅ 2026-02-21              | ⏳ Bez odpovědi                                                                                             |
+| 8   | Loughborough (Mark King) | EN    | ✅ 2026-02-21              | ✅ King přesměroval na Hannah Jowitt (hannah.jowitt@aquaticsgb.com), CC Fred Yeadon                         |
+| 9   | OTAB                     | EN    | ✅ 2026-02-21              | ⏳ Bez odpovědi                                                                                             |
+| 10  | World Aquatics           | EN    | ✅ 2026-02-21              | ⏳ Bez odpovědi                                                                                             |
+| 11  | LEN / European Aquatics  | EN    | ✅ 2026-02-21              | ✅ Juliana Daguano — race analysis footage zdarma pro národní federace, kontaktovat ČSPS                    |
+| —   | IOC (images@olympic.org) | EN    | ✅ 2026-02-21              | ❌ Jen screen-only přístup, žádné footage pro výzkum                                                        |
+| —   | VUT CESA — Bátorová      | CZ    | ✅ (odpověď na Šťastného?) | ✅ Nabízí zavolat v úterý, tel. 732120614                                                                   |

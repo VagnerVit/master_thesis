@@ -1,17 +1,26 @@
 # Datasety a kontakty pro SwimAth
 
-**Stav**: 2026-03-01 (aktualizováno s odpověďmi na emaily)
+**Stav**: 2026-03-02 (aktualizováno — nové 2 kategorie plavců)
 **Cíl**: Získat reálná plavecká video data pro diplomku (syntetický SwimXYZ nestačí)
+
+### Cílové kategorie plavců (aktualizováno 2026-03-02)
+
+| Kategorie     | Věk  | Popis                                              | Min. plavců | Status dat                       |
+| ------------- | ---- | -------------------------------------------------- | ----------- | -------------------------------- |
+| **Dítě**      | 8–14 | Plavecký kurz, dětský oddíl                        | 5           | ❌ Nemáme — hlavní blocker        |
+| **Pokročilý** | 15+  | Od rekreačních po závodní (triatlonisté, oddíloví) | 8–10        | ⚠️ Částečně (SwimXYZ syntetický) |
+
+> Kategorie „Profesionál" = budoucí rozšíření, neimplementujeme v diplomce.
 
 ---
 
 ## Stávající datasety
 
-| Dataset | Typ | Status |
-|---------|-----|--------|
-| **SwimXYZ** | Syntetický, 11520 videí, 4 styly | ✅ Staženo |
-| **Augsburg Swimming Channel** | Reálný, 4 styly | ❌ Zamítnuto (NDA) |
-| **SwimmerNET** | Reálný podvodní, kraul | ⏳ Bez odpovědi |
+| Dataset                       | Typ                              | Status            |
+| ----------------------------- | -------------------------------- | ----------------- |
+| **SwimXYZ**                   | Syntetický, 11520 videí, 4 styly | ✅ Staženo         |
+| **Augsburg Swimming Channel** | Reálný, 4 styly                  | ❌ Zamítnuto (NDA) |
+| **SwimmerNET**                | Reálný podvodní, kraul           | ⏳ Bez odpovědi    |
 
 ---
 
@@ -28,6 +37,11 @@
 - **Proč**: 3 synchronizované podvodní kamery, data české reprezentace od 2009, IMU senzory, vlastní tachograf. Aktivní výzkum kinematiky záběrů.
 - **Publikace**: "Kinematic and dynamic analysis of swimming technique of Czech national team 2009-2015", case study s IMU (2017)
 - **📧 Status**: Odesláno 2026-02-21, ⏳ bez odpovědi
+- **Co od něj potřebujeme**:
+  - Side-view + underwater video kraul, závodní plavci (Pokročilý)
+  - Podvodní záběry z 3 synchronizovaných kamer — pull-through analýza
+  - Metadata plavců a ideálně trenérské hodnocení (ground truth)
+  - Min. HD/30 FPS, 10+ cyklů na plavce
 
 ### 2. Michaela Bátorová — VUT Brno CESA — ✅ ODPOVĚDĚLA
 
@@ -35,8 +49,15 @@
 - **Email**: Michaela.Batorova@vut.cz
 - **Tel**: 732120614, +420 54114 9585
 - **Centrum sportovních aktivit**, VUT v Brně, Kolejní 2, 612 00 Brno
+- **Pokrývá kategorie**: 🧒 **Dítě** (plavecké kurzy!) + možná Pokročilý
 - **📧 Odpověď (2026-02)**: Nabízí zavolat v úterý dopoledne — diskuze o možnostech spolupráce
-- **Akce**: ☎️ Zavolat, připravit body (viz pozadavky_video_data.md)
+- **Akce**: ☎️ Zavolat, připravit body (viz pozadavky_video_data.md sekce 8.2)
+- **Co od ní konkrétně potřebujeme**:
+  - **Hlavně dětské plavce (8–14 let)** — side-view kraul, min. 5 dětí, 10+ cyklů na plavce
+  - Přístup k bazénu na 1–2 natáčecí sessions
+  - Metadata: věk, pohlaví, kolik let plave
+  - Existující záběry z kurzů (pokud mají)
+  - GDPR proces pro natáčení dětí
 
 ### 3. FTVS UK Praha — Katedra plaveckých sportů — ✅ ODPOVĚDĚL (Macas → Jurák)
 
@@ -46,8 +67,14 @@
 - **Plavecká sekce**: Mgr. Daniel Jurák, Ph.D. (daniel.jurak@ftvs.cuni.cz)
 - **Web**: [ftvs.cuni.cz/FTVS-592.html](https://ftvs.cuni.cz/FTVS-592.html)
 - **Proč**: Plavecký flume (6m, proud 0.5-2.5 m/s), podvodní pozorovací okno 3m, Dartfish software, underwater cameras. Diagnostika pro závodní plavce.
+- **Pokrývá kategorie**: 🏊 **Pokročilý** (závodní plavci z flumu)
 - **📧 Odpověď Macase (2026-02)**: Plavání neučí, flume bohužel nefunguje. Přesměroval na Dana Juráka — ten má videozáznamy z flumu. V kopii dal Juráka.
-- **Akce**: ✉️ Napsat přímo Jurákovi (daniel.jurak@ftvs.cuni.cz) — zmínit přesměrování od Macase
+- **Akce**: ✉️ Napsat přímo Jurákovi (daniel.jurak@ftvs.cuni.cz) — zmínit přesměrování od Macase (viz pozadavky_video_data.md sekce 8.3)
+- **Co od něj konkrétně potřebujeme**:
+  - Side-view + podvodní záběry kraul z flumu (kontrolované podmínky = konstantní rychlost)
+  - Pokročilí/závodní plavci
+  - Metadata plavců + trenérské hodnocení (ground truth)
+  - Min. HD/30 FPS, 10+ cyklů na plavce
 
 ### 4. BALUO — FTK UPOL Olomouc — ✅ ODPOVĚDĚL (Prycl)
 
@@ -56,8 +83,15 @@
 - **Tel**: +420 775 111 781
 - **Web**: [acbaluo.cz](https://www.acbaluo.cz/), [testbal.cz](https://www.testbal.cz/)
 - **Proč**: Testovací bazén s kamerovým systémem, high-sequence kamery, centrum kinantropologického výzkumu.
+- **Pokrývá kategorie**: 🏊 **Pokročilý** (+ otázka: mají i děti?)
 - **📧 Odpověď (2026-02)**: Kontaktoval kolegu, který má databázi videí a je ochoten je poskytnout. Posílá ukázkové video: https://www.youtube.com/watch?v=ijmb06JR74o
-- **Akce**: ✉️ Odpovědět s konkrétní specifikací požadovaných záběrů (viz pozadavky_video_data.md)
+- **Akce**: ✉️ Odpovědět s konkrétní specifikací požadovaných záběrů (viz pozadavky_video_data.md sekce 8.1)
+- **Co od něj konkrétně potřebujeme**:
+  - Side-view kraul, min. HD/30 FPS (60 FPS ideální), 10+ cyklů na plavce
+  - Pokročilí dospělí plavci — hlavní přínos
+  - **Otázka: mají i dětské plavce?** — klíčová informace
+  - Metadata plavců (věk, úroveň)
+  - Anotace/hodnocení trenérem (pokud existují)
 
 ### 5. ČSPS — Český svaz plaveckých sportů
 
@@ -68,7 +102,11 @@
 - **Proč**: Brána ke SCM datům, metodická videa, spolupráce s kluby.
 - **📧 Status Zenáhlík**: Odesláno 2026-02-21, ⏳ bez odpovědi
 - **Nová cesta**: European Aquatics (Juliana Daguano) doporučuje kontaktovat ČSPS — race analysis footage je zdarma pro národní federace
-- **Akce**: ✉️ Napsat znovu ČSPS, zmínit doporučení od Daguano
+- **Akce**: ✉️ Napsat znovu ČSPS, zmínit doporučení od Daguano (viz pozadavky_video_data.md sekce 8.4)
+- **Co od nich konkrétně potřebujeme**:
+  - Závodní záběry kraulistů z bočního pohledu (race analysis footage od European Aquatics)
+  - HD rozlišení, 30+ FPS
+  - Závodní plavci = validace na kompetitivní úrovni
 
 ### 5. FSpS MUNI Brno
 
@@ -122,7 +160,13 @@
 - **Spolupráce**: British Swimming (Aquatics GB), Intel
 - **Proč**: Technicky nejschopnější swimming lab v Evropě.
 - **📧 Odpověď Mark King (2026-02)**: Přesměroval na Hannah Jowitt (hannah.jowitt@aquaticsgb.com). CC Fred Yeadon (M.R.Yeadon@lboro.ac.uk).
-- **Akce**: ✉️ Napsat Hannah Jowitt — požádat o přístup k datům pro akademický výzkum
+- **Akce**: ✉️ Napsat Hannah Jowitt (viz pozadavky_video_data.md sekce 8.5)
+- **Co od nich konkrétně potřebujeme**:
+  - Side-view + underwater video kraul z multi-camera setupu (10 kamer, 4 podvodní)
+  - Různé úrovně plavců (recreational → competitive)
+  - HD/30+ FPS, 10+ cyklů na plavce
+  - Trenérské hodnocení (ground truth)
+  - Klíčové pro validaci domain gap: syntetická → reálná data
 
 ### 5. IAT Leipzig (Německo)
 
@@ -213,26 +257,30 @@
 
 ---
 
-## Aktuální stav a další kroky (2026-03-01)
+## Aktuální stav a další kroky (2026-03-02)
 
-### Odpověděli — aktivní jednání
-| Kontakt | Odpověď | Další krok |
-|---------|---------|------------|
-| **David Prycl** (BALUO) | Kolega má databázi videí, ochoten poskytnout | ✉️ Odpovědět s požadavky |
-| **Bátorová** (VUT CESA) | Zavolat v úterý | ☎️ Připravit body, zavolat |
-| **Macas → Jurák** (FTVS) | Přesměrováno na Juráka, má videa z flumu | ✉️ Napsat Jurákovi |
-| **Daguano** (European Aquatics) | Race analysis zdarma pro federace → ČSPS | ✉️ Napsat ČSPS s odkazem |
-| **King** (Loughborough) | Přesměrováno na Hannah Jowitt | ✉️ Napsat Jowitt |
+### Odpověděli — aktivní jednání (seřazeno podle pravděpodobnosti získání dat)
+
+| #   | Kontakt                          | Odpověď                                  | Pokrývá                 | Další krok               | Priorita                              |
+| --- | -------------------------------- | ---------------------------------------- | ----------------------- | ------------------------ | ------------------------------------- |
+| 1   | **David Prycl** (BALUO)          | Kolega ochoten poskytnout databázi videí | Pokročilý (+ děti?)     | ✉️ Odpovědět s požadavky | 🔴 NEJVYŠŠÍ — nejkonkrétnější nabídka |
+| 2   | **Bátorová** (VUT CESA)          | Zavolat v úterý                          | 🧒 **Dítě** + Pokročilý | ☎️ Zavolat s body        | 🔴 NEJVYŠŠÍ — jediný zdroj dětí       |
+| 3   | **Macas → Jurák** (FTVS)         | Přesměrováno, má videa z flumu           | Pokročilý (flume)       | ✉️ Napsat Jurákovi       | 🟡 VYSOKÁ — flume = ideální podmínky  |
+| 4   | **Daguano** (EA) → ČSPS          | Race analysis zdarma pro federace        | Závodní                 | ✉️ Napsat ČSPS           | 🟡 VYSOKÁ — nepřímá cesta             |
+| 5   | **King** → Jowitt (Loughborough) | Přesměrováno na Aquatics GB              | Pokročilý + závodní     | ✉️ Napsat Jowitt         | 🟠 STŘEDNÍ — UK, formálnější proces   |
 
 ### Slepé uličky
-| Kontakt | Důvod |
-|---------|-------|
-| **IOC Content Licensing** | Jen screen-only přístup, žádné footage |
-| **Augsburg Swimming Channel** | Zamítnuto (NDA) |
+
+| Kontakt                       | Důvod                                  |
+| ----------------------------- | -------------------------------------- |
+| **IOC Content Licensing**     | Jen screen-only přístup, žádné footage |
+| **Augsburg Swimming Channel** | Zamítnuto (NDA)                        |
 
 ### Bez odpovědi (follow-up?)
+
 Jan Šťastný (VUT), ČSPS Zenáhlík, SWIM-360 Malta, SwimTrack/MediaEval, PLOS One HSD, SwimmerNET, OTAB, World Aquatics
 
 ### Průběžně
-- Natočit vlastní reálná data (triatlonové tréninky)
+
+- Natočit vlastní reálná data (triatlonové tréninky) — pokryje Pokročilý
 - Stáhnout Roboflow swimmer detection datasets

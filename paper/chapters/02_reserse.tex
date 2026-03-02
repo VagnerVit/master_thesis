@@ -102,29 +102,94 @@ Tato hierarchie obtížnosti automatizace přímo ovlivňuje návrh systému ---
 
 \section{Odhad lidské pózy}
 \label{sec:pose_estimation}
-% TODO: Architektury: OpenPose → HRNet → ViTPose → RTMPose
-% Zdroje: Xu 2022 (ViTPose), Jiang 2023 (RTMPose), Einfalt 2018/2019
-% - Evoluce: bottom-up vs top-down
-% - ViTPose: Vision Transformer, škálovatelný 20M-1B params
-% - RTMPose: 75.8% AP COCO, 90+ FPS CPU, 430+ FPS GPU
-% - Plavecky-specifické: Einfalt (Augsburg), domain-specific challenges
+
+Odhad lidské pózy (\textit{human pose estimation}, HPE) je úloha počítačového vidění, jejímž cílem je lokalizovat klíčové body těla (\textit{keypoints}) --- typicky klouby --- v~obraze nebo videu. Pro analýzu plavecké techniky je HPE základním stavebním kamenem: extrahované keypointy tvoří vstup pro výpočet biomechanických metrik popsaných v~sekci~\ref{sec:biomechanika}.
+
+Architektury HPE se dělí na dva přístupy. \textit{Bottom-up} metody nejprve detekují všechny keypointy v~obraze a~poté je seskupují do~jednotlivých osob. Přístup OpenPose~\cite{openpose2019} reprezentuje tuto kategorii --- pomocí Part Affinity Fields asociuje keypointy s~osobami v~reálném čase. \textit{Top-down} metody nejprve detekují osoby (bounding boxy) a~poté pro každou osobu odhadují keypointy zvlášť. Tento přístup dosahuje vyšší přesnosti na úkor lineárně rostoucího času s~počtem osob. Pro plaveckou analýzu, kde se v~záběru typicky nachází jeden plavec, je top-down přístup přirozenou volbou.
+
+\subsection{Klíčové architektury}
+\label{subsec:pe_architektury}
+
+\paragraph{HRNet.}
+Sun et~al.~\cite{hrnet2019} navrhli architekturu, která udržuje vysoké rozlišení reprezentací po~celou dobu inference namísto opakovaného downsamplingu a~upsamplingu. HRNet dosáhl $77{,}0$\,\% AP na COCO, čímž výrazně překonal OpenPose ($61{,}8$\,\% AP) a~stal se základem pro řadu navazujících architektur.
+
+\paragraph{ViTPose.}
+Xu et~al.~\cite{xu2022vitpose} ukázali, že jednoduchý Vision Transformer backbone s~lehkým dekodérem dosahuje state-of-the-art výsledků na COCO bez potřeby složitých architekturálních inovací. ViTPose je škálovatelný od~20M do~1B parametrů --- ViTPose-B (86M params) dosahuje $75{,}8$\,\% AP, ViTPose-H (632M) $79{,}1$\,\% AP. Klíčovou výhodou je flexibilita backbone --- model lze pre-trainovat na velkých obrazových datasetech (MAE, ImageNet-21k) a~poté fine-tunovat na doménově specifická data, což je relevantní pro adaptaci na plavecké prostředí.
+
+\paragraph{RTMPose.}
+Jiang et~al.~\cite{jiang2023rtmpose} navrhli real-time architekturu optimalizovanou pro nasazení na edge zařízeních. RTMPose-L dosahuje $75{,}8$\,\% AP na COCO při 90+ FPS na CPU a~430+ FPS na GPU (NVIDIA 3090). Toho dosahuje kombinací CSPNeXt backbone, SimCC dekodéru (klasifikace souřadnic místo regrese heatmap) a~knowledge distillace z~většího modelu. Pro systém zpracovávající video v~reálném čase nebo blízko reálného času je RTMPose nejvhodnějším kandidátem.
+
+\paragraph{MediaPipe Pose.}
+Google MediaPipe~\cite{mediapipe2019} poskytuje framework pro mobilní inference s~modelem BlazePose~\cite{blazepose2020}, který detekuje 33 keypointů včetně obličejových bodů a~prstů rukou. BlazePose je optimalizovaný pro mobilní zařízení s~nízkou latencí, avšak dosahuje nižší přesnosti než ViTPose nebo RTMPose, zejména v~případech okluze a~netypických póz. Pro prototypování a~scénáře bez GPU je vhodným výchozím bodem.
+
+\begin{table}[htbp]
+\centering
+\caption{Srovnání klíčových architektur odhadu lidské pózy. AP udáváno na COCO val2017 (top-down, single-person crop). FPS měřeno na NVIDIA RTX 3090.}
+\label{tab:pe_srovnani}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{AP (\%)} & \textbf{FPS (GPU)} & \textbf{Params (M)} & \textbf{Fine-tuning} \\
+\midrule
+OpenPose        & 61,8 & 22  & 26   & omezený \\
+HRNet-W48       & 77,0 & 28  & 64   & dobrý \\
+ViTPose-B       & 75,8 & 78  & 86   & výborný \\
+ViTPose-H       & 79,1 & 20  & 632  & výborný \\
+RTMPose-L       & 75,8 & 430 & 28   & dobrý \\
+BlazePose       & $\sim$70 & mobil & $<$5 & omezený \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Odhad pózy specifický pro plavání}
+\label{subsec:pe_plavani}
+
+Standardní HPE modely trénované na datasetu COCO obsahují téměř výhradně suchozemské pózy --- osoby stojící, sedící nebo v~pohybu na souši. Plavecké prostředí přináší specifické výzvy: horizontální poloha těla, okluze vodní hladinou (část těla nad, část pod vodou), reflexy na hladině, bubliny a~nízký kontrast pod vodou. Tento \textit{domain gap} vede k~výraznému poklesu přesnosti při nasazení standardních modelů na plavecká data.
+
+Einfalt et~al.~\cite{einfalt2018} jako první systematicky řešili odhad pózy plavců z~videa pořízeného přes skleněnou stěnu plaveckého kanálu na Univerzitě v~Augsburgu. Navrhli podmíněný model, který využívá informaci o~aktivitě (styl plavání) pro zpřesnění odhadu. V~navazující práci~\cite{einfalt2019} dosáhli zlepšení $0{,}8$--$4{,}8$\,\% PCK zpřesněním pozic kloubů pomocí temporálních omezení.
+
+Giulietti et~al.~\cite{giulietti2023} vyvinuli SwimmerNET --- specializovaný model pro podvodní odhad pózy kraulových plavců. Model zpracovává optický tok (\textit{optical flow}) společně s~RGB obrazem, čímž zlepšuje detekci keypointů v~podmínkách nízkého kontrastu. Dataset obsahuje 2\,021 anotovaných snímků se~segmentačními maskami částí těla.
+
+Cao a~Yan~\cite{cao2024underwater} aplikovali HRNet na podvodní plavecká videa s~2\,500 snímky a~14 COCO keypointy. Cronin et~al.~\cite{cronin2019underwater} demonstrovali použitelnost DeepLabCut~\cite{mathis2018deeplabcut} pro podvodní kinematickou analýzu s~průměrnou chybou menší než 3~pixely.
+
+\paragraph{Implikace pro tuto práci.}
+Přímé nasazení standardních modelů na plavecká data je nedostatečné --- fine-tuning na doménově specifických datech je nezbytný. Dataset SwimXYZ (sekce~\ref{sec:datasety}) poskytuje syntetické trénovací záběry s~perfektními ground-truth anotacemi, avšak syntetický charakter dat přináší vlastní domain gap (viz sekce~\ref{sec:datasety}). Optimální strategie je dvoustupňový fine-tuning: nejprve na SwimXYZ, poté na menším množství ručně anotovaných reálných snímků.
 
 \section{Datasety pro plaveckou analýzu}
 \label{sec:datasety}
-% TODO: SwimXYZ, Augsburg, SwimmerNET, CADDY
-% Zdroje: Fiche 2023 (SwimXYZ), Giulietti 2023 (SwimmerNET)
-% - SwimXYZ: syntetický, 11,520 videí, 3.4M snímků, 48 keypointů
-% - Augsburg: reálný, 4 styly, na žádost
-% - SwimmerNET: podvodní, kraul, 2,021 snímků
-% - Tabulka srovnání datasetů
+
+Trénink a~vyhodnocení modelů odhadu pózy a~klasifikace plaveckého stylu vyžaduje anotovaná data --- videa nebo snímky plavců s~označenými pozicemi kloubů. Na~rozdíl od~obecného odhadu pózy, kde jsou k~dispozici rozsáhlé datasety (COCO: 200\,000+ osob, MPII: 40\,000+ osob), je krajina plaveckých datasetů výrazně řidší. Jediným volně dostupným datasetem dostatečného rozsahu je SwimXYZ.
+
+\subsection{SwimXYZ}
+\label{subsec:swimxyz}
+
+Fiche et~al.~\cite{fiche2023swimxyz} vytvořili dosud největší plavecký dataset --- 11\,520 syntetických videí s~přibližně 3{,}4 miliony snímků pokrývajících všechny čtyři závodní styly (kraul, znak, prsa, motýlek). Videa byla generována pomocí GANimator s~SMPL modely těl ve~virtuálních bazénech z~pěti různých pohledů kamery. Anotace zahrnují 2D i~3D souřadnice 48 keypointů v~každém snímku, což poskytuje perfektní ground-truth bez chyb manuální anotace. Dataset je volně dostupný na Zenodo s~oddělenými archivy pro jednotlivé styly.
+
+\paragraph{Výhody.}
+Syntetický charakter dat garantuje bezchybné anotace --- žádný šum z~manuálního značení, žádné chybějící keypointy kvůli okluzi. Rozsah datasetu (3{,}4M snímků) je dostatečný pro trénink i~fine-tuning hlubokých modelů. Pokrytí všech čtyř stylů a~pěti pohledů kamery umožňuje systematické experimenty.
+
+\paragraph{Omezení.}
+Hlavním omezením je \textit{domain gap} mezi syntetickými a~reálnými daty. SwimXYZ obsahuje pouze dospělé postavy s~nízkou diverzitou tělesných proporcí, chybí realistické vizuální artefakty (bubliny, reflexy, refrakce na~vodní hladině) a~prostředí bazénu je uniformní. Model trénovaný výhradně na SwimXYZ se učí \uv{čisté} pohyby bez šumu pose estimation --- při nasazení na reálná videa lze očekávat pokles přesnosti. Mitigací je augmentace šumem při tréninku a~následný fine-tuning na~malém množství ručně anotovaných reálných snímků.
 
 \section{Strojové učení ve sportovní analýze}
 \label{sec:ml_sport}
-% TODO: Existující systémy, co chybí
-% Diskuse RAG/LLM přístupu: Comendant 2024, Talking Tennis, BoxingPro
-% Argumentace proč ML pipeline místo LLM:
-% - Závislost na ext. API, nedeterminismus, latence, náklady, offline, reprodukovatelnost
-% - Porovnání trade-offs: pravidlový systém vs. LLM-generated feedback
+
+Automatická analýza plavecké techniky z~videa je instancí širšího problému --- strojové učení pro sportovní analýzu. Typická architektura takového systému má formu pipeline: video $\rightarrow$ odhad pózy $\rightarrow$ extrakce příznaků $\rightarrow$ analýza/klasifikace $\rightarrow$ zpětná vazba. Jednotlivé komponenty se liší podle sportu a~úrovně ambicí, avšak základní schéma je konzistentní.
+
+Mooney et~al.~\cite{mooney2016review} v~systematickém přehledu video-based metod pro analýzu soutěžního plavání identifikovali, že většina existujících prací se zaměřuje na izolované úlohy --- detekci záběrů, sledování plavce nebo měření rychlosti --- bez integrace do~uceleného systému zpětné vazby. Komerční platformy (Dartfish, Qualisys, TritonWear) nabízejí kompletní řešení, avšak za~vysokou cenu a~s~uzavřeným zdrojovým kódem.
+
+V~literatuře chybí veřejně dostupný end-to-end systém, který by kombinoval moderní odhad pózy (ViTPose/RTMPose fine-tuned na plaveckých datech) s~biomechanickou analýzou a~personalizovanou zpětnou vazbou podle úrovně plavce. Existující akademické práce řeší dílčí problémy (detekce pózy, klasifikace stylu, měření SR/SL), ale žádná je neintegruje do~pipeline video $\rightarrow$ metriky $\rightarrow$ detekce chyb $\rightarrow$ zpětná vazba.
+
+\subsection{Generování zpětné vazby: pravidlový systém vs.\ LLM}
+\label{subsec:feedback_llm}
+
+Poslední komponenta analytického pipeline --- generování zpětné vazby v~přirozeném jazyce --- se v~posledních letech stala předmětem zájmu díky rozvoji velkých jazykových modelů (LLM). Existují tři relevantní práce, které kombinují biomechanickou analýzu s~LLM:
+
+Comendant~\cite{comendant2024} v~bakalářské práci na~University of Twente navrhl systém LLMUR (\textit{LLM + User Model + RAG}) pro plavecké koučování. Systém využívá GPT-4o s~retrieval-augmented generation (RAG)~\cite{lewis2020rag} nad databází plaveckých příruček a~uživatelským modelem plavce. V~třítýdenní studii dosáhl lepšího subjektivního hodnocení než samotný LLM bez RAG. Jedná se o~jedinou práci, která aplikuje RAG na plavecké koučování --- žádná recenzovaná publikace tento přístup nerealizovala.
+
+Talha et~al.~\cite{talha2025} vyvinuli systém Talking Tennis, který extrahuje biomechanické příznaky z~videa pomocí CNN-LSTM a~následně je předává LLM pro generování zpětné vazby v~přirozeném jazyce. BoxingPro~\cite{boxingpro2024} kombinuje IoT senzory s~GPT-4 pro koučování boxu --- hodnocení biomechanické správnosti dosáhlo 4{,}0/5{,}0.
+
+Žádný ekvivalentní pipeline neexistuje pro plavání --- kombinace počítačového vidění, biomechanické analýzy a~LLM zpětné vazby pro plaveckou techniku nebyla dosud publikována. Tato práce se však rozhodla pro alternativní přístup --- pravidlový systém doplněný ML modely bez závislosti na~LLM. Zdůvodnění tohoto rozhodnutí a~porovnání trade-offs obou přístupů je uvedeno v~kapitole~\ref{ch:navrh}, sekce~\ref{sec:diskuse_alternativ}.
 
 \subsection{Klasifikace časových řad z~keypointů}
 \label{subsec:klasifikace_casovych_rad}
@@ -257,7 +322,33 @@ V~oblasti vodních sportů byl DTW úspěšně nasazen pro klasifikaci záběrů
 
 \section{Podvodní výzvy}
 \label{sec:podvodni_vyzvy}
-% TODO: Refrakce, bubliny, viditelnost
-% - Optické artefakty pod vodou
-% - Problémy s detekcí pózy (okluze, reflexy)
-% - Existující přístupy: SwimmerNET, DeepLabCut
+
+Podvodní záběry poskytují nejlepší pohled na propulzní fázi záběru (pull-through, push), avšak přinášejí specifické vizuální výzvy, které výrazně komplikují odhad pózy. Tato sekce shrnuje hlavní problémy a~existující přístupy k~jejich řešení.
+
+\subsection{Optické jevy}
+
+\paragraph{Refrakce.}
+Na rozhraní voda/vzduch dochází k~lomu světla podle Snellova zákona ($n_{\text{voda}} \approx 1{,}33$). Kwon a~Casebolt~\cite{kwon2006refraction} kvantifikovali vliv refrakce na přesnost rekonstrukce pohybu a~ukázali, že bez korekce dosahuje chyba pozice keypointů řádu centimetrů. Deformace je nehomogenní --- závisí na hloubce keypointu, úhlu kamery a~vzdálenosti od~optické osy. Pro 2D analýzu z~jediné kamery je korekce refrakce obtížná, protože vyžaduje znalost hloubky každého keypointu.
+
+\paragraph{Absorbce a~rozptyl světla.}
+Voda selektivně absorbuje červenou složku světla, čímž podvodní snímky získávají charakteristický modrozelený nádech. Rozptyl na~částicích (chlor, bubliny) snižuje kontrast a~ostrost. Tyto jevy ztěžují detekci hran a~textur, na~kterých závisí konvoluční vrstvy HPE modelů.
+
+\paragraph{Kaustiky.}
+Nerovný vodní povrch funguje jako nestabilní čočka, která vytváří pohyblivé světelné vzory (\textit{caustics}) na~dně bazénu i~na~těle plavce. Tyto vzory mění lokální jas a~kontrast mezi snímky, čímž ztěžují temporální sledování keypointů.
+
+\subsection{Okluze a~artefakty}
+
+\paragraph{Bubliny a~splash.}
+Při záběru paží a~kopání vznikají vzduchové bubliny, které okluzují části těla. Splash na~vodní hladině okluzuje přechod mezi nadvodní a~podvodní částí těla. Tyto okluze jsou dynamické --- mění se frame po~framu --- a~vedou k~nestabilním detekcím keypointů nebo jejich úplné ztrátě.
+
+\paragraph{Nízký kontrast.}
+Podobné barvy plaveckého oblečení, kůže plavce a~stěn bazénu snižují kontrast mezi popředím a~pozadím. Reflexy na~vodní hladině vytvářejí falešné hrany. Kombinace těchto faktorů vede k~vyšší chybovosti pose estimation oproti suchozemským podmínkám.
+
+\subsection{Existující přístupy}
+
+Giulietti et~al.~\cite{giulietti2023} v~modelu SwimmerNET řeší podvodní výzvy kombinací RGB obrazu s~optickým tokem, který poskytuje informaci o~pohybu nezávislou na absolutním jasu a~kontrastu. Cronin et~al.~\cite{cronin2019underwater} demonstrovali, že DeepLabCut~\cite{mathis2018deeplabcut} dosahuje pod vodou průměrné chyby menší než 3~pixely po~fine-tuningu na~přibližně 200 ručně anotovaných snímcích, což ukazuje na~efektivitu transfer learningu i~v~degradovaných podmínkách.
+
+Pro korekci chyb odhadu pózy v~post-processingu se nabízejí dvě strategie: (1)~\textit{ragdoll constraints} --- vynucování fyzikálních limitů kloubů (loket $0$--$150°$, koleno $0$--$170°$), které odfiltrují anatomicky nemožné pózy vzniklé z~chybných detekcí; (2)~\textit{temporální vyhlazení} --- Butterworth filtr nebo Savitzky-Golay filtr na~trajektorie keypointů, které potlačí skokové výkyvy mezi snímky způsobené bublinami nebo reflexy. Obě strategie jsou podrobněji popsány v~návrhu řešení (sekce~\ref{sec:ragdoll}).
+
+\paragraph{Implikace pro tuto práci.}
+Podvodní analýza je v~této práci podporována jako jeden ze~tří pohledů kamery (boční, přední, podvodní), avšak s~explicitním upozorněním na~nižší spolehlivost výstupů. Metriky z~podvodních záběrů jsou označeny jako sekundární a~systém reportuje confidence skóre pro každý keypoint. Boční pohled zůstává primárním zdrojem dat pro většinu biomechanických metrik.

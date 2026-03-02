@@ -7,6 +7,7 @@
 ## `paper/chapters/02_reserse.tex` — sekce Datasety (řádek 112, prázdná)
 
 Struktura sekce:
+
 1. Úvodní odstavec — nedostatek anotovaných plaveckých dat, jen 1 velký veřejný dataset
 2. **SwimXYZ** (Fiche 2023) — syntetický, 11 520 videí, 48 kp, Zenodo, GANimator+SMPL
 3. **Augsburg Swimming Channel** (Einfalt 2018/2019) — reálný, skleněná stěna, 1200+ snímků, 14 kloubů
