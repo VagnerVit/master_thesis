@@ -37,9 +37,6 @@ paper/*.lot
 paper/*.pdf
 paper/chapters/*.aux
 
-# Literature PDFs (too large for git)
-literature/**/*.pdf
-
 # Dataset (large files)
 prototyp/data/
 prototyp/models/*.onnx
