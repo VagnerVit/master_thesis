@@ -34,12 +34,14 @@
 ### A. REŠERŠE A PŘÍPRAVA
 
 - [ ] **A1. Literární rešerše — biomechanika plavání**
+  
   - Prostudovat klíčové zdroje (Maglischo, Riewald, Craig & Pendergast)
   - Definovat metriky techniky pro každou úroveň
   - Sepsat kapitolu rešerše — biomechanika
   - *Odhadovaný rozsah: 2 týdny*
 
 - [ ] **A2. Literární rešerše — pose estimation a ML**
+  
   - Prostudovat architektury (ViTPose, RTMPose, HRNet, MediaPipe)
   - Prostudovat plavecky-specifické práce (Augsburg, SwimmerNET, SwimXYZ)
   - Prostudovat existující sportovní analytické systémy
@@ -47,14 +49,17 @@
   - *Odhadovaný rozsah: 2 týdny*
 
 - [ ] **A3. Získání datasetů**
+  
   - [x] Odeslat žádost — Augsburg Swimming Channel
   - [x] Odeslat žádost — SwimmerNET
-  - [ ] Stáhnout SwimXYZ ze Zenodo (~300 GB)
+  - [x] Stáhnout SwimXYZ ze Zenodo (~300 GB)
   - [ ] Stáhnout CADDY Underwater dataset
   - [ ] Prozkoumat a ohodnotit získaná data
+  
   - *Odhadovaný rozsah: 1–4 týdny (záleží na odpovědích)*
 
 - [ ] **A4. Definice metrik a prahů pro 3 úrovně**
+  
   - Na základě literatury + konzultace s trenérem
   - Začátečníci: co sledovat, jaké odchylky tolerovat
   - Mírně pokročilí: zpřísnění, přidání metrik
@@ -67,6 +72,7 @@
 ### B. EXPERIMENTY S POSE ESTIMATION
 
 - [ ] **B1. Benchmark existujících modelů na plaveckých datech**
+  
   - Spustit MediaPipe, RTMPose, ViTPose na vzorcích plaveckého videa
   - Porovnat přesnost, rychlost, chybové módy
   - Rozhodnout se pro model (nebo kombinaci)
@@ -74,6 +80,7 @@
   - *Odhadovaný rozsah: 1–2 týdny*
 
 - [ ] **B2. Fine-tuning vybraného modelu na SwimXYZ**
+  
   - Připravit trénovací data (side-view freestyle jako první)
   - Fine-tune ViTPose/RTMPose
   - Vyhodnotit zlepšení oproti base modelu
@@ -81,6 +88,7 @@
   - *Odhadovaný rozsah: 2–3 týdny*
 
 - [ ] **B3. Testování na různých pohledech kamery**
+  
   - Side-view (primární)
   - Front-view (pokud data)
   - Underwater (pokud data)
@@ -92,6 +100,7 @@
 ### C. BIOMECHANICKÁ ANALÝZA
 
 - [ ] **C1. Pipeline: keypoints → biomechanické metriky**
+  
   - Implementovat výpočet: frekvence záběru, délka záběru
   - Implementovat výpočet: rotace těla, poloha hlavy
   - Implementovat výpočet: úhly kloubů (loket, rameno)
@@ -99,12 +108,14 @@
   - *Odhadovaný rozsah: 2 týdny*
 
 - [ ] **C2. Vytvoření referenčních vzorů**
+  
   - Vybrat segmenty správné techniky z dostupných dat
   - Vypočítat referenční sekvence pro alespoň 1 styl × 1 pohled × 3 úrovně
   - Uložit jako .npy + metrics.json + error_thresholds.json
   - *Odhadovaný rozsah: 1–2 týdny*
 
 - [ ] **C3. Implementace porovnávací metody**
+  
   - DTW pro temporální porovnání sekvencí záběrů
   - Pravidlový systém pro detekci konkrétních chyb
   - Skórovací systém (overall score 0–100)
@@ -116,6 +127,7 @@
 ### D. WEBOVÁ APLIKACE
 
 - [ ] **D1. Backend — FastAPI základ**
+  
   - Projekt + struktura + config
   - Upload endpoint + validace videa
   - PostgreSQL + SQLAlchemy model
@@ -125,6 +137,7 @@
   - *Odhadovaný rozsah: 2 týdny*
 
 - [ ] **D2. Backend — integrace ML pipeline**
+  
   - Napojení pose estimation modelu
   - Napojení biomechanické analýzy
   - Napojení porovnávacího systému
@@ -132,6 +145,7 @@
   - *Odhadovaný rozsah: 1–2 týdny*
 
 - [ ] **D3. Frontend — Vue.js**
+  
   - Upload stránka (video + výběr úrovně/pohledu/stylu)
   - Progress bar (WebSocket)
   - Výsledková stránka (metriky, odchylky, doporučení)
@@ -144,18 +158,21 @@
 ### E. VYHODNOCENÍ A DIPLOMKA
 
 - [ ] **E1. Testování na reálných videích**
+  
   - Natočit/sehnat videa plavců různých úrovní
   - Spustit analýzu, porovnat s hodnocením trenéra
   - Zdokumentovat úspěšnost a limity
   - *Odhadovaný rozsah: 1–2 týdny*
 
 - [ ] **E2. Sepsání diplomové práce**
+  
   - Průběžně psát po dokončení každého bloku
   - Finální kompilace a revize
   - Obrázky, tabulky, grafy z experimentů
   - *Odhadovaný rozsah: průběžně + 2–3 týdny na finalizaci*
 
 - [ ] **E3. Příprava na obhajobu**
+  
   - Prezentace (10–15 slidů)
   - Demo aplikace
   - Připravit odpovědi na očekávané otázky
@@ -183,6 +200,7 @@ A4 (metriky/prahy) ──► C1 (pipeline) ──► C2 (reference) ──► C3
 **Kritická cesta:** A3 (datasety) → B1 → B2 → C1 → C2 → C3 → D2 → E1
 
 **Co můžeš dělat paralelně:**
+
 - Rešerši (A1, A2) psát současně se stahováním datasetů (A3)
 - Backend základ (D1) a frontend (D3) stavět současně s ML experimenty (B1, B2)
 - Text diplomky (E2) psát průběžně po každém dokončeném bloku
@@ -191,14 +209,14 @@ A4 (metriky/prahy) ──► C1 (pipeline) ──► C2 (reference) ──► C3
 
 ## Odhad celkového rozsahu
 
-| Blok | Rozsah | Poznámka |
-|---|---|---|
-| A. Rešerše a příprava | 4–6 týdnů | Lze začít ihned |
-| B. Pose estimation experimenty | 4–6 týdnů | Závisí na datech |
-| C. Biomechanická analýza | 4–5 týdnů | Jádro diplomky |
-| D. Webová aplikace | 4–6 týdnů | Lze paralelně s B/C |
-| E. Vyhodnocení a psaní | 4–6 týdnů | Průběžně + finalizace |
-| **Celkem** | **~14–20 týdnů** | S paralelním prací |
+| Blok                           | Rozsah           | Poznámka              |
+| ------------------------------ | ---------------- | --------------------- |
+| A. Rešerše a příprava          | 4–6 týdnů        | Lze začít ihned       |
+| B. Pose estimation experimenty | 4–6 týdnů        | Závisí na datech      |
+| C. Biomechanická analýza       | 4–5 týdnů        | Jádro diplomky        |
+| D. Webová aplikace             | 4–6 týdnů        | Lze paralelně s B/C   |
+| E. Vyhodnocení a psaní         | 4–6 týdnů        | Průběžně + finalizace |
+| **Celkem**                     | **~14–20 týdnů** | S paralelním prací    |
 
 ---
 
@@ -216,6 +234,7 @@ Pokud by byl čas kritický, diplomka stojí i s tímto minimem:
 8. ✅ Vyhodnocení na reálných videích
 
 Co může jít do "budoucí práce":
+
 - Více stylů a pohledů kamery
 - Podvodní korekce refrakce
 - Pokročilá vizualizace (side-by-side, 3D)

@@ -234,15 +234,6 @@
 - **Kontakt**: Juliana Daguano, Media Relations and Media Operations Manager, julianadaguano@europeanaquatics.org, +34 620 693 778
 - **Akce**: → Kontaktovat ČSPS s odkazem na tuto odpověď
 
-### 4. IOC — Olympic Studies Centre — ❌ SLEPÁ ULIČKA
-
-- **Email**: studies.centre@olympic.org
-- **Web**: [olympics.com/ioc/olympic-studies-centre](https://www.olympics.com/ioc/olympic-studies-centre)
-- **Research granty**: PhD Students and Early Career Academics programme (roční výzva)
-- **Footage**: images@olympic.org (primárně pro federace a broadcasters)
-- **📧 Odpověď Content Licensing (2026-02)**: Mohou sdílet email se Studies Centre, ale bude jen **screen-only přístup k archívům**. Žádné footage pro výzkum nedodají.
-- **Závěr**: ❌ Nepoužitelné pro projekt — nelze stáhnout videa
-
 ### 5. Swiss Timing / Omega
 
 - **Email**: info@swisstiming.com
@@ -251,11 +242,9 @@
 
 ---
 
-## Veřejné zdroje (stáhnout hned)
+## Veřejné zdroje
 
-- **Roboflow Universe**: [swimmer detection datasets](https://universe.roboflow.com/search?q=class:swimmer) — malé, detection-only, ale použitelné pro preprocessing
 - **awesome-biomechanics**: [github.com/modenaxe/awesome-biomechanics](https://github.com/modenaxe/awesome-biomechanics) — kurátorský seznam open biomechanics datasetů
-- **IAT BMS Bibliography**: [iat.uni-leipzig.de](https://www.iat.uni-leipzig.de/service/datenbanken/biomechanics-medicine-in-swimming) — 1266 swimming science papers
 
 ---
 

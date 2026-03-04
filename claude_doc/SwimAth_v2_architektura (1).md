@@ -471,12 +471,12 @@ references/
 
 #### Jak se liší prahy podle úrovně:
 
-| Metrika | Začátečník | Mírně pokročilý | Expert |
-|---|---|---|---|
-| Frekvence záběru | 25–40/min | 35–50/min | 45–65/min |
-| Rotace těla | 20–45° | 35–55° | 45–60° |
-| Úhel loktu (catch) | >120° OK | >140° OK | >150° OK |
-| Tolerance odchylek | ±25° | ±15° | ±8° |
+| Metrika            | Začátečník | Mírně pokročilý | Expert    |
+| ------------------ | ---------- | --------------- | --------- |
+| Frekvence záběru   | 25–40/min  | 35–50/min       | 45–65/min |
+| Rotace těla        | 20–45°     | 35–55°          | 45–60°    |
+| Úhel loktu (catch) | >120° OK   | >140° OK        | >150° OK  |
+| Tolerance odchylek | ±25°       | ±15°            | ±8°       |
 
 Začátečníkům se toleruje víc a feedback se zaměřuje na základy (poloha hlavy, dýchání, kopání). Expertům se hodnotí jemné detaily (EVF úhel, timing koordinace).
 
@@ -588,6 +588,7 @@ volumes:
 ### 7. Fáze vývoje
 
 #### Fáze 1 — Základ (2–3 týdny)
+
 - [ ] FastAPI projekt + základní endpointy (upload, status, výsledek)
 - [ ] Vue.js projekt + upload formulář + progress bar
 - [ ] Video upload + uložení + základní validace
@@ -595,6 +596,7 @@ volumes:
 - [ ] Docker compose pro lokální dev
 
 #### Fáze 2 — ML Pipeline (3–4 týdny)
+
 - [ ] Integrace ViTPose/RTMPose (ONNX Runtime)
 - [ ] Fine-tuning na SwimXYZ datasetu (side-view freestyle jako první)
 - [ ] Extrakce keypoints z videa → .npy sekvence
@@ -602,6 +604,7 @@ volumes:
 - [ ] Video overlay s vizualizací pózy (OpenCV)
 
 #### Fáze 3 — Referenční systém (2–3 týdny)
+
 - [ ] Vytvoření referenčních vzorů pro 1. styl + 1. pohled + 3 úrovně
 - [ ] DTW porovnávání sekvencí
 - [ ] Pravidlový systém pro detekci chyb (error_thresholds.json)
@@ -609,6 +612,7 @@ volumes:
 - [ ] Skórovací systém (overall_score)
 
 #### Fáze 4 — Frontend vizualizace (2 týdny)
+
 - [ ] Výsledková stránka s metrikami
 - [ ] Video přehrávač s overlay pózy (Canvas)
 - [ ] Side-by-side porovnání s referencí
@@ -616,6 +620,7 @@ volumes:
 - [ ] Responsive design (mobil-friendly)
 
 #### Fáze 5 — Rozšíření (průběžně)
+
 - [ ] Další styly a pohledy kamery
 - [ ] Front-view + underwater modely
 - [ ] Vylepšení feedbacku na základě testování s reálnými plavci
@@ -625,11 +630,11 @@ volumes:
 
 ### 8. Klíčová rozhodnutí k doladění
 
-| Otázka | Doporučení | Alternativa |
-|---|---|---|
-| Async zpracování videa | Celery + Redis | FastAPI BackgroundTasks (jednodušší, ale méně škálovatelné) |
-| Pose estimation model | RTMPose-L (rychlejší) | ViTPose-B (přesnější) |
-| Porovnávací metoda | DTW + pravidlový systém | Natrénovaný klasifikátor chyb |
-| Storage videí | Lokální filesystem | S3/MinIO (škálovatelnější) |
-| Auth | Zatím žádný (MVP) | JWT + OAuth2 (později) |
-| Max délka videa | 60 sekund | Delší = delší zpracování |
+| Otázka                 | Doporučení              | Alternativa                                                 |
+| ---------------------- | ----------------------- | ----------------------------------------------------------- |
+| Async zpracování videa | Celery + Redis          | FastAPI BackgroundTasks (jednodušší, ale méně škálovatelné) |
+| Pose estimation model  | RTMPose-L (rychlejší)   | ViTPose-B (přesnější)                                       |
+| Porovnávací metoda     | DTW + pravidlový systém | Natrénovaný klasifikátor chyb                               |
+| Storage videí          | Lokální filesystem      | S3/MinIO (škálovatelnější)                                  |
+| Auth                   | Zatím žádný (MVP)       | JWT + OAuth2 (později)                                      |
+| Max délka videa        | 60 sekund               | Delší = delší zpracování                                    |
