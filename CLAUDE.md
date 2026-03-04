@@ -259,6 +259,7 @@ E. VYHODNOCENÍ A DIPLOMKA (4-6 týdnů)
 - Virag et al. (2014) — prevalence biomechanických chyb (dropped elbow 61.3%) · [PMC open access](https://pmc.ncbi.nlm.nih.gov/articles/PMC4000476/)
 - Barden & Kell (2014) — vztah stroke parametrů a critical swimming speed
 - Barbosa et al. (2011) — Biomechanics of Competitive Swimming Strokes · [IntechOpen open access](https://www.intechopen.com/chapters/19665)
+- Toussaint et al. (2000) — Biomechanics of Swimming (drag faktor K, propelling efficiency e_p, power balance) · KNIHA (Garrett & Kirkendall, Exercise and Sport Science, pp. 639–660) · ✅ STAŽENO
 
 ### Pose estimation
 
