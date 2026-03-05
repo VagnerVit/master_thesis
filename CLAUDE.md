@@ -40,8 +40,10 @@ master_thesis/
 │   ├── SwimAth_plan_diplomky.md                    ← plán diplomky s TODO balíky A-E
 │   ├── SwimAth_v2_architektura (1).md              ← architektura webové aplikace (v2)
 │   └── moje poznamky.txt                           ← autorovy poznámky a nápady
-├── literature/            ← stažená literatura (15/16 PDF)
-│   ├── biomechanics/      ← 5 PDF (Barbosa, Barden, Chollet, Craig, Psycharakis)
+├── literature/            ← stažená literatura (52 PDF)
+│   ├── biomechanics/
+│   │   ├── stroke/        ← 28 PDF (stroke mechanics, koordinace, youth, reviews)
+│   │   └── starts_turns/  ← 14 PDF (starty, obrátky, UDK, podvodní fáze)
 │   ├── pose_estimation/   ← 5 PDF (ViTPose, RTMPose, Einfalt, SwimmerNET, DeepLabCut)
 │   ├── rag_llm_sport/     ← 4 PDF (RAG Lewis, Comendant, Talking Tennis, BoxingPro)
 │   └── datasets/          ← 1 PDF (SwimXYZ Fiche 2023)

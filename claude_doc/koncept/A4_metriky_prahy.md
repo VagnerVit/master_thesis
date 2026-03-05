@@ -697,6 +697,22 @@ Tento pattern (shoulder/hip roll ratio convergence) je potenciálně detekovatel
 | 12  | Body roll asymmetry   | °        | < 25            | < 12            | Extrapolace†; Psycharakis 2008        |
 | 13  | Hip roll (per side)   | °        | 5–40            | 15–35           | Extrapolace†; Psycharakis 2008        |
 
+### 8.2b Start / Turn / UDK metriky (PoC, implementace v2)
+
+| #   | Metrika                      | Jednotka   | Dítě (8–14 let)†  | Pokročilý (15+)  | Zdroj                                     |
+| --- | ---------------------------- | ---------- | ------------------ | ----------------- | ----------------------------------------- |
+| 14  | Entry angle (start)          | °          | 25–55 (±20)        | 20–40 (±10)       | Tor 2020; Benjanuvatra 2007               |
+| 15  | Streamline tightness         | °          | < 25° od osy       | < 10° od osy      | Vantorre 2014                             |
+| 16  | UDK kick frequency           | Hz         | 1.5–2.5 (±0.5)     | 2.0–2.5 (±0.3)    | Rejman 2017; Alves 2006                   |
+| 17  | UDK kick amplitude           | m          | 0.30–0.65          | 0.40–0.60         | Rejman 2017; Alves 2006                   |
+| 18  | UDK kick count (start)       | count      | 0–6                | 3–8               | Vantorre 2014                             |
+| 19  | UDK kick count (turn)        | count      | 0–5                | 3–7               | —                                         |
+| 20  | UDK amplitude consistency    | CV         | < 0.40             | < 0.25            | de Jesus et al.                           |
+| 21  | Push-off angle (turn)        | °          | 150–180 (±25)      | 170–180 (±10)     | Lyttle et al. 1999                        |
+| 22  | Approach SR consistency      | CV         | < 0.30             | < 0.15            | —                                         |
+
+† **Caveat:** Pediatrická data pro start/turn/UDK biomechaniku prakticky neexistují. Prahy pro Dítě jsou extrapolovány z dospělých dat s rozšířenou tolerancí. U dětí 8–14 let je UDK často nerozvinutý a flip turn může být nahrazen open turnem — absence těchto dovedností **není hodnocena jako chyba**.
+
 ### 8.3 Tolerance odchylek a severity
 
 Tolerance se liší podle typu metriky:
@@ -891,6 +907,34 @@ Tyto features jsou navrženy pro implementaci v2. V první verzi systému se ext
 53. **Psycharakis, S. G., Naemi, R., Connaboy, C., McCabe, C. & Sanders, R. (2010).** Intra-cyclic variation of the velocity of the centre of mass of the body in front crawl swimming. *J Sports Sci*, 28(6), 651–660. — IVV zůstává relativně konstantní celých 200m; nekoreluje přímo s výkonem. [Online](https://coachsci.sdsu.edu/swim/biomechs/psychar3.htm)
 54. **Strumbelj, B., Usaj, A. & Kapus, V. (2007).** The influence of using a snorkel on physiological and biomechanical responses in front crawl swimming. *Kinesiologia Slovenica*, 13(1), 14–22. — Šnorchl mění techniku (eliminace dýchání → odlišný body roll a timing); videa se šnorchlem nereprezentují závodní techniku.
 
+### UDK, Start a Turn zdroje (nově přidané — březen 2026)
+
+55. **Alves, F., Lopes, P., Veloso, A. & Martins-Silva, A. (2006).** Influence of body position on dolphin kick kinematics. *Portuguese J Sport Sciences*, 6(Suppl. 2), 12–14. — UDK kinematics prone/dorsal/lateral: frequency 2.08–2.35 Hz, amplitude 0.50–0.59 m, velocity 1.42–1.46 m/s.
+56. **Arellano, R., Pardillo, S. & Gavilán, A. (1999).** Underwater undulatory swimming: kinematic characteristics, vortex generation and application during the start, turn and swimming strokes. *XX ISBS Proceedings*. — Elite UDK velocity 1.69 m/s, frequency 2.22 Hz.
+57. **Connaboy, C., Coleman, S. & Sanders, R. (2009).** Hydrodynamics of undulatory underwater swimming: a review. *Sports Biomechanics*, 8(4), 360–380. — Body wave characteristics, Strouhal number 0.59–0.88, propulsive efficiency 11–29 %.
+58. **Connaboy, C., Naemi, R., Brown, S., Psycharakis, S., McCabe, C., Coleman, S. & Sanders, R. (2015).** The key kinematic determinants of undulatory underwater swimming at maximal velocity. *J Sports Sciences*. — Ankle + knee motion = 93.3 % variance; body wave velocity r = 0.78. [PDF](https://www.pure.ed.ac.uk/ws/files/21759173/Connaboy_et_al_2015_version_approved_for_publication.pdf)
+59. **Rejman, M., Kwaśna, A. & Chrobot, M. (2017).** Kinematic analysis of undulatory underwater swimming performed by young swimmers. *ISBS Proceedings*, 35(1). — Young swimmers: frequency 2.00 Hz, amplitude 0.46 m, velocity 1.08 m/s, St = 0.83.
+60. **Higgs, A. J., Pease, D. L. & Sanders, R. H.** Angular velocities and body wave velocity in underwater dolphin kick. — Knee angular velocity: downkick 260°/s, upkick 190°/s; peak vertical toe velocity correlated with UDK velocity (r = 0.85).
+61. **Vennell, R., Pease, D. & Wilson, B. (2006).** Wave drag on human swimmers. *J Biomechanics*, 39(4), 664–671. — Wave drag < 5 % at depth > 0.5 m (1 m/s), > 0.7 m (2 m/s).
+62. **Lyttle, A. & Blanksby, B. (1999).** Optimising gliding and kicking in underwater swimming. *ISBS Proceedings*. — Drag reduction 15–18 % at 0.4 m depth; optimal glide depth 0.4–0.75 m. [ISBS](https://ojs.ub.uni-konstanz.de/cpa/article/view/2531)
+63. **Elipot, M., Dietrich, G., Heilard, P. & Houel, N. (2009).** High-level swimmers' kinetic efficiency during the underwater phase of a grab start. *J Applied Biomechanics*, 25(1), 49–65. — Optimal kick initiation ~6 m from wall.
+64. **Houel, N. & Elipot, M.** Velocity decay analysis after push-off. — Velocity at 5.5 m: 2.18 m/s, at 7.5 m: 1.76 m/s; premature kick initiation 1.69 m too early on average.
+65. **Vantorre, J., Chollet, D. & Seifert, L. (2014).** Biomechanical analysis of the swim-start: a review. *J Sports Science & Medicine*, 13(2), 223–231. [PMC3990873](https://pmc.ncbi.nlm.nih.gov/articles/PMC3990873/) — 6 start phases; start contributes 0.8–26.1 % of race time; glide velocity minimum 2 m/s. ✅ `Vantorre_2014_Swim_Start_Review.pdf`
+66. **Tor, E., Pease, D. L. & Ball, K. A. (2020).** Key parameters of the swimming start and their relationship to start performance. *J Sports Sciences*, 38(10), 1178–1186. [PMC7598512](https://pmc.ncbi.nlm.nih.gov/articles/PMC7598512/) — Entry angle ~20–22°; per 1 rad flatter = −0.5 s; flight distance males 3.2 m.
+67. **Benjanuvatra, N., Lyttle, A., Blanksby, B. & Larkin, D. (2007).** Analysis of elite and non-elite grab and track start swimmers. *Int J Sport Biomech*. — Elite take-off angle 27.45 ± 5.99°, non-elite 39.62 ± 13.19°.
+68. **Guimaraes, A. & Hay, J. (1985).** A mechanical analysis of the grab starting technique in swimming. *Int J Sport Biomech*, 1, 25–35. — Glide time explains 95 % variance of start time (r = 0.97).
+69. **Cossor, J. & Mason, B. (2001).** Swim start performances at the Sydney 2000 Olympic Games. *XIX ISBS Proceedings*. — Negative correlation UW velocity ↔ 15m time (r = −0.734).
+70. **Puel, F., Morlier, J., Mesnard, M. & Hellard, P. (2022).** Influence of wall contact time and tuck index on tumble turn performance in competitive swimming. *Frontiers in Sports and Active Living*, 4, 925273. [PMC9354539](https://pmc.ncbi.nlm.nih.gov/articles/PMC9354539/) — WCT males 0.37 s; tuck index optimal 0.64–0.77; push-off velocity 2.19 m/s.
+71. **PMC6409673 (2019).** Kinetic analysis of tumble turns — countermovement force 875–973 N; push-off in body weights 1.1–1.5 BW.
+72. **PMC12134280 (2025).** Phase-specific determinants of 100m freestyle performance — turn time ~20 % of total; breakout distance 7.11 m (males); UW speed 2.60 m/s.
+73. **PMC8442910 (2021).** Underwater parameters by performance level — elite 100m SC total UW distance 37.50 m; UW speed 2.54 m/s.
+74. **PMC8625813 (2021).** Kick start key parameters — max depth 0.90 m; take-off angle 40.6°; flight distance 2.73 m.
+75. **Lyttle, A. & Benjanuvatra, N. (2005).** Start contribution to race time: 0.8 % (1500m) to 26.1 % (50m sprint).
+76. **Hochstein, S. & Blickhan, R. (2011).** Vortex re-capturing and kinematics in human underwater undulatory swimming. *Human Movement Science*, 30(5), 998–1007. — National swimmers: UDK frequency 1.98–2.13 Hz, velocity 1.23 m/s.
+77. **Marinho, D. A., Barbosa, T. M., Reis, V. M., Kjendlie, P. L., Alves, F. B., Vilas-Boas, J. P., Machado, L., Silva, A. J. & Rouboa, A. I. (2009).** Swimming propulsion forces are enhanced by a small finger spread. *J Applied Biomechanics*, 25(1). — Diminishing returns for depth > 0.75 m. [PMC3588683](https://pmc.ncbi.nlm.nih.gov/articles/PMC3588683/)
+78. **de Jesus, K. et al.** UDK amplitude decay analysis: first 4 cycles 0.61 m → last 4 cycles 0.55 m.
+79. **Bulgakova, N. & Makarenko, L. (1966).** Streamlined hands = 7 % less drag than shoulder-width arms.
+
 > **Poznámka:** [Swimming Science Journal](https://coachsci.sdsu.edu/swim/index.htm) (coachsci.sdsu.edu, B. S. Rushall, SDSU) je archiv 115+ abstraktů biomechaniky plavání a originálních článků. Obsahuje abstrakty konferenčních příspěvků jinak nedostupných online (Cappaert 1996, Keppenham 1995 aj.) a detailní analýzy techniky olympijských šampionů.
 
 ### Stav stažení zdrojů
@@ -919,6 +963,26 @@ Tyto features jsou navrženy pro implementaci v2. V první verzi systému se ext
 - [x] Morais et al. (2023 SPM) — (staženo, PMC)
 - [ ] Morais et al. (2022 cluster) — Sci-Hub nemá (2022+), zkusit ResearchGate/EDD
 
+**UDK / Start / Turn zdroje (nově přidané — březen 2026):**
+
+- [x] Vantorre et al. (2014) — `Vantorre_2014_Swim_Start_Review.pdf`
+- [ ] Alves et al. (2006) — UDK kinematics, Portuguese J Sport Sciences
+- [x] Connaboy et al. (2009) — `Connaboy_2009_UDK_hydrodynamics_review.pdf`
+- [x] Connaboy et al. (2015) — `Connaboy_2015_UDK_key_determinants.pdf`
+- [ ] Rejman et al. (2017) — young swimmers UDK, ISBS Proceedings (nedostupné na Sci-Hub)
+- [x] Tor et al. (2020) — `Tor_2020_start_performance.pdf`
+- [x] Puel et al. (2022) — `Puel_2022_tumble_turn_WCT.pdf`
+- [x] Vennell et al. (2006) — `Vennell_2006_wave_drag.pdf`
+- [x] Lyttle & Blanksby (1999) — `Lyttle_1999_optimal_glide_depth.pdf`
+- [ ] Elipot et al. (2009) — kick initiation distance (nedostupné na Sci-Hub)
+- [x] PMC12134280 (2025) — `Phase_Determinants_100m_2025_PMC12134280.pdf`
+- [x] PMC8442910 (2021) — `Underwater_Parameters_2021_PMC8442910.pdf`
+- [x] Nicol et al. (2019, PMC6409673) — `Nicol_2019_tumble_turn_kinetics.pdf`
+- [x] Hochstein & Blickhan (2011) — `Hochstein_2011_UDK_vortex.pdf`
+- [x] Guimarães & Hay (1985) — `Guimaraes_1985_grab_start_mechanics.pdf`
+- [x] Cossor & Mason (2001) — `Cossor_2001_sydney_starts.pdf`
+- [x] Kick Start (2021, PMC8625813) — `Kick_Start_2021_PMC8625813.pdf`
+
 ---
 
 ## 13. Verifikační kontrola
@@ -929,6 +993,10 @@ Tyto features jsou navrženy pro implementaci v2. V první verzi systému se ext
 - [x] Všechny tabulky (sekce 2–8) reflektují 2 kategorie (Dítě + Pokročilý)
 - [x] Metriky jsou extrahovatelné z keypointů (MediaPipe/COCO)
 - [x] Dokument pokrývá všech 6 kategorií: kloubové úhly, stroke parametry, rotace trupu, koordinace (IdC), symetrie, streamline
+- [x] Dokument pokrývá UDK (sekce 15), starty (sekce 16) a obrátky (sekce 17) s kvantitativními daty a citacemi
+- [x] UDK/start/turn prahy pro Dítě mají explicitní caveat o chybějících pediatrických datech
+- [x] Souhrnná tabulka (sekce 8.2b) obsahuje nové start/turn/UDK metriky
+- [ ] **Nová limitace:** UDK, start a turn literatura je převážně z PMC review článků — některé zdroje (Houel & Elipot, de Jesus, Higgs, Atkison) nemají kompletní citace (konferenční příspěvky). Doplnit plné citace při stahování.
 - [x] Dokument je použitelný jako podklad pro sekci 3.4 kapitoly 3 diplomky
 - [x] Metriky s nedostatkem pediatrických dat mají explicitní caveat
 - [x] Kategorie „Pokročilý" pokrývá celé spektrum dospělých plavců s tolerancí ±15°
@@ -1019,4 +1087,458 @@ Očekávaný výsledek: Combined > Pravidlový > DTW-only pro known errors; DTW-
 
 ---
 
-_Last updated: 2026-03-02_
+## 15. Underwater Dolphin Kick (UDK)
+
+### 15.1 Definice a kontext
+
+**Underwater Dolphin Kick (UDK)** je vlnovitý pohyb celého těla pod hladinou s pažemi ve streamline pozici (nad hlavou). Používá se po startu a po obrátkách jako přechodová fáze mezi odrazem/vstupem do vody a volným plaváním. Pravidla World Aquatics (dříve FINA) povolují podvodní fázi maximálně 15 m od stěny.
+
+> **Proč analyzovat UDK:** U elitních plavců je UDK často nejrychlejší fáze závodu — podvodní rychlost po odrazu (2.18–2.60 m/s) výrazně převyšuje rychlost volného plavání (1.7–2.0 m/s). Elitní 100m freestylisté stráví pod vodou celkem 31–37 m ze 100 m (PMC8442910, 2021). Zlepšení UDK je proto jedním z nejefektivnějších způsobů, jak zrychlit celkový čas.
+
+### 15.2 Frekvence kopů (Kick Frequency)
+
+| Úroveň / studie | Frekvence | Zdroj |
+| --- | --- | --- |
+| Elite, prone | 2.35 ± 0.27 Hz | Alves et al. 2006 |
+| Elite, dorsal | 2.30 ± 0.33 Hz | Alves et al. 2006 |
+| Elite, lateral | 2.08 ± 0.36 Hz | Alves et al. 2006 |
+| Elite, prone | 2.22 Hz | Arellano et al. 1999 |
+| National | 2.13 ± 0.23 Hz | Connaboy et al. 2009 |
+| National | 2.26 ± 0.16 Hz | Shimojo et al. |
+| National | 1.98–2.13 Hz | Hochstein & Blickhan 2011 |
+| Female swimmers | 1.99 ± 0.15 Hz | Yamakawa et al. |
+| Young swimmers | 2.00 ± 0.39 Hz | Rejman et al. 2017 |
+
+**Shrnutí:** Elite ~2.1–2.35 Hz, National ~2.0–2.13 Hz, Young ~2.0 Hz. Frekvence samotná negarantuje rychlost — vyšší frekvence zvyšuje energetickou náročnost bez nutného zvýšení rychlosti (Strouhal number trade-off, viz 15.9).
+
+### 15.3 Amplituda kopů (Kick Amplitude)
+
+| Úroveň / studie | Amplituda (peak-to-peak ankle) | Zdroj |
+| --- | --- | --- |
+| Elite, prone | 0.50 ± 0.06 m | Alves et al. 2006 |
+| Elite, dorsal | 0.55 ± 0.08 m | Alves et al. 2006 |
+| Elite, lateral | 0.59 ± 0.09 m | Alves et al. 2006 |
+| Female swimmers | 0.48 ± 0.05 m | Yamakawa et al. |
+| First 4 cycles post-wall | 0.61 ± 0.07 m | de Jesus et al. |
+| Last 4 cycles post-wall | 0.55 ± 0.05 m | de Jesus et al. |
+| Young swimmers | 0.46 ± 0.08 m | Rejman et al. 2017 |
+
+**Shrnutí:** Elite ~0.48–0.59 m, Young ~0.46 m. Amplituda klesá s vzdáleností od stěny (de Jesus: 0.61 → 0.55 m) — indikátor ztráty síly/konzistence. Příliš velká amplituda zvyšuje čelní odpor.
+
+### 15.4 Rychlost UDK (UDK Velocity)
+
+| Úroveň / studie | Rychlost | Zdroj |
+| --- | --- | --- |
+| Elite, prone | 1.46 ± 0.15 m/s | Alves et al. 2006 |
+| Elite, prone | 1.69 m/s | Arellano et al. 1999 |
+| Male elite | 1.75 ± 0.16 m/s | Ikeda et al. |
+| National | 1.60 ± 0.12 m/s | Shimojo et al. |
+| National | 1.64 ± 0.20 m/s | Willems et al. |
+| National | 1.20 ± 0.13 m/s | Connaboy et al. |
+| National | 1.23 ± 0.04 m/s | Hochstein & Blickhan 2011 |
+| Regional | 1.09 ± 0.13 m/s | Hochstein & Blickhan 2011 |
+| Female swimmers | 1.35 ± 0.08 m/s | Yamakawa et al. |
+| Young swimmers | 1.08 ± 0.13 m/s | Rejman et al. 2017 |
+| At 5.5 m from wall | 2.18 ± 0.21 m/s | Houel et al. |
+| At 7.5 m from wall | 1.76 ± 0.15 m/s | Houel et al. |
+
+**Shrnutí:** Elite 1.46–1.85 m/s, National 1.20–1.64 m/s, Young ~1.08 m/s. Rychlost po odrazu od stěny prudce klesá — z 2.18 m/s (5.5 m) na 1.76 m/s (7.5 m). Breakout by měl nastat, když UDK rychlost klesne pod rychlost volného plavání.
+
+### 15.5 Optimální hloubka
+
+| Zjištění | Zdroj |
+| --- | --- |
+| Wave drag < 5 % total drag při hloubce > 0.5 m (1 m/s) a > 0.7 m (2 m/s) | Vennell et al. 2006 |
+| Drag reduction 15–18 % při 0.4 m vs. hladina | Lyttle & Blanksby 1999 |
+| Diminishing returns po 0.75 m hloubce | Marinho et al. 2009 |
+| Zahájení kopů optimálně ~6 m od stěny | Elipot et al. 2009 |
+
+**Praktické doporučení:** Glide při ~0.4–0.75 m hloubce. Příliš mělko = wave drag; příliš hluboko = delší cesta nahoru při breakoutu. Zahájení kopů by mělo být ~6 m od stěny (Elipot et al. 2009) — průměrný plavec zahajuje kopu o 1.69 m příliš brzy (Houel & Elipot).
+
+### 15.6 Charakteristiky tělesné vlny (Body Wave)
+
+UDK je vlnovitý pohyb, kde vlna progreduje od kyčlí směrem ke kotníkům se zvyšující se amplitudou.
+
+| Parametr | Hodnota | Zdroj |
+| --- | --- | --- |
+| Body wave speed | 2–2.8× rychlost plavce ve vodě | Connaboy et al. |
+| Ankle + knee motion | Vysvětluje 93.3 % variance rychlosti kopů | Connaboy et al. 2015 |
+| Peak vertical toe velocity (downkick) | 2.38 m/s | Atkison et al. |
+| Peak vertical toe velocity (upkick) | 1.99 m/s | Atkison et al. |
+| Knee angular velocity (downkick) | 260 ± 28.9 °/s | Higgs et al. |
+| Knee angular velocity (upkick) | 190 ± 43.6 °/s | Higgs et al. |
+
+**Klíčový poznatek:** Efektivní UDK vyžaduje koordinovanou vlnu celého těla (hip → knee → ankle), ne izolovaný pohyb nohou. Fázový posun mezi segmenty je diagnostický — pokud head, hip a ankle oscilují synchronně (bez fázového posunu), jde o flutter kick z kolen, ne o UDK.
+
+### 15.7 Rozsah pohybu kolene při UDK (Knee ROM)
+
+| Úroveň / studie | Knee ROM | Zdroj |
+| --- | --- | --- |
+| Elite, prone | 119.34 ± 3.70° | Alves et al. |
+| Male elite | 109.0 ± 10.8° (min angle) | Ikeda et al. |
+| National | 89.6 ± 6.9° | Connaboy et al. |
+| Male swimmers | 73.3 ± 6.6° | Yamakawa et al. |
+
+**Srovnání s flutter kickem:** Knee ROM při UDK (73–119°) je výrazně větší než při flutter kicku při volném plavání (sekce 3.3: optimální 140–180°, tj. ROM ~0–40°). UDK vyžaduje hlubší flexi kolene pro generování vlnového pohybu.
+
+### 15.8 Korelace s rychlostí UDK
+
+| Proměnná | Korelace (r) | Zdroj |
+| --- | --- | --- |
+| Foot resultant acceleration | 0.94 | Alves et al. |
+| Kick frequency | 0.90 | Alves et al. |
+| Peak vertical toe velocity | 0.85 | Higgs et al. |
+| Shoulder angle (streamline) | 0.80 | Ikeda et al. |
+| Body wave velocity | 0.78 | Higgs et al. |
+| Peak hip angular velocity | 0.73 | Higgs et al. |
+| Max knee flexion/extension | 0.84–0.88 | Atkison et al. |
+
+**Poznámka:** Streamline pozice ramen (r = 0.80, Ikeda) potvrzuje, že kvalita streamline je klíčová i během kopání, nejen při glide fázi.
+
+### 15.9 Strouhal number a propulzní efektivita
+
+| Organismus | Strouhal number (St) | Zdroj |
+| --- | --- | --- |
+| Ryby / delfíni (optimální) | 0.25–0.35 | — |
+| Lidští plavci (průměr) | 0.59–0.88 (mean 0.80) | Connaboy et al. 2009 |
+| Mladí plavci | 0.83 | Rejman et al. 2017 |
+
+**Propulzní efektivita:** Lidé dosahují pouze 11–29 % propulzní efektivity UDK vs. ~56 % u kytovců (Connaboy et al. 2009). Vyšší frekvence kopů nemusí zvyšovat rychlost — optimalizace spočívá v koordinaci body wave a amplitudy, ne v pouhém zrychlení.
+
+### 15.10 Biomechanické chyby UDK
+
+| Chyba | Popis | Prevalence / zdroj |
+| --- | --- | --- |
+| Knee-dominant kicking | Iniciace z kolen (quadriceps) místo core/kyčlí — chybí body wave | Velmi časté u age-group plavců |
+| Nadměrný pohyb hlavy | Brada příliš zasunutá nebo vystouplá → narušení streamline | Snižuje r = 0.80 korelaci shoulder angle/speed |
+| Asymetrický timing | Nerovnoměrný čas downbeat vs. upbeat — slabší plavci tráví příliš dlouho na upbeatu | Connaboy et al. |
+| Nadměrná amplituda | Velký kop za cenu zvýšení čelního odporu | Trade-off: amplituda vs. drag |
+| Předčasné zahájení kopů | Průměrný plavec zahajuje kopu o 1.69 m příliš brzy po odrazu | Houel & Elipot |
+| Příliš malá hloubka | Surfacing příliš brzy → wave drag | Vennell et al. 2006 |
+
+### 15.11 Prahy per úroveň
+
+| Metrika | Dítě (8–14 let)† | Pokročilý (15+) | Zdroj |
+| --- | --- | --- | --- |
+| Kick frequency | 1.5–2.5 Hz (±0.5 Hz) | 2.0–2.5 Hz (±0.3 Hz) | Rejman 2017; Alves 2006 |
+| Kick amplitude | 0.30–0.65 m | 0.40–0.60 m | Rejman 2017; Alves 2006 |
+| Kick count (po startu) | 0–6 kopů | 3–8 kopů | Vantorre 2014 |
+| Kick count (po obrátce) | 0–5 kopů | 3–7 kopů | — |
+| Amplitude consistency (CV) | < 0.40 | < 0.25 | de Jesus et al. |
+
+† **Caveat (Dítě):** Pediatrická data pro UDK prakticky neexistují. Prahy jsou extrapolovány z Rejman et al. 2017 (young swimmers, bez specifikace věku) a rozšířeny o bezpečnostní marži. U dětí 8–14 let je UDK často nerozvinutý nebo zcela chybí — absence UDK u dítěte **není chyba**, ale informace pro trenéra. Systém reportuje „UDK nedetekován" bez negativního hodnocení.
+
+### 15.12 Detekce UDK z keypointů
+
+**Rozlišení UDK vs. flutter kick:**
+
+```
+UDK detekce:
+1. Paže ve streamline: |wrist_y - ear_y| < threshold AND |elbow_angle - 180°| < 15°
+2. Periodická oscilace ankle_y: peak detection → kick frequency
+3. Fázový posun: phase_lag(head_y, hip_y, ankle_y) > 0
+   - UDK: head vede, hip následuje, ankle jako poslední (body wave)
+   - Flutter kick: hip a ankle oscilují přibližně synchronně
+4. Amplituda: peak_to_peak(ankle_y) per cycle
+5. Všechny keypointy pod water_line
+```
+
+**Keypointy (MediaPipe):** ear(7/8), shoulder(11/12), elbow(13/14), wrist(15/16), hip(23/24), knee(25/26), ankle(27/28)
+
+### 15.13 Limitace
+
+- **UDK analýza je spolehlivá primárně z podvodního pohledu kamery.** Z nadvodního bočního pohledu je podvodní fáze zkreslená refrakcí na rozhraní voda/vzduch — pozice keypointů pod hladinou jsou systematicky posunuté.
+- Z nadvodního pohledu je možné detekovat **přítomnost/absenci UDK** a **přibližný kick count**, ale ne přesnou amplitudu nebo knee ROM.
+- Strouhal number u lidských plavců (0.59–0.88) je daleko od hydrodynamicky optimálního rozsahu (0.25–0.35) — lidské tělo není optimalizované pro undulační lokomoci.
+
+---
+
+## 16. Biomechanika startu
+
+### 16.1 Fáze startu
+
+Vantorre et al. (2014) definují 6 fází plaveckého startu:
+
+```
+[Block] → [Flight] → [Entry] → [Glide] → [UDK] → [Breakout] → [Volné plavání]
+  (1)        (2)        (3)       (4)       (5)       (6)            (7)
+```
+
+1. **Block phase:** Reakční čas + odraz ze startovního bloku
+2. **Flight phase:** Tělo ve vzduchu po opuštění bloku
+3. **Entry phase:** Vstup těla do vody
+4. **Glide phase:** Streamline pozice pod vodou (bez pohybu končetin)
+5. **UDK phase:** Podvodní dolphin kick (viz sekce 15)
+6. **Breakout:** Přechod na první záběr volného plavání
+
+> **Příspěvek startu k závodu:** Start tvoří 0.8 % (1500m) až 26.1 % (50m sprint) celkového závodního času (Lyttle & Benjanuvatra 2005). Podvodní fáze (0–15 m) je nejdůležitější proměnnou — negativní korelace mezi podvodní rychlostí a časem na 15 m: r = −0.734 (Cossor & Mason 2001).
+
+### 16.2 Entry Angle (úhel vstupu do vody)
+
+**Definice:** Úhel vektoru head → feet vůči horizontále v momentě, kdy hlava protíná vodní hladinu.
+
+| Úroveň / studie | Entry angle | Zdroj |
+| --- | --- | --- |
+| Elite | 21.25 ± 5.59° | Wilson & Marino 1983 |
+| Elite | 27.45 ± 5.99° | Benjanuvatra et al. 2007 |
+| Non-elite | 39.62 ± 13.19° | Benjanuvatra et al. 2007 |
+| Males, water entry | ~22° | Tor et al. 2020 |
+| Females, water entry | ~20° | Tor et al. 2020 |
+| Males, COM crossing waterline | ~38° | Tor et al. 2020 |
+| Females, COM crossing waterline | ~42° | Tor et al. 2020 |
+| Competitive (take-off angle) | 40.6 ± 1.5° | PMC8625813 2021 |
+
+**Zdůvodnění:** Plošší vstup = menší odpor při vstupu do vody = zachování horizontální rychlosti. Tor et al. (2020) kvantifikovali: start time se zkrátí o 0.5 s na každý 1 radian (~57°) plošší entry angle. Elite plavci mají výrazně plošší vstup (21–28°) než non-elite (40°).
+
+**Poznámka:** Rozdíl mezi „entry angle" (úhel těla při vstupu) a „take-off angle" (úhel vzletu z bloku). Take-off angle je vyšší (27–41°), entry angle nižší (20–28°) — tělo se naklání dolů během letu.
+
+### 16.3 Flight Distance a Horizontal Velocity
+
+| Metrika | Males | Females | Zdroj |
+| --- | --- | --- | --- |
+| Flight distance | 3.2 ± 0.3 m | 2.8 ± 0.2 m | Tor et al. 2020 |
+| Horizontal velocity at entry | 4.4 ± 0.3 m/s | 4.0 ± 0.3 m/s | Tor et al. 2020 |
+| Horizontal impulse (elite) | 3.60 ± 0.23 N·s | — | Vantorre et al. 2014 |
+| Horizontal impulse (non-elite) | 3.17 ± 0.30 N·s | — | Vantorre et al. 2014 |
+
+**Klíčové korelace (Tor et al. 2020):**
+
+- Per 1 m further entry distance → −0.6 s start time
+- Per 1 m/s higher horizontal velocity → −0.3 s start time
+
+### 16.4 Streamline Quality
+
+| Zjištění | Zdroj |
+| --- | --- |
+| Streamlined hands (jedna na druhé) = 7 % méně odporu než paže na šířku ramen | Bulgakova & Makarenko 1966 |
+| Glide time vysvětluje 95 % variance start time (r = 0.97) | Guimaraes & Hay 1985 |
+| Minimální glide velocity pro udržení výhody: 2 m/s | Vantorre et al. 2014 |
+| Maximální hloubka během startu: ~0.90 ± 0.02 m | PMC8625813 2021 |
+
+**Poznámka:** Guimaraes & Hay (1985) zjistili, že glide time je nejsilnější prediktor celkového start time — kvalita streamline pozice je důležitější než síla odrazu.
+
+### 16.5 Breakout Distance a Time to 15m
+
+| Metrika | Elite males | Elite females | Zdroj |
+| --- | --- | --- | --- |
+| Underwater distance (start) | 8.29 ± 0.95 m | 7.86 ± 0.93 m | PMC12134280 2025 |
+| Water breakout distance | 11.88 ± 0.97 m | 11.09 ± 0.88 m | PMC12134280 2025 |
+| Underwater speed | 2.49 ± 0.15 m/s | 2.27 ± 0.11 m/s | PMC12134280 2025 |
+| Time to 15m | 5.64 ± 0.18 s | 6.41 ± 0.17 s | PMC12134280 2025 |
+
+**Start phase breakdown (PMC12134280 2025, elite 100m FS finalists):**
+
+| Fáze | Podíl na 15m čase |
+| --- | --- |
+| Block phase | ~11 % |
+| Flight | ~5 % |
+| Underwater (entry → breakout) | ~56 % |
+| Free swim (breakout → 15m) | ~28 % |
+
+### 16.6 Prahy per úroveň
+
+| Metrika | Dítě (8–14 let)† | Pokročilý (15+) | Zdroj |
+| --- | --- | --- | --- |
+| Entry angle | 25–55° (±20°) | 20–40° (±10°) | Tor 2020; Benjanuvatra 2007 |
+| Streamline tightness | Paže < 25° od osy těla | Paže < 10° od osy těla | Vantorre 2014 |
+| Streamline duration | Informativní (bez prahu) | > 0.5 s glide před prvním kopem | Guimaraes & Hay 1985 |
+| UDK po startu | 0–6 kopů (viz 15.11) | 3–8 kopů (viz 15.11) | Vantorre 2014 |
+| Max depth | Informativní | 0.4–0.90 m | PMC8625813; Lyttle 1999 |
+
+† **Caveat (Dítě):** Pediatrická data pro startovní biomechaniku neexistují. Entry angle u dětí bude pravděpodobně vyšší (strmější vstup) kvůli nižší síle odrazu a menší zkušenosti. Rozsah 25–55° je extrapolace z non-elite dospělých (Benjanuvatra 2007: 39.6 ± 13.2°) s rozšířenou tolerancí. U dětí mladších 10 let je start z bloku často nahrazen skokem z okraje bazénu — jiná biomechanika.
+
+### 16.7 Detekce fází startu z keypointů
+
+| Fáze | Detekce | Heuristika |
+| --- | --- | --- |
+| Flight | Všechny keypointy nad water line, velký Y-displacement | `all_keypoints_y < water_line_y AND velocity_y > threshold` |
+| Entry | Postupný pokles keypointů pod water line (hlava → nohy) | `head_y crosses water_line_y downward` |
+| Glide (streamline) | Minimální joint movement, body alignment ~180° | `std(joint_angles) < thr AND body_alignment > 170°` |
+| UDK | Periodická oscilace, paže u hlavy (viz 15.12) | `ankle_y oscillation AND wrist near head` |
+| Breakout | První detekovaný stroke cycle | `wrist crosses water_line upward` |
+
+**Entry angle výpočet:**
+
+```
+# V momentě kdy head_y protíná water_line_y:
+entry_angle = arctan(|head_y - ankle_y| / |head_x - ankle_x|)
+# Alternativně: úhel vektoru head→pelvis vůči horizontále
+```
+
+### 16.8 Limitace
+
+- **Boční pohled:** Entry angle a streamline jsou dobře viditelné. Hloubka (z-osa) není.
+- **Podvodní fáze:** Pokud kamera je nad vodou, glide a UDK fáze jsou zkreslené refrakcí.
+- **Bez kalibrace kamery:** Absolutní vzdálenosti (flight distance, breakout distance v metrech) nelze měřit — pouze relativní odhady z pixelů.
+- **Block phase (1-2):** Vyžaduje kameru zaměřenou na startovní blok. Z bočního pohledu u bazénu jsou realisticky detekovatelné fáze 2–7.
+- **Temporální rozlišení:** Flight phase trvá ~0.3 s (~9 framů @ 30 FPS) — nízký počet framů pro přesnou detekci entry angle.
+
+---
+
+## 17. Biomechanika obrátek (Flip Turn)
+
+### 17.1 Fáze obrátky
+
+```
+[Approach] → [Flip] → [Wall Contact] → [Push-off] → [Streamline] → [UDK] → [Breakout]
+    (1)         (2)         (3)             (4)           (5)          (6)       (7)
+```
+
+1. **Approach:** Poslední 2–3 záběry před obrátkou
+2. **Flip (salto):** Rotace přes hlavu, nohy na stěnu
+3. **Wall contact:** Nohy na stěně, příprava odrazu
+4. **Push-off:** Odraz od stěny
+5. **Streamline:** Klouzání v streamline pozici
+6. **UDK:** Podvodní dolphin kick (viz sekce 15)
+7. **Breakout:** Přechod na volné plavání
+
+> **Příspěvek obrátky k závodu:** Obrátka tvoří ~20 % celkového času na 100 m freestyle (PMC12134280 2025). V 1500 m je podíl obrátek na celkovém čase ještě vyšší. Elite 100 m SC (short course) plavci stráví celkem 31–37 m pod vodou (všechny obrátky + start, PMC8442910 2021).
+
+### 17.2 Typy obrátek
+
+| Typ | Použití | Klíčový rozdíl |
+| --- | --- | --- |
+| **Flip turn (salto)** | Kraul, znak | Rotace přes hlavu, nohy na stěnu, push-off na zádech → rotace do kraulu |
+| **Open turn** | Prsa, motýlek (+ začátečníci u kraulu) | Dotek stěny rukou, obrat, push-off |
+
+Pro kraul je primární **flip turn**. Open turn u začátečníků lze zmínit jako variantu, ale metriky níže se vztahují k flip turn.
+
+### 17.3 Wall Contact Time (WCT)
+
+**Definice:** Doba, po kterou jsou nohy plavce v kontaktu se stěnou bazénu.
+
+| Podmínka / studie | Males | Females | Zdroj |
+| --- | --- | --- | --- |
+| Short WCT | 0.30 ± 0.06 s | 0.25 ± 0.06 s | Puel et al. 2022 |
+| Reference (optimal) | 0.37 ± 0.04 s | 0.30 ± 0.05 s | Puel et al. 2022 |
+| Long WCT | 0.47 ± 0.05 s | 0.40 ± 0.09 s | Puel et al. 2022 |
+
+**Zdůvodnění:** Reference WCT (~0.30–0.37 s) produkuje nejrychlejší 5m round-trip time (5mRTT). Příliš krátký WCT = nedostatečná síla odrazu (nohy nestihnou vyvinout plný impuls). Příliš dlouhý WCT = ztráta času na stěně bez odpovídajícího zvýšení push-off velocity.
+
+### 17.4 Tuck Index
+
+**Definice:** Poměr vzdálenosti chodidel od stěny k délce nohou při prvním kontaktu. Indikátor kompaktnosti tuck pozice.
+
+| Podmínka | Tuck Index | Zdroj |
+| --- | --- | --- |
+| Reference | 0.65 ± 0.06 | Puel et al. 2022 |
+| Optimal (predicted) | 0.70 ± 0.04 (range 0.64–0.77) | Puel et al. 2022 |
+| Close tuck | 0.44 ± 0.10 | Puel et al. 2022 |
+| Far tuck | 0.78–0.85 | Puel et al. 2022 |
+
+**Zdůvodnění:** Optimal tuck index ~0.64–0.77 maximalizuje push-off velocity. Příliš blízko (close, < 0.50) = kolena příliš ohnutá → mechanicky nevýhodná pozice pro odraz. Příliš daleko (far, > 0.80) = nohy téměř natažené → krátký range of motion pro odraz.
+
+### 17.5 Push-off Velocity
+
+| Podmínka / studie | Males | Females | Zdroj |
+| --- | --- | --- | --- |
+| Short WCT | 2.05 ± 0.34 m/s | 1.76 ± 0.15 m/s | Puel et al. 2022 |
+| Reference | 2.19 ± 0.29 m/s | 1.83 ± 0.14 m/s | Puel et al. 2022 |
+| Long WCT | 2.13 ± 0.31 m/s | 1.77 ± 0.11 m/s | Puel et al. 2022 |
+| Club to elite range | 1.5–2.5 m/s | — | Lyttle & Blanksby |
+| Countermovement (land) | 1.90 ± 0.48 m/s | — | PMC6409673 2019 |
+
+### 17.6 Push-off Force
+
+| Podmínka / studie | Force (N) | Zdroj |
+| --- | --- | --- |
+| Short WCT | 1,195 ± 416 N | Puel et al. 2022 |
+| Reference | 1,061 ± 359 N | Puel et al. 2022 |
+| Long WCT (far tuck) | 1,293 ± 521 N | Puel et al. 2022 |
+| Countermovement (water) | 875 ± 343 N | PMC6409673 2019 |
+| No countermovement (water) | 973 ± 261 N | PMC6409673 2019 |
+| Historical range | 536–1,190 N | Various |
+
+**Typický rozsah:** 1.1–1.5 BW (body weight), extrémně až 2.0 BW.
+
+**Poznámka pro SwimAth:** Push-off force nelze přímo měřit z keypointů. Proxy metrika: push-off velocity (odhadnutelná z horizontálního posunu pelvis keypointu po odrazu).
+
+### 17.7 Turn Time Benchmarks
+
+**Elite 100m freestyle finalists (PMC12134280 2025, n=59):**
+
+| Metrika | Males | Females |
+| --- | --- | --- |
+| Total turn time (20m: 45–65m) | 9.72 ± 0.23 s | 10.90 ± 0.30 s |
+| 5m-in time | 2.84 ± 0.11 s | 3.20 ± 0.16 s |
+| Water breakout time | 2.75 ± 0.45 s | 2.40 ± 0.67 s |
+| 15m-out time | 6.87 ± 0.15 s | 7.71 ± 0.18 s |
+| Breakout distance (after turn) | 7.11 ± 0.88 m | 5.82 ± 1.21 m |
+| Underwater speed (turn) | 2.60 ± 0.16 m/s | 2.49 ± 0.28 m/s |
+| Turn velocity (VT20) | 2.059 ± 0.05 m/s | 1.690 ± 0.03 m/s |
+
+**5m Round-Trip Time (5mRTT) — national level (Puel et al. 2022):**
+
+| Podmínka | Males | Females |
+| --- | --- | --- |
+| Short WCT | 5.57 ± 0.63 s | 5.93 ± 0.23 s |
+| Reference | 5.38 ± 0.49 s | 5.87 ± 0.33 s |
+| Long WCT | 5.69 ± 0.51 s | 6.13 ± 0.36 s |
+
+### 17.8 Approach Velocity
+
+| Studie | Males | Females | Zdroj |
+| --- | --- | --- | --- |
+| National (reference) | 1.70 ± 0.10 m/s | 1.54 ± 0.08 m/s | Puel et al. 2022 |
+| Elite 100m FS (implied) | ~1.76 m/s | ~1.56 m/s | PMC12134280 2025 |
+
+**Klíčový poznatek:** Konzistentní approach velocity (stabilní SR v posledních 3 záběrech) je důležitější než absolutní rychlost — zpomalení nebo zrychlení před stěnou narušuje timing flipu.
+
+### 17.9 Optimal Push-off Angle a Streamline
+
+| Parametr | Hodnota | Zdroj |
+| --- | --- | --- |
+| Optimální knee angle při wall contact | ~90° | Lyttle et al. 1999 |
+| Body alignment při push-off | 170–180° (co nejrovnější) | Lyttle et al. 1999 |
+| Optimal glide depth po push-off | 0.4–0.75 m | Lyttle & Blanksby 1999 |
+| Kick initiation velocity | 1.9–2.2 m/s (zahájit kopu při poklesu na tuto rychlost) | Elipot et al. 2009 |
+
+### 17.10 Prahy per úroveň
+
+| Metrika | Dítě (8–14 let)† | Pokročilý (15+) | Zdroj |
+| --- | --- | --- | --- |
+| Push-off angle (body alignment) | 150–180° (±25°) | 170–180° (±10°) | Lyttle et al. 1999 |
+| Approach SR consistency (CV) | < 0.30 | < 0.15 | — |
+| Streamline quality po push-off | Volnější tolerance (viz 16.6) | Tight streamline (viz 16.6) | Puel 2022 |
+| UDK po obrátce | Viz 15.11 | Viz 15.11 | — |
+| Breakout timing | Informativní | Breakout při UDK speed < swim speed | — |
+
+† **Caveat (Dítě):** Pediatrická data pro flip turn biomechaniku neexistují. Mnoho dětí 8–14 let používá open turn místo flip turn — systém by měl rozlišovat typ obrátky. Prahy jsou extrapolovány z dospělé national-level literatury (Puel 2022) s rozšířenou tolerancí. Push-off force a velocity u dětí budou výrazně nižší kvůli nižší síle dolních končetin.
+
+### 17.11 Biomechanické chyby obrátek
+
+| Chyba | Detekce z keypointů | Severity |
+| --- | --- | --- |
+| Nekonzistentní approach (SR drop/spike) | SR variance posledních 3 cycles vs. předchozích | Moderate |
+| Pomalý flip (otevřený tuck) | Počet framů od zahájení flipu do nohou na stěně | Minor–Moderate |
+| Špatný push-off angle (ne-streamline) | body_alignment < 165° po push-off | Moderate–Severe |
+| Příliš brzký breakout | Breakout při vysoké UDK velocity (> swim speed) | Moderate |
+| Příliš pozdní breakout | Breakout při nízké UDK velocity nebo blízko 15 m | Minor |
+| Žádný/slabý UDK | udk_kick_count < 2 po obrátce | Moderate |
+| Nekonzistentní UDK amplitude | amplitude CV > 0.30 | Minor |
+
+### 17.12 Detekce fází obrátky z keypointů
+
+| Fáze | Detekce | Heuristika |
+| --- | --- | --- |
+| Approach | Poslední 2–3 záběry | `pelvis_x` konverguje k hranici záběru |
+| Flip | Rychlá rotace celého těla | `angular_velocity(body_alignment)` > threshold |
+| Push-off | Rychlý horizontální pohyb od stěny | `velocity_x(pelvis)` > threshold, směr opačný než approach |
+| Streamline | Stejné jako u startu | `std(joint_angles) < thr AND body_alignment > 170°` |
+| UDK | Viz 15.12 | Viz 15.12 |
+| Breakout | První stroke cycle | `wrist crosses water_line upward` |
+
+**Detekce stěny bazénu:** Bez explicitní detekce stěny z obrazu se pozice stěny aproximuje jako x-pozice, kde plavec zastaví horizontální pohyb a začne rotaci. Alternativně: uživatel označí frame obrátky manuálně.
+
+### 17.13 Limitace
+
+- **Flip turn je rychlý pohyb** — při 30 FPS trvá flip ~10–15 framů (~0.3–0.5 s). Pose estimation bude mít výrazně vyšší chybovost (motion blur, okluzně).
+- **Stěna bazénu** není keypointem — detekce pozice stěny je heuristická.
+- **Wall contact time** nelze přímo měřit z keypointů — proxy: počet framů s nohama na přibližné pozici stěny.
+- **Push-off force** nelze měřit z videa — proxy: push-off velocity (horizontální posun pelvis).
+- **Podvodní fáze** po push-off: stejné problémy jako u startu (refrakce, viditelnost). UDK analýza vyžaduje podvodní kameru pro spolehlivé výsledky.
+- **PoC kvalita:** Spolehlivě detekovatelné jsou approach consistency a streamline quality. Flip speed a push-off angle budou méně přesné.
+
+---
+
+_Last updated: 2026-03-05_
