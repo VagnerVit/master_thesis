@@ -4,10 +4,13 @@
       "Bash(git rm:*)",
       "Bash(git checkout:*)",
       "Bash(awk*)",
-      "mcp__playwright__browser_navigate",
+      "mcp__playwright",
       "Bash(curl:*)",
       "Bash(bibtex main:*)",
-      "Bash(xelatex:*)"
+      "Bash(xelatex:*)",
+      "Bash(mv:*)",
+      "mcp__playwright__browser_run_code",
+      "mcp__playwright__browser_type"
     ]
   },
   "enableAllProjectMcpServers": true,

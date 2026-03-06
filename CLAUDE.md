@@ -336,6 +336,7 @@ Zvlášť důležité pro podvodní záběry, kde pose estimation dělá víc ch
 - **Testy**: pytest, cíl ≥80% coverage
 - **Error handling**: graceful degradation, nikdy silent failures
 - **Commit messages**: anglicky, krátký summary + detailní popis, BEZ co-author tagů
+- **Bash scripty**: vždy do kořenové složky projektu (ne do podsložek), relativní cesty od kořene. Sandbox Cowork neumožňuje přímé stahování (curl/wget/urllib blokováno) — scripty generovat pro spuštění na uživatelově PC. Pozor na Windows line endings (\r\n) — používat LF.
 
 ---
 
