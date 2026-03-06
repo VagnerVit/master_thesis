@@ -1,30 +1,52 @@
 # SwimAth — Plán diplomové práce
 
+## Zaměření: Softwarové inženýrství
+
+Diplomka je zaměřená na **návrh a implementaci webového systému**. ML/PE je použitá technologie (jako databáze), ne předmět výzkumu. Hlavní přínos = end-to-end SW řešení.
+
+---
+
 ## Struktura diplomové práce (kapitoly)
 
-1. **Úvod** — motivace, cíl práce, přínos
-2. **Rešerše / Teoretická část**
-   - Biomechanika plavání (styly, metriky, co dělá dobrého plavce)
-   - Odhad lidské pózy (architektury: OpenPose → HRNet → ViTPose → RTMPose)
-   - Existující datasety (SwimXYZ, Augsburg, SwimmerNET, ...)
-   - ML ve sportovní analýze (existující systémy, co chybí)
-   - Podvodní výzvy (refrakce, bubliny, viditelnost)
-3. **Návrh řešení**
-   - Architektura systému (Vue.js + FastAPI + ML pipeline)
-   - Referenční model (3 úrovně × pohledy × styly)
-   - Výběr pose estimation modelu a důvody
-   - Návrh biomechanických metrik pro každou úroveň
-   - Porovnávací metoda (DTW / klasifikátor)
+1. **Úvod** — motivace, cíl práce, přínos (SW systém pro analýzu plavecké techniky)
+2. **Analýza problému**
+   - 2.1 Doménová analýza — biomechanika plavání (stručně, max 10 stran)
+   - 2.2 Existující řešení a konkurenční analýza
+   - 2.3 Požadavky na systém (funkční, nefunkční, aktéři, use cases)
+   - 2.4 Technologická rešerše (PE architektury, DTW, webové frameworky, async processing)
+3. **Návrh řešení** ← JÁDRO PRÁCE pro SW inženýrství
+   - 3.1 Požadavky na systém (FR, NFR, use case diagram)
+   - 3.2 Architektura systému (C4 diagramy, komponentový diagram)
+   - 3.3 Návrh API (REST endpointy, WebSocket protokol)
+   - 3.4 Datový model (ER diagram, PostgreSQL schéma, Alembic migrace)
+   - 3.5 Asynchronní zpracování (Celery + Redis, task lifecycle)
+   - 3.6 Bezpečnost a ochrana dat (GDPR, validace, CORS)
+   - 3.7 Návrh ML pipeline jako SW komponenty (Strategy pattern, pipeline orchestrace)
+   - 3.8 Výběr modelu pro odhad pózy
+   - 3.9 Ragdoll constraints
+   - 3.10 Biomechanické metriky
+   - 3.11 Referenční systém
+   - 3.12 Porovnávací metoda (DTW)
+   - 3.13 Klasifikace plaveckého stylu
+   - 3.14 Diskuse alternativních přístupů
 4. **Implementace**
-   - Předzpracování videa
-   - ML pipeline (pose estimation → metriky → porovnání)
-   - Webová aplikace (frontend + backend)
-   - Referenční databáze
+   - 4.1 Předzpracování videa (OpenCV, FFmpeg normalizace)
+   - 4.2 ML pipeline (ONNX Runtime, batching, error handling)
+   - 4.3 Backend (FastAPI, routing, dependency injection, Pydantic)
+   - 4.4 Frontend (Vue.js 3, Pinia, Canvas API video overlay)
+   - 4.5 Asynchronní zpracování (Celery workers, WebSocket progress)
+   - 4.6 Databáze (SQLAlchemy ORM, Alembic migrace, connection pooling)
+   - 4.7 Referenční databáze (DBA generování, JSON schéma)
+   - 4.8 Testovací strategie (unit, integrace, e2e, code coverage)
+   - 4.9 CI/CD a deployment (Docker, docker-compose, GitHub Actions)
 5. **Experimenty a vyhodnocení**
-   - Přesnost pose estimation na plaveckých datech
-   - Kvalita detekce chyb vs. ruční hodnocení trenérem
-   - Testování na reálných videích (různé úrovně, pohledy)
-   - Limity systému
+   - 5.1 Funkční testování (end-to-end scénáře)
+   - 5.2 Výkonnostní testování (throughput, latence, škálovatelnost)
+   - 5.3 Přesnost odhadu pózy (benchmark PE modelů — validace ML komponenty)
+   - 5.4 Kvalita detekce chyb (precision/recall vs. trenér)
+   - 5.5 Testování na reálných videích
+   - 5.6 Uživatelské testování (alespoň návrh protokolu)
+   - 5.7 Limity systému
 6. **Závěr** — shrnutí, přínos, budoucí práce
 
 ---
@@ -34,149 +56,131 @@
 ### A. REŠERŠE A PŘÍPRAVA
 
 - [ ] **A1. Literární rešerše — biomechanika plavání**
-  
   - Prostudovat klíčové zdroje (Maglischo, Riewald, Craig & Pendergast)
   - Definovat metriky techniky pro každou úroveň
-  - Sepsat kapitolu rešerše — biomechanika
-  - *Odhadovaný rozsah: 2 týdny*
+  - Sepsat kapitolu rešerše — biomechanika (stručně, max 10 stran)
 
-- [ ] **A2. Literární rešerše — pose estimation a ML**
-  
-  - Prostudovat architektury (ViTPose, RTMPose, HRNet, MediaPipe)
-  - Prostudovat plavecky-specifické práce (Augsburg, SwimmerNET, SwimXYZ)
-  - Prostudovat existující sportovní analytické systémy
+- [ ] **A2. Literární rešerše — technologická**
+  - PE architektury (ViTPose, RTMPose, HRNet, MediaPipe)
+  - Plavecky-specifické práce (Augsburg, SwimmerNET, SwimXYZ)
+  - Existující sportovní analytické systémy (konkurenční analýza)
+  - Webové frameworky, async processing patterns
   - Sepsat kapitolu rešerše — technická část
-  - *Odhadovaný rozsah: 2 týdny*
 
 - [ ] **A3. Získání datasetů**
-  
-  - [x] Odeslat žádost — Augsburg Swimming Channel
-  - [x] Odeslat žádost — SwimmerNET
-  - [x] Stáhnout SwimXYZ ze Zenodo (~300 GB)
+  - [x] SwimXYZ ze Zenodo (~300 GB)
+  - [x] Žádost — Augsburg Swimming Channel
+  - [x] Žádost — SwimmerNET
   - [ ] Stáhnout CADDY Underwater dataset
   - [ ] Prozkoumat a ohodnotit získaná data
-  
-  - *Odhadovaný rozsah: 1–4 týdny (záleží na odpovědích)*
 
-- [ ] **A4. Definice metrik a prahů pro 3 úrovně**
-  
+- [ ] **A4. Definice metrik a prahů pro 2 úrovně**
   - Na základě literatury + konzultace s trenérem
-  - Začátečníci: co sledovat, jaké odchylky tolerovat
-  - Mírně pokročilí: zpřísnění, přidání metrik
-  - Experti: jemné detaily, úzké tolerance
+  - Dítě (8–14): základní metriky, širší tolerance
+  - Pokročilý (15+): zpřísněné prahy
   - Vytvořit tabulku: metrika × úroveň × optimální rozsah × práh chyby
-  - *Odhadovaný rozsah: 1 týden*
 
 ---
 
 ### B. EXPERIMENTY S POSE ESTIMATION
 
 - [ ] **B1. Benchmark existujících modelů na plaveckých datech**
-  
-  - Spustit MediaPipe, RTMPose, ViTPose na vzorcích plaveckého videa
-  - Porovnat přesnost, rychlost, chybové módy
-  - Rozhodnout se pro model (nebo kombinaci)
-  - Zdokumentovat výsledky pro diplomku
-  - *Odhadovaný rozsah: 1–2 týdny*
+  - MediaPipe vs RTMPose vs ViTPose na SwimXYZ
+  - Metriky: PCK, AP, MPJPE
+  - Zdokumentovat výsledky
 
 - [ ] **B2. Fine-tuning vybraného modelu na SwimXYZ**
-  
-  - Připravit trénovací data (side-view freestyle jako první)
-  - Fine-tune ViTPose/RTMPose
+  - Side-view freestyle jako první
   - Vyhodnotit zlepšení oproti base modelu
-  - Otestovat přenos na reálná data (pokud dostupná z Augsburgu)
-  - *Odhadovaný rozsah: 2–3 týdny*
+  - Otestovat přenos na reálná data
 
 - [ ] **B3. Testování na různých pohledech kamery**
-  
-  - Side-view (primární)
-  - Front-view (pokud data)
-  - Underwater (pokud data)
-  - Zdokumentovat, kde model funguje a kde selhává
-  - *Odhadovaný rozsah: 1 týden*
+  - Side-view (primární), front-view, underwater
+  - Zdokumentovat kde model funguje a kde selhává
 
 ---
 
 ### C. BIOMECHANICKÁ ANALÝZA
 
 - [ ] **C1. Pipeline: keypoints → biomechanické metriky**
-  
-  - Implementovat výpočet: frekvence záběru, délka záběru
-  - Implementovat výpočet: rotace těla, poloha hlavy
-  - Implementovat výpočet: úhly kloubů (loket, rameno)
-  - Implementovat detekci fází záběru (catch, pull, push, recovery)
-  - *Odhadovaný rozsah: 2 týdny*
+  - Implementovat výpočet: SR, SL, rotace, úhly kloubů
+  - Implementovat detekci fází záběru
 
 - [ ] **C2. Vytvoření referenčních vzorů**
-  
-  - Vybrat segmenty správné techniky z dostupných dat
-  - Vypočítat referenční sekvence pro alespoň 1 styl × 1 pohled × 3 úrovně
-  - Uložit jako .npy + metrics.json + error_thresholds.json
-  - *Odhadovaný rozsah: 1–2 týdny*
+  - Min 1 styl × 1 pohled × 2 úrovně
+  - DBA generování, JSON schéma
 
 - [ ] **C3. Implementace porovnávací metody**
-  
-  - DTW pro temporální porovnání sekvencí záběrů
-  - Pravidlový systém pro detekci konkrétních chyb
-  - Skórovací systém (overall score 0–100)
+  - DTW-D + Sakoe-Chiba constraint
+  - Pravidlový systém detekce chyb
+  - Skórovací systém 0–100
   - Generování textové zpětné vazby
-  - *Odhadovaný rozsah: 2 týdny*
 
 ---
 
 ### D. WEBOVÁ APLIKACE
 
 - [ ] **D1. Backend — FastAPI základ**
-  
   - Projekt + struktura + config
   - Upload endpoint + validace videa
-  - PostgreSQL + SQLAlchemy model
-  - Async zpracování (BackgroundTasks nebo Celery)
-  - WebSocket pro progress
-  - API pro výsledky
-  - *Odhadovaný rozsah: 2 týdny*
+  - PostgreSQL + SQLAlchemy + Alembic migrace
+  - Celery + Redis async zpracování
+  - WebSocket progress
+  - REST API endpointy
 
 - [ ] **D2. Backend — integrace ML pipeline**
-  
-  - Napojení pose estimation modelu
-  - Napojení biomechanické analýzy
-  - Napojení porovnávacího systému
+  - ONNX Runtime inference
+  - Strategy pattern pro PE modely
   - End-to-end: video in → výsledky out
-  - *Odhadovaný rozsah: 1–2 týdny*
 
-- [ ] **D3. Frontend — Vue.js**
-  
-  - Upload stránka (video + výběr úrovně/pohledu/stylu)
+- [ ] **D3. Frontend — Vue.js 3**
+  - Upload (video + výběr úrovně/pohledu/stylu)
   - Progress bar (WebSocket)
-  - Výsledková stránka (metriky, odchylky, doporučení)
-  - Video přehrávač s overlay pózy
+  - Výsledky (metriky, odchylky, doporučení)
+  - Video přehrávač s overlay pózy (Canvas API)
   - Historie analýz
-  - *Odhadovaný rozsah: 2–3 týdny*
+
+- [ ] **D4. Testovací strategie**
+  - Unit testy (pytest)
+  - Integrace (TestClient)
+  - E2E (Playwright)
+  - Code coverage
+
+- [ ] **D5. CI/CD a deployment**
+  - Docker multi-stage build
+  - docker-compose
+  - GitHub Actions
+  - Linting/formatting
 
 ---
 
 ### E. VYHODNOCENÍ A DIPLOMKA
 
-- [ ] **E1. Testování na reálných videích**
-  
-  - Natočit/sehnat videa plavců různých úrovní
-  - Spustit analýzu, porovnat s hodnocením trenéra
-  - Zdokumentovat úspěšnost a limity
-  - *Odhadovaný rozsah: 1–2 týdny*
+- [ ] **E1. Funkční testování**
+  - End-to-end scénáře
+  - Test matrix (styl × pohled × úroveň)
 
-- [ ] **E2. Sepsání diplomové práce**
-  
-  - Průběžně psát po dokončení každého bloku
+- [ ] **E2. Výkonnostní testování**
+  - Throughput (videí/hodinu)
+  - Latence (upload → výsledek)
+  - Paměťové nároky, GPU utilization
+
+- [ ] **E3. Validace ML pipeline**
+  - Přesnost PE modelů (jako ověření SW komponenty)
+  - Kvalita detekce chyb vs. trenér
+
+- [ ] **E4. Testování na reálných videích**
+  - Autorova vlastní videa (triatlonista)
+  - Různé podmínky nahrávání
+
+- [ ] **E5. Sepsání diplomové práce**
+  - Průběžně po dokončení každého bloku
   - Finální kompilace a revize
-  - Obrázky, tabulky, grafy z experimentů
-  - *Odhadovaný rozsah: průběžně + 2–3 týdny na finalizaci*
 
-- [ ] **E3. Příprava na obhajobu**
-  
-  - Prezentace (10–15 slidů)
+- [ ] **E6. Příprava na obhajobu**
+  - Prezentace (max 12 minut, ~10–15 slidů)
   - Demo aplikace
-  - Připravit odpovědi na očekávané otázky
-  - *Odhadovaný rozsah: 1 týden*
+  - Odpovědi na očekávané otázky
 
 ---
 
@@ -194,58 +198,61 @@ A4 (metriky/prahy) ──► C1 (pipeline) ──► C2 (reference) ──► C3
                         D1 (backend) ──► D2 (integrace ML) ◄──────┘
                             │                    │
                             ▼                    ▼
-                        D3 (frontend) ──► E1 (testování) ──► E2 (text) ──► E3 (obhajoba)
+                        D3 (frontend) ──► E1-E4 (testování) ──► E5 (text) ──► E6 (obhajoba)
+                            │
+                        D4 (testy) + D5 (CI/CD)
 ```
 
-**Kritická cesta:** A3 (datasety) → B1 → B2 → C1 → C2 → C3 → D2 → E1
+**Kritická cesta:** A3 → B1 → B2 → C1 → C2 → C3 → D2 → E3
 
-**Co můžeš dělat paralelně:**
-
-- Rešerši (A1, A2) psát současně se stahováním datasetů (A3)
-- Backend základ (D1) a frontend (D3) stavět současně s ML experimenty (B1, B2)
-- Text diplomky (E2) psát průběžně po každém dokončeném bloku
+**Paralelně:**
+- Rešerši (A1, A2) + stahování dat (A3)
+- Backend (D1) + Frontend (D3) + ML experimenty (B)
+- Testy (D4) + CI/CD (D5) průběžně
+- Text diplomky (E5) průběžně
 
 ---
 
 ## Odhad celkového rozsahu
 
-| Blok                           | Rozsah           | Poznámka              |
-| ------------------------------ | ---------------- | --------------------- |
-| A. Rešerše a příprava          | 4–6 týdnů        | Lze začít ihned       |
-| B. Pose estimation experimenty | 4–6 týdnů        | Závisí na datech      |
-| C. Biomechanická analýza       | 4–5 týdnů        | Jádro diplomky        |
-| D. Webová aplikace             | 4–6 týdnů        | Lze paralelně s B/C   |
-| E. Vyhodnocení a psaní         | 4–6 týdnů        | Průběžně + finalizace |
-| **Celkem**                     | **~14–20 týdnů** | S paralelním prací    |
+| Blok | Rozsah | Poznámka |
+|------|--------|----------|
+| A. Rešerše a příprava | 4–6 týdnů | Lze začít ihned |
+| B. Pose estimation experimenty | 4–6 týdnů | Závisí na datech |
+| C. Biomechanická analýza | 4–5 týdnů | Jádro ML |
+| D. Webová aplikace + testy | 5–7 týdnů | Jádro SW inženýrství |
+| E. Vyhodnocení a psaní | 4–6 týdnů | Průběžně + finalizace |
+| **Celkem** | **~14–20 týdnů** | S paralelní prací |
 
 ---
 
-## Minimální životaschopný rozsah (pokud nestíháš)
+## Minimální životaschopný rozsah
 
-Pokud by byl čas kritický, diplomka stojí i s tímto minimem:
-
-1. ✅ Rešerše (kompletní)
-2. ✅ Benchmark pose estimation modelů na plaveckých datech
-3. ✅ Fine-tuning na SwimXYZ (alespoň freestyle side-view)
-4. ✅ Pipeline keypoints → biomechanické metriky
-5. ✅ Referenční systém pro 1 styl × 1 pohled × 3 úrovně
-6. ✅ Fungující porovnání s detekcí chyb
-7. ✅ Základní webové rozhraní (upload → výsledky)
-8. ✅ Vyhodnocení na reálných videích
+1. Kompletní rešerše
+2. Benchmark PE modelů na plaveckých datech
+3. Fine-tuning na SwimXYZ (freestyle side-view)
+4. Pipeline keypoints → biomechanické metriky
+5. Referenční systém pro 1 styl × 1 pohled × 2 úrovně
+6. Fungující porovnání s detekcí chyb
+7. Základní webové rozhraní (upload → výsledky)
+8. Vyhodnocení na reálných videích
+9. Výkonnostní testování systému
 
 Co může jít do "budoucí práce":
-
 - Více stylů a pohledů kamery
 - Podvodní korekce refrakce
 - Pokročilá vizualizace (side-by-side, 3D)
 - Uživatelské účty, historie
+- LLM prezentační vrstva
 
 ---
 
-## Otevřené otázky k rozhodnutí
-
-1. **Jaký je deadline odevzdání?** → ovlivní rozsah
-2. **Máš přístup ke GPU pro trénování?** → fine-tuning ViTPose potřebuje GPU
-3. **Máš kontakt na trenéra pro konzultaci metrik?** → A4 bude kvalitnější
-4. **Na jaký styl se zaměřit první?** → kraul je nejčastější a má nejvíc dat
-5. **Budeš mít reálná videa pro testování?** → natočit u bazénu?
+## Rozhodnuté otázky
+1. **Deadline** — cca únor 2027, dostatek času
+2. **GPU** — RTX 3060 + škola poskytne výkon
+3. **Primární styl** — kraul (freestyle)
+4. **Úrovně plavců** — 2: Dítě (8–14) + Pokročilý (15+)
+5. **Architektura** — Web (Vue.js + FastAPI + Celery)
+6. **Feedback** — Pravidlový systém + ML (bez LLM/RAG)
+7. **LaTeX šablona** — FITthesis-LaTeX (oficiální FIT)
+8. **Název práce** — "Návrh a implementace webového systému pro automatickou analýzu plavecké techniky z videa"

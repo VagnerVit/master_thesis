@@ -1,41 +1,104 @@
 %% SwimAth — Diplomová práce
-%% Analýza plavecké techniky z videa s využitím pose estimation a strojového učení
+%% Návrh a implementace webového systému pro automatickou analýzu plavecké techniky z videa
 %% Autor: Bc. Vít Vagner
 %% Kompilace: xelatex main.tex && bibtex main && xelatex main.tex && xelatex main.tex
 
-\documentclass[12pt, a4paper, twoside]{report}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CLASS OPTIONS
+% language: czech/english/slovak
+% thesis type: bachelor/master/dissertation
+% electronic (oneside) or printed (twoside)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[czech,master,twoside]{ctufit-thesis}
 
-% --- Encoding & Language ---
-\usepackage{fontspec}
-\usepackage{polyglossia}
-\setdefaultlanguage{czech}
-\setotherlanguage{english}
-\usepackage{csquotes}
-\newcommand{\uv}[1]{\enquote{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FILL IN THIS INFORMATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ctufittitle{Návrh a~implementace webového systému pro automatickou analýzu plavecké techniky z~videa}
+\ctufitauthorfull{Bc.~Vít Vagner}
+\ctufitauthorsurnames{Vagner}
+\ctufitauthorgivennames{Vít}
+\ctufitsupervisor{TODO}  % TODO: doplnit vedoucího (musí mít Ph.D.)
+\ctufitdepartment{Katedra softwarového inženýrství}  % TODO: ověřit katedru
+\ctufitprogram{Informatika}
+\ctufitspecialisation{Softwarové inženýrství}
+\ctufityear{2027}
+\ctufitdeclarationplace{Praze}
+\ctufitdeclarationdate{\today}
 
-% --- Page geometry ---
-\usepackage[
-    top=30mm,
-    bottom=30mm,
-    inner=35mm,
-    outer=25mm,
-    headheight=15pt
-]{geometry}
+\ctufitabstractCZE{%
+Tato diplomová práce představuje SwimAth, webový systém pro automatickou analýzu plavecké techniky z~videa.
+Práce se zaměřuje na~návrh a~implementaci kompletní softwarové architektury zahrnující asynchronní zpracování videa,
+integraci ML pipeline pro odhad lidské pózy a~biomechanickou analýzu.
+Systém zpracovává nahraný videozáznam plavce, extrahuje klíčové body těla pomocí fine-tuned modelu
+(ViTPose/RTMPose), filtruje je přes ragdoll constraints, vypočítává biomechanické metriky
+(úhly kloubů, rotace trupu, frekvence a~délka záběru) a~porovnává je s~referenčními vzory
+pro dvě úrovně plavců pomocí Dynamic Time Warping.
+Výstupem je skóre techniky, detekce konkrétních chyb a~personalizovaná doporučení ke~zlepšení.
+Webová aplikace je postavena na~architektuře Vue.js~3 + FastAPI + Celery + PostgreSQL
+s~důrazem na~škálovatelnost, testovatelnost a~bezpečnost (GDPR).
+Práce zahrnuje návrh REST API, datového modelu, asynchronního zpracování úloh,
+benchmark pose estimation modelů na~datasetu SwimXYZ a~vyhodnocení systému na~reálných videích.%
+}
 
-% --- Typography ---
-\usepackage{setspace}
-\onehalfspacing
-\usepackage{microtype}
-\usepackage{parskip}
+\ctufitabstractENG{%
+This master thesis presents SwimAth, a~web-based system for automated swimming technique analysis from video.
+The thesis focuses on~the design and implementation of~a~complete software architecture
+encompassing asynchronous video processing, ML pipeline integration for human pose estimation,
+and biomechanical analysis.
+The system processes uploaded swimmer video recordings, extracts body keypoints using a~fine-tuned model
+(ViTPose/RTMPose), filters them through ragdoll constraints, computes biomechanical metrics
+(joint angles, trunk rotation, stroke rate and length), and compares them with reference patterns
+for two skill levels using Dynamic Time Warping.
+The output includes a~technique score, detection of~specific errors, and personalized improvement recommendations.
+The web application is built on~a~Vue.js~3 + FastAPI + Celery + PostgreSQL architecture
+with emphasis on~scalability, testability, and security (GDPR).
+The thesis includes REST API design, data model, asynchronous task processing,
+a~benchmark of~pose estimation models on~the SwimXYZ dataset, and system evaluation on~real-world videos.%
+}
 
-% --- Headers & Footers ---
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[LE]{\leftmark}
-\fancyhead[RO]{\rightmark}
-\fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
+\ctufitkeywordsCZE{softwarová architektura, webová aplikace, analýza plavecké techniky, odhad lidské pózy, asynchronní zpracování, biomechanika plavání, Dynamic Time Warping, FastAPI, Vue.js, strojové učení}
+\ctufitkeywordsENG{software architecture, web application, swimming technique analysis, human pose estimation, asynchronous processing, swimming biomechanics, Dynamic Time Warping, FastAPI, Vue.js, machine learning}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END FILL IN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CUSTOMIZATION of this template
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{iftex}[2020/03/06]
+\iftutex % XeLaTeX and LuaLaTeX
+    \RequirePackage{ellipsis}[2020/05/22]
+\else
+    \errmessage{Only compilation with XeLaTeX or LuaLaTeX is allowed}
+    \stop
+\fi
+
+% hyperlinks
+\hypersetup{
+    pdfpagelayout=TwoPageRight,
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue!60!black,
+    urlcolor=blue!70!black,
+    pdfborder={0 0 0.1}
+}
+
+\RequirePackage{pdfpages}[2020/01/28]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CUSTOMIZATION END
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% PACKAGES
+%%%%%%%%%%%%%%%%%%%%%%
+
+% --- Bibliography (biblatex with natbib compatibility) ---
+\usepackage[backend=bibtex,style=numeric,natbib=true,sorting=none]{biblatex}
+\addbibresource{references.bib}
 
 % --- Graphics & Floats ---
 \usepackage{graphicx}
@@ -47,9 +110,6 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{longtable}
-
-% --- Math ---
-\usepackage{amsmath, amssymb}
 
 % --- TikZ & pgfplots ---
 \usepackage{tikz}
@@ -69,132 +129,90 @@
     captionpos=b
 }
 
-% --- Colors & Links ---
-\usepackage{xcolor}
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    citecolor=blue!60!black,
-    urlcolor=blue!70!black,
-    pdfauthor={Vít Vagner},
-    pdftitle={Analýza plavecké techniky z videa s využitím pose estimation a strojového učení},
-}
-
-% --- Bibliography ---
-\usepackage[numbers,sort&compress]{natbib}
-\bibliographystyle{plainnat}
-
-% --- Abbreviations ---
-\usepackage{acronym}
+% --- Units ---
+\usepackage{siunitx}
 
 % --- Misc ---
 \usepackage{enumitem}
-\usepackage{pdfpages}
+\usepackage{csquotes}
+\providecommand{\uv}[1]{\enquote{#1}}
 
-% ====================================================
-% METADATA
-% ====================================================
-\title{Analýza plavecké techniky z videa s~využitím pose estimation a~strojového učení}
-\author{Bc.~Vít Vagner}
-\date{2027}
+%%%%%%%%%%%%%%%%%%%%%%
+% PACKAGES END
+%%%%%%%%%%%%%%%%%%%%%%
 
-% ====================================================
-% DOCUMENT
-% ====================================================
 \begin{document}
+\frontmatter\frontmatterinit
 
-% --- Title Page ---
-\begin{titlepage}
-    \centering
-    \vspace*{2cm}
+\thispagestyle{empty}\maketitle\thispagestyle{empty}\cleardoublepage
 
-    {\Large České vysoké učení technické v~Praze\\[4pt]
-    Fakulta informačních technologií}
+% TODO: nahradit za PDF zadání z ProjectsFIT
+% \includepdf[pages={1-}]{assignment.pdf}
 
-    \vspace{3cm}
+\imprintpage
+\stopTOCentries
 
-    {\LARGE\bfseries Analýza plavecké techniky z~videa\\[6pt]
-    s~využitím pose estimation\\[6pt]
-    a~strojového učení}
+%%%%%%%%%%%%%%%%%%%
+% ACKNOWLEDGMENT
+%%%%%%%%%%%%%%%%%%%
+\begin{acknowledgmentpage}
+	% TODO: Doplnit poděkování.
+	Chtěl bych poděkovat \ldots
+\end{acknowledgmentpage}
 
-    \vspace{2cm}
+%%%%%%%%%%%%%%%%%%%
+% DECLARATION
+%%%%%%%%%%%%%%%%%%%
+\begin{declarationpage}
+	% TODO: Vybrat schválený text prohlášení z https://courses.fit.cvut.cz/SZZ/dokumenty/index.html
+	Prohlašuji, že jsem předloženou práci vypracoval samostatně a~že jsem uvedl veškeré použité informační zdroje v~souladu s~Metodickým pokynem o~dodržování etických principů při přípravě vysokoškolských závěrečných prací.
+\end{declarationpage}
 
-    {\Large Diplomová práce}
+\printtwopageabstract
 
-    \vspace{2cm}
+%%%%%%%%%%%%%%%%%%%
+% ABBREVIATIONS
+%%%%%%%%%%%%%%%%%%%
+\chapter{\thectufitabbreviationlabel}
 
-    {\large Bc.~Vít Vagner}
+\begin{tabular}{rl}
+	API   & Application Programming Interface \\
+	CI/CD & Continuous Integration / Continuous Deployment \\
+	COCO  & Common Objects in Context \\
+	CORS  & Cross-Origin Resource Sharing \\
+	CV    & Computer Vision -- počítačové vidění \\
+	DBA   & DTW Barycenter Averaging \\
+	DTW   & Dynamic Time Warping \\
+	FPS   & Frames Per Second \\
+	GDPR  & General Data Protection Regulation \\
+	GPU   & Graphics Processing Unit \\
+	IdC   & Index of Coordination \\
+	LSTM  & Long Short-Term Memory \\
+	ML    & Machine Learning -- strojové učení \\
+	NFR   & Non-Functional Requirement \\
+	ONNX  & Open Neural Network Exchange \\
+	ORM   & Object-Relational Mapping \\
+	PE    & Pose Estimation -- odhad pózy \\
+	REST  & Representational State Transfer \\
+	SL    & Stroke Length -- délka záběru \\
+	SR    & Stroke Rate -- frekvence záběru \\
+	WS    & WebSocket \\
+\end{tabular}
 
-    \vfill
+\resumeTOCentries
 
-    {\large
-    Vedoucí práce: TODO\\[12pt]
-    Katedra: TODO\\[6pt]
-    Studijní program: TODO\\[6pt]
-    2027
-    }
-\end{titlepage}
-
-% --- Declaration ---
-\chapter*{Prohlášení}
-\addcontentsline{toc}{chapter}{Prohlášení}
-
-TODO: Vložit schválený text prohlášení z~FIT ČVUT.
-
-\vspace{2cm}
-\noindent V~Praze dne \today \hfill Bc.~Vít Vagner
-
-% --- Acknowledgments ---
-\chapter*{Poděkování}
-\addcontentsline{toc}{chapter}{Poděkování}
-
-TODO: Doplnit poděkování.
-
-% --- Abstracts ---
-\chapter*{Abstrakt}
-\addcontentsline{toc}{chapter}{Abstrakt}
-
-Tato diplomová práce představuje SwimAth, webový systém pro automatickou analýzu plavecké techniky z~videa. Systém kombinuje moderní metody odhadu lidské pózy (ViTPose/RTMPose) fine-tuned na plaveckých datech s~biomechanickou analýzou a~personalizovaným feedbackem podle úrovně plavce. Pipeline zpracovává nahraný videozáznam, extrahuje klíčové body těla, filtruje je přes ragdoll constraints, vypočítává biomechanické metriky (úhly kloubů, rotace trupu, frekvence a~délka záběru) a~porovnává je s~referenčními vzory pro dvě úrovně plavců pomocí Dynamic Time Warping. Výstupem je skóre techniky, detekce konkrétních chyb a~personalizovaná doporučení ke zlepšení. Práce zahrnuje benchmark pose estimation modelů na syntetickém datasetu SwimXYZ, fine-tuning vybraného modelu, návrh a~implementaci kompletního webového pipeline a~vyhodnocení na reálných videích.
-
-\paragraph{Klíčová slova:}
-analýza plavecké techniky, odhad lidské pózy, počítačové vidění, strojové učení, biomechanika plavání, ViTPose, RTMPose, Dynamic Time Warping
-
-\chapter*{Abstract}
-\addcontentsline{toc}{chapter}{Abstract}
-
-This master thesis presents SwimAth, a~web-based system for automated swimming technique analysis from video. The system combines modern human pose estimation methods (ViTPose/RTMPose) fine-tuned on swimming data with biomechanical analysis and personalized feedback based on swimmer skill level. The pipeline processes uploaded video recordings, extracts body keypoints, filters them through ragdoll constraints, computes biomechanical metrics (joint angles, trunk rotation, stroke rate and length), and compares them with reference patterns for two skill levels using Dynamic Time Warping. The output includes a~technique score, detection of specific errors, and personalized improvement recommendations. The thesis includes a~benchmark of pose estimation models on the synthetic SwimXYZ dataset, fine-tuning of the selected model, design and implementation of a~complete web pipeline, and evaluation on real-world videos.
-
-\paragraph{Keywords:}
-swimming technique analysis, human pose estimation, computer vision, machine learning, swimming biomechanics, ViTPose, RTMPose, Dynamic Time Warping
-
-% --- Abbreviations ---
-\chapter*{Seznam zkratek}
-\addcontentsline{toc}{chapter}{Seznam zkratek}
-
-\begin{acronym}[ONNX]
-    \acro{CV}{Computer Vision -- počítačové vidění}
-    \acro{COCO}{Common Objects in Context}
-    \acro{DTW}{Dynamic Time Warping}
-    \acro{FPS}{Frames Per Second}
-    \acro{GPU}{Graphics Processing Unit}
-    \acro{IdC}{Index of Coordination}
-    \acro{LSTM}{Long Short-Term Memory}
-    \acro{ML}{Machine Learning -- strojové učení}
-    \acro{ONNX}{Open Neural Network Exchange}
-    \acro{PE}{Pose Estimation -- odhad pózy}
-    \acro{SL}{Stroke Length -- délka záběru}
-    \acro{SR}{Stroke Rate -- frekvence záběru}
-\end{acronym}
-
-% --- Table of Contents ---
 \tableofcontents
 \listoffigures
+\begingroup
+\let\clearpage\relax
 \listoftables
+\endgroup
 
-% --- Main Content ---
-\clearpage
-\pagenumbering{arabic}
+\mainmatter\mainmatterinit
+
+%%%%%%%%%%%%%%%%%%%
+% THE THESIS
+%%%%%%%%%%%%%%%%%%%
 
 \include{chapters/01_uvod}
 \include{chapters/02_reserse}
@@ -203,11 +221,12 @@ swimming technique analysis, human pose estimation, computer vision, machine lea
 \include{chapters/05_experimenty}
 \include{chapters/06_zaver}
 
-% --- Bibliography ---
-\bibliography{references}
+\appendix\appendixinit
 
-% --- Appendices ---
-\appendix
 \include{chapters/appendix_A}
+
+\backmatter
+
+\printbibliography[heading=bibintoc]
 
 \end{document}

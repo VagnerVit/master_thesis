@@ -638,3 +638,78 @@ volumes:
 | Storage videí          | Lokální filesystem      | S3/MinIO (škálovatelnější)                                  |
 | Auth                   | Zatím žádný (MVP)       | JWT + OAuth2 (později)                                      |
 | Max délka videa        | 60 sekund               | Delší = delší zpracování                                    |
+
+---
+
+### 9. Design Patterns
+
+| Pattern | Kde | Proč |
+|---------|-----|------|
+| **Strategy** | PE model selection (`PoseEstimatorBase` → `MediaPipePE`, `RTMPosePE`, `ViTPosePE`) | Výměna PE modelu bez změny pipeline |
+| **Factory** | Analyzer creation (`AnalyzerFactory.create(style, view, level)`) | Správná kombinace referenční šablony + pravidel podle parametrů |
+| **Pipeline** | Processing stages (`VideoProcessor → PoseEstimator → RagdollFilter → BiomechanicsExtractor → Comparator → FeedbackGenerator`) | Modulární řetězení kroků, snadné přidání/odebrání kroku |
+| **Observer** | Progress notification (Redis pub/sub → WebSocket) | Decoupling workeru od frontendu, real-time progress |
+| **Repository** | DB access (`AnalysisRepository`, `ReferenceRepository`) | Abstrakce persistence, testovatelnost s mock DB |
+
+---
+
+### 10. Testovací strategie
+
+```
+          ╭───────────╮
+          │   E2E     │  ← Playwright: upload → progress → výsledky
+          │  (málo)   │
+          ╰─────┬─────╯
+          ╭─────┴─────╮
+          │ Integrační│  ← FastAPI TestClient: API endpointy, Celery tasky, DB
+          │  (střed)  │
+          ╰─────┬─────╯
+          ╭─────┴─────╮
+          │   Unit    │  ← pytest: biomechanics, DTW, feedback, validace
+          │  (základ) │
+          ╰───────────╯
+```
+
+**Co testovat na které úrovni:**
+
+| Úroveň | Co testovat | Příklady |
+|---------|-------------|----------|
+| Unit | Jednotlivé funkce a třídy | `compute_elbow_angle()`, `dtw_distance()`, `generate_feedback()`, Pydantic validace |
+| Integrační | API + DB + Celery | Upload endpoint vytvoří záznam v DB, Celery task zpracuje mock video |
+| E2E | Celý flow | Nahrání videa v prohlížeči → progress bar → výsledky na stránce |
+
+**Coverage target:** >80% na unit + integrační úrovni.
+
+---
+
+### 11. GDPR a bezpečnost
+
+#### Ochrana videí
+- UUID názvy souborů (žádné osobní údaje v cestě)
+- Configurable retention policy (automatické smazání po N dnech)
+- DELETE endpoint pro okamžité smazání uživatelem
+- Keypoint data (pózy) jsou anonymní — neobsahují obličej
+
+#### Validace vstupů
+- Video: formát (MP4/MOV), codec (H.264/H.265), max velikost (500 MB), max délka (60s)
+- Parametry: enum validace přes Pydantic
+- Path traversal prevence při ukládání souborů
+- Rate limiting: max 10 uploadů/hodinu per IP
+
+#### Síťová bezpečnost
+- HTTPS v produkci (TLS termination na reverse proxy)
+- Strict CORS policy (povolené originy v konfiguraci)
+- No secrets in code (env variables, `.env` file gitignored)
+
+---
+
+### 12. Non-Functional Requirements
+
+| NFR | Požadavek | Metrika | Jak měřit |
+|-----|-----------|---------|-----------|
+| NFR-01 Výkon | Zpracování 30s videa < 5 min | Čas upload → výsledek | Automatizovaný benchmark |
+| NFR-02 Škálovatelnost | Min 10 souběžných analýz | Concurrent requests | Load test (locust) |
+| NFR-03 Bezpečnost | GDPR compliance | Retention policy, validace | Security review checklist |
+| NFR-04 Dostupnost | Graceful degradation | Uptime, error rate | Monitoring (Prometheus) |
+| NFR-05 Udržovatelnost | Modulární architektura | Test coverage >80% | pytest + coverage report |
+| NFR-06 Přenositelnost | Docker kontejnerizace | docker-compose up funguje | CI pipeline |

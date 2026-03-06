@@ -3,12 +3,198 @@
 \label{ch:navrh}
 %---------------------------------------------------------------
 
+Tato kapitola popisuje návrh webového systému SwimAth pro automatickou analýzu plavecké techniky z~videa.
+Nejprve definujeme požadavky na~systém, poté představíme celkovou architekturu a~návrh jednotlivých komponent.
+Strojové učení a~biomechanická analýza jsou rámovány jako softwarové komponenty systému --- jejich návrh je popsán v~sekcích~\ref{sec:ml_pipeline_navrh} až~\ref{sec:diskuse_alternativ}.
+
+%===============================================================
+% SW SEKCE (jádro práce pro softwarové inženýrství)
+%===============================================================
+
+\section{Požadavky na systém}
+\label{sec:pozadavky}
+
+% TODO: Detailní specifikace požadavků
+
+\subsection{Funkční požadavky}
+
+% TODO: Tabulka FR-01 až FR-nn
+% FR-01: Nahrání videa (MP4/MOV, max 60s, max 500 MB)
+% FR-02: Výběr úrovně plavce (dítě / pokročilý)
+% FR-03: Výběr pohledu kamery (side / front / underwater)
+% FR-04: Výběr plaveckého stylu (kraul / znak / prsa / motýlek)
+% FR-05: Asynchronní zpracování videa s real-time progress
+% FR-06: Zobrazení biomechanických metrik
+% FR-07: Zobrazení skóre techniky 0–100
+% FR-08: Detekce a zobrazení konkrétních chyb
+% FR-09: Personalizovaná doporučení ke zlepšení
+% FR-10: Video přehrávač s overlay pózy
+% FR-11: Export výsledků (JSON, PDF)
+% FR-12: Historie analýz
+
+\subsection{Nefunkční požadavky}
+
+% TODO: Tabulka NFR-01 až NFR-nn
+% NFR-01: Výkon — zpracování 30s videa do 5 minut
+% NFR-02: Škálovatelnost — podpora minimálně 10 souběžných analýz
+% NFR-03: Bezpečnost — GDPR compliance, validace vstupů, CORS
+% NFR-04: Dostupnost — graceful degradation při výpadku ML modelu
+% NFR-05: Udržovatelnost — modulární architektura, >80% test coverage
+% NFR-06: Přenositelnost — Docker kontejnerizace
+
+\subsection{Aktéři a use cases}
+
+% TODO: Use case diagram (TikZ/pgfplots figure)
+% Aktéři: Plavec, Trenér, Systém (ML pipeline)
+% Hlavní use cases: Upload videa, Sledování průběhu, Zobrazení výsledků, Prohlížení historie
+
 \section{Architektura systému}
 \label{sec:architektura}
-% TODO: Vue.js 3 + FastAPI + Celery + Redis + PostgreSQL
-% - Diagram architektury (figure)
-% - Upload flow: video + úroveň + pohled + styl → WebSocket progress → výsledky
-% - Asynchronní zpracování (Celery workers)
+
+% TODO: Detailní popis architektury
+
+\subsection{Přehled architektury}
+
+% TODO: C4 Context diagram (figure) — systém, uživatel, externí závislosti
+% TODO: C4 Container diagram (figure) — Frontend, API, Worker, DB, Redis, File Storage
+
+% TODO: Textový popis:
+% - Vue.js 3 frontend (Vite, Tailwind CSS, Pinia)
+% - FastAPI backend (REST API + WebSocket)
+% - Celery workers (ML inference)
+% - Redis (task queue, cache)
+% - PostgreSQL (persistentní data)
+% - File Storage (videa, modely, referenční šablony)
+
+\subsection{Komponentový diagram}
+
+% TODO: C4 Component diagram pro backend (figure)
+% Komponenty: API Router, Upload Handler, Analysis Service, ML Pipeline, Reference Manager,
+%              Feedback Generator, WebSocket Manager, DB Access Layer
+
+\subsection{Sekvenční diagram --- upload flow}
+
+% TODO: Sekvenční diagram (TikZ figure)
+% 1. Uživatel → Frontend: nahrání videa + parametry
+% 2. Frontend → API: POST /api/upload (multipart)
+% 3. API → File Storage: uložení videa
+% 4. API → DB: vytvoření záznamu Analysis(status=processing)
+% 5. API → Celery: spuštění tasku analyze_video
+% 6. API → Frontend: {task_id, status: processing}
+% 7. Frontend ↔ API: WebSocket /ws/progress/{task_id}
+% 8. Worker: pose estimation → ragdoll → biomechanics → DTW → feedback
+% 9. Worker → DB: update Analysis(status=completed, metrics, feedback)
+% 10. API → Frontend: WS {progress: 100, stage: done}
+% 11. Frontend: redirect na /analysis/{id}
+
+\section{Návrh API}
+\label{sec:navrh_api}
+
+% TODO: Detailní návrh REST API
+
+\subsection{REST endpointy}
+
+% TODO: Tabulka endpointů
+% | Metoda | Cesta                    | Popis                          | Auth |
+% |--------|--------------------------|--------------------------------|------|
+% | POST   | /api/upload              | Nahrání videa + parametry      | ne   |
+% | GET    | /api/analysis/{id}       | Výsledky analýzy               | ne   |
+% | GET    | /api/analysis/{id}/poses | Keypoint data pro vizualizaci  | ne   |
+% | GET    | /api/history             | Seznam analýz                  | ne   |
+% | DELETE | /api/analysis/{id}       | Smazání analýzy + videa        | ne   |
+% | WS     | /ws/progress/{task_id}   | Real-time progress             | ne   |
+
+\subsection{WebSocket protokol}
+
+% TODO: Definice zpráv
+% Server → Client: {progress: int, stage: string, message: string}
+% Stages: uploading, extracting, pose_estimation, biomechanics, comparing, generating_feedback, done, error
+
+\subsection{Datové formáty}
+
+% TODO: Pydantic modely pro request/response (listing)
+% UploadRequest, AnalysisResponse, MetricsResponse, DeviationResponse, FeedbackResponse
+
+\section{Datový model}
+\label{sec:datovy_model}
+
+% TODO: ER diagram (TikZ figure)
+% Tabulky: Analysis, Metrics, Deviations, Feedback, ReferenceTemplate
+% Vztahy: Analysis 1:N Deviations, Analysis 1:1 Metrics, Analysis 1:N Feedback
+
+% TODO: PostgreSQL schéma (listing)
+% - analyses: id, created_at, video_path, skill_level, camera_view, swim_style, status, progress, overall_score
+% - metrics: id, analysis_id (FK), metric_name, value, unit, optimal_min, optimal_max
+% - deviations: id, analysis_id (FK), body_part, metric, actual, reference, severity, feedback_text
+% - reference_templates: id, skill_level, swim_style, camera_view, template_path, variance_path, created_at
+
+% TODO: Alembic migrace — verzování schématu
+
+\section{Asynchronní zpracování}
+\label{sec:async}
+
+% TODO: Detailní popis async pipeline
+
+\subsection{Celery + Redis}
+
+% TODO: Task lifecycle diagram (figure)
+% PENDING → STARTED → (PROGRESS updates) → SUCCESS / FAILURE
+% Retry strategie: max 3 retries, exponential backoff
+% Dead letter queue pro neúspěšné tasky
+
+\subsection{Task orchestrace}
+
+% TODO: Popis Celery tasku analyze_video:
+% 1. Validace a předzpracování videa
+% 2. Extrakce framů
+% 3. Detekce plavce (bounding box)
+% 4. Pose estimation (batched ONNX inference)
+% 5. Ragdoll filtering
+% 6. Extrakce biomechanických metrik
+% 7. Segmentace záběrů
+% 8. DTW porovnání s referenční šablonou
+% 9. Generování zpětné vazby
+% 10. Uložení výsledků do DB
+% Progress update po každém kroku přes Redis pub/sub → WebSocket
+
+\section{Bezpečnost a ochrana dat}
+\label{sec:bezpecnost}
+
+% TODO: GDPR a bezpečnostní opatření
+
+% Validace vstupů:
+% - Video: kontrola formátu (MP4/MOV), max velikost (500 MB), max délka (60s)
+% - Parametry: enum validace (skill_level, camera_view, swim_style)
+% - Rate limiting: max 10 uploadů za hodinu per IP
+
+% GDPR videí:
+% - Videa ukládána s UUID názvem (bez osobních údajů v cestě)
+% - Automatické smazání videí po N dnech (configurable retention policy)
+% - Možnost okamžitého smazání uživatelem (DELETE endpoint)
+% - Pose data (keypoints) anonymní — neobsahují obličej ani identifikační údaje
+
+% CORS:
+% - Povolené originy definované v konfiguraci
+% - Strict CORS policy v produkci
+
+% Další:
+% - HTTPS v produkci
+% - Input sanitization proti path traversal (video upload)
+% - Validace video obsahu (ne jen přípony)
+
+%===============================================================
+% NÁVRH ML PIPELINE JAKO SW KOMPONENTY
+%===============================================================
+
+\section{Návrh ML pipeline}
+\label{sec:ml_pipeline_navrh}
+
+% TODO: Popis ML pipeline jako softwarové komponenty
+% - Strategy pattern pro výběr PE modelu (MediaPipe / RTMPose / ViTPose)
+% - Factory pattern pro vytváření analyzérů podle stylu a pohledu
+% - Pipeline pattern pro orchestraci kroků (PE → ragdoll → metrics → DTW → feedback)
+% - Observer pattern pro progress notification
+% - Error handling: graceful degradation při selhání PE na jednotlivém framu
 
 \section{Výběr modelu pro odhad pózy}
 \label{sec:vyber_modelu}

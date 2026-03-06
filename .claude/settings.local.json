@@ -10,12 +10,14 @@
       "Bash(xelatex:*)",
       "Bash(mv:*)",
       "mcp__playwright__browser_run_code",
-      "mcp__playwright__browser_type"
+      "mcp__playwright__browser_type",
+      "Skill(latex-thesis)"
     ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "filesystem"
   ],
+  "outputStyle": "Explanatory",
   "prefersReducedMotion": true
 }

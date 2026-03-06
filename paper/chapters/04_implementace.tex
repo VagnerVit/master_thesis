@@ -3,31 +3,243 @@
 \label{ch:implementace}
 %---------------------------------------------------------------
 
+Tato kapitola popisuje implementaci jednotlivých komponent systému SwimAth podle návrhu z~kapitoly~\ref{ch:navrh}.
+Kapitola je strukturována od~předzpracování videa přes ML pipeline a~webovou aplikaci až~po~testovací strategii a~nasazení.
+
 \section{Předzpracování videa}
 \label{sec:predzpracovani}
-% TODO: OpenCV, normalizace FPS, resize, detekce plavce
-% - VideoCapture pipeline
-% - Frame extraction a buffering
-% - Normalizace rozlišení a FPS
+
+% TODO: OpenCV pipeline
+% - VideoCapture wrapper: otevření videa, kontrola codec/fps/resolution
+% - Validace formátu: MP4/MOV, H.264/H.265 codec
+% - Normalizace: resize na max 1080p (zachování aspect ratio), normalizace FPS na 30
+% - FFmpeg integrace: konverze nestandardních formátů
+% - Frame extraction: sekvenční čtení framů do numpy array
+% - Buffering strategie: batch processing po N framech (memory efficient)
 
 \section{ML pipeline}
 \label{sec:ml_pipeline}
-% TODO: Pose estimation → ragdoll → biomechanics → comparison → feedback
-% - Diagram pipeline (figure)
-% - ONNX inference
-% - Popis každého kroku
 
-\section{Webová aplikace}
-\label{sec:web_app}
-% TODO: Backend (FastAPI), frontend (Vue.js), WebSocket progress, Celery workers
-% - REST API endpointy
-% - Asynchronní zpracování
-% - Frontend: upload, progress, výsledky, video overlay, historie
-% - Databázový model (PostgreSQL)
+% TODO: Implementace ML pipeline jako SW komponenty
+
+\subsection{ONNX Runtime inference}
+
+% TODO: Popis inference pipeline
+% - Načtení modelu: ONNX Runtime session s GPU ExecutionProvider
+% - Batched inference: zpracování N framů najednou (optimalizace GPU utilization)
+% - Pre-processing: resize, normalizace, top-down crop podle bounding boxu
+% - Post-processing: heatmap → keypoints (argmax + subpixel refinement)
+% - Fallback: pokud GPU není dostupný, CPU inference (pomalejší, ale funkční)
+
+\subsection{Strategy pattern pro PE modely}
+
+% TODO: Popis implementace Strategy pattern
+% - PoseEstimatorBase (ABC): predict(frames) → keypoints
+% - MediaPipePoseEstimator: wrapper pro MediaPipe (baseline)
+% - RTMPosePoseEstimator: ONNX inference RTMPose-m
+% - ViTPosePoseEstimator: ONNX inference ViTPose-B
+% - Výběr strategie na základě konfigurace (env variable / admin setting)
+% - Konfigurační rozhraní: model_path, input_size, keypoint_count, confidence_threshold
+
+\subsection{Pipeline orchestrace}
+
+% TODO: Popis pipeline flow
+% - Pipeline třída: orchestrace kroků (PE → ragdoll → metrics → DTW → feedback)
+% - Každý krok jako samostatná třída s rozhraním process(input) → output
+% - Error handling: selhání na jednom framu nezastaví celou analýzu
+% - Progress callback: po každém kroku update progressu přes Redis
+
+\section{Backend}
+\label{sec:backend}
+
+% TODO: Implementace FastAPI backendu
+
+\subsection{Struktura projektu}
+
+% TODO: Diagram adresářové struktury (listing)
+% swimath-api/
+% ├── app/
+% │   ├── main.py              # FastAPI app, CORS, lifecycle
+% │   ├── config.py            # Pydantic BaseSettings
+% │   ├── api/                 # Endpointy (upload, analysis, history, websocket)
+% │   ├── ml/                  # ML pipeline (PE, biomechanics, comparator, feedback)
+% │   ├── processing/          # Video zpracování (handler, extractor, pipeline)
+% │   ├── references/          # Referenční databáze (manager, templates)
+% │   ├── db/                  # SQLAlchemy modely, Alembic migrace
+% │   └── utils/               # Pomocné funkce
+
+\subsection{Routing a dependency injection}
+
+% TODO: FastAPI specifika
+% - APIRouter pro modularitu endpointů
+% - Dependency injection: DB session, Celery app, config
+% - Pydantic modely pro validaci request/response
+% - Middleware: CORS, request logging, error handling
+
+\subsection{Pydantic modely}
+
+% TODO: Ukázkové modely (listing)
+% - UploadParams: skill_level (Enum), camera_view (Enum), swim_style (Enum)
+% - AnalysisResponse: id, status, metrics, deviations, feedback, overall_score
+% - ProgressMessage: progress (int), stage (str), message (str)
+
+\section{Frontend}
+\label{sec:frontend}
+
+% TODO: Implementace Vue.js 3 frontendu
+
+\subsection{Vue.js 3 Composition API}
+
+% TODO: Architektura frontendu
+% - Composition API s <script setup> syntaxí
+% - Pinia store pro globální stav (aktuální analýza, historie)
+% - Vue Router pro navigaci (upload → progress → results → history)
+% - Axios instance s interceptory pro error handling
+
+\subsection{Upload komponenta}
+
+% TODO: Popis upload flow
+% - Drag & drop + file input
+% - Klientská validace (formát, velikost)
+% - Formulář pro výběr parametrů (skill_level, camera_view, swim_style)
+% - Axios POST s FormData
+% - Redirect na progress view
+
+\subsection{WebSocket progress}
+
+% TODO: Popis real-time progress
+% - WebSocket spojení na /ws/progress/{task_id}
+% - Reactive progress bar (Vue reactive refs)
+% - Stage indikátor (jaký krok pipeline právě běží)
+% - Auto-redirect na výsledky po dokončení
+
+\subsection{Video overlay --- Canvas API}
+
+% TODO: Popis vizualizace pózy
+% - HTML5 Canvas overlay přes <video> element
+% - Vykreslení skeleton (keypoints + connections)
+% - Synchronizace canvas s video playback (requestAnimationFrame)
+% - Barevné kódování: zelená (OK), žlutá (minor), červená (severe) pro problematické klouby
+% - Timeline vizualizace záběrových cyklů
+
+\section{Asynchronní zpracování}
+\label{sec:async_impl}
+
+% TODO: Implementace Celery pipeline
+
+\subsection{Celery workers}
+
+% TODO: Konfigurace a implementace
+% - Celery app s Redis brokerem
+% - Task: analyze_video(analysis_id) — hlavní processing task
+% - Konfigurace: concurrency, prefetch multiplier, task time limit
+% - GPU worker: dedikovaný worker s GPU přístupem pro ML inference
+% - CPU worker: pro lehké úlohy (validace, export)
+
+\subsection{WebSocket progress bridge}
+
+% TODO: Redis pub/sub → WebSocket
+% - Worker publikuje progress do Redis kanálu
+% - FastAPI WebSocket endpoint odebírá z Redis kanálu
+% - Bridge zajišťuje real-time doručení progress updates klientovi
+
+\subsection{Task state management}
+
+% TODO: Stavový diagram tasku
+% - Stavy: PENDING, STARTED, PROGRESS, SUCCESS, FAILURE, REVOKED
+% - Retry logika: max 3 retries, exponential backoff
+% - Timeout: task time limit pro prevenci zombie tasků
+% - Cleanup: automatické smazání starých tasků
+
+\section{Databáze}
+\label{sec:databaze}
+
+% TODO: Implementace persistence vrstvy
+
+\subsection{SQLAlchemy ORM}
+
+% TODO: Popis ORM modelů
+% - Deklarativní mapování (DeclarativeBase)
+% - Modely: Analysis, Metric, Deviation, Feedback, ReferenceTemplate
+% - Vztahy: relationship() s lazy loading
+% - JSON column pro flexibilní metadata
+
+\subsection{Alembic migrace}
+
+% TODO: Migrace workflow
+% - alembic revision --autogenerate pro generování migrací
+% - alembic upgrade head při startu aplikace
+% - Verzování schématu v git
+
+\subsection{Connection pooling}
+
+% TODO: SQLAlchemy connection pool
+% - Pool size, max overflow, pool recycle
+% - Async session (pokud FastAPI async endpoints)
 
 \section{Referenční databáze}
 \label{sec:referencni_db}
-% TODO: Struktura, generování referenčních vzorů
-% - Formát uložení (JSON)
-% - Generování z SwimXYZ datasetu
-% - Sliding window, normalizace
+
+% TODO: Implementace referenčního systému
+
+% - Struktura: skill_level / swim_style / camera_view / template.json
+% - JSON schéma: temporální sekvence keypointů (DBA výstup) + variance envelope
+% - Generování: DBA iterativní algoritmus na trénovacích záběrech ze SwimXYZ
+% - Verzování šablon: verze v JSON metadata, migrace při změně formátu
+% - Lazy loading: šablony se načítají při prvním požadavku a cacheují v paměti
+
+\section{Testovací strategie}
+\label{sec:testovani}
+
+% TODO: Detailní popis testovacího přístupu
+
+\subsection{Testovací pyramida}
+
+% TODO: Diagram testovací pyramidy (figure)
+% - Unit testy (základ): jednotlivé funkce, třídy, moduly
+% - Integrační testy (střed): API endpointy, DB operace, Celery tasky
+% - E2E testy (špička): celý upload → výsledky flow
+
+\subsection{Unit testy}
+
+% TODO: pytest specifika
+% - Fixtures pro DB session, test client, mock ML models
+% - Parametrizované testy pro různé kombinace (styl × pohled × úroveň)
+% - Mock PE modelu pro rychlé testy (předpočítané keypoints)
+% - Coverage target: >80%
+
+\subsection{Integrační testy}
+
+% TODO: FastAPI TestClient
+% - Test upload endpointu (validace, vytvoření záznamu)
+% - Test analysis endpointu (vrácení výsledků)
+% - Test WebSocket (progress updates)
+% - Test Celery tasku s mock ML modelem
+
+\subsection{E2E testy}
+
+% TODO: Playwright testy
+% - Upload flow: nahrání videa → progress → výsledky
+% - Video overlay: kontrola renderování
+% - Historie: zobrazení předchozích analýz
+
+\section{CI/CD a deployment}
+\label{sec:cicd}
+
+% TODO: Popis nasazení a automatizace
+
+\subsection{Docker}
+
+% TODO: Multi-stage Dockerfile
+% - Build stage: instalace závislostí, kompilace
+% - Runtime stage: minimální image, non-root user
+% - docker-compose: frontend, api, worker, db, redis
+% - GPU podpora: nvidia-docker pro ML worker
+
+\subsection{CI pipeline}
+
+% TODO: GitHub Actions workflow
+% - Lint: ruff, mypy
+% - Test: pytest s coverage reportem
+% - Build: Docker image
+% - (Budoucí) Deploy: push to registry, deploy to server

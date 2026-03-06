@@ -3,31 +3,165 @@
 \label{ch:experimenty}
 %---------------------------------------------------------------
 
+Tato kapitola prezentuje vyhodnocení systému SwimAth z~pohledu funkčnosti, výkonu i~kvality ML komponent.
+Nejprve popisujeme funkční a~výkonnostní testování systému jako celku (sekce~\ref{sec:funkcni_testovani}--\ref{sec:skalovatelnost}),
+poté validaci ML pipeline (sekce~\ref{sec:presnost_pe}--\ref{sec:realna_videa})
+a~nakonec uživatelské testování a~limity (sekce~\ref{sec:uzivatelske_testovani}--\ref{sec:limity}).
+
+%===============================================================
+% SW EXPERIMENTY
+%===============================================================
+
+\section{Funkční testování}
+\label{sec:funkcni_testovani}
+
+% TODO: End-to-end scénáře
+
+\subsection{Test matrix}
+
+% TODO: Tabulka testovacích scénářů
+% | Scénář | Styl    | Pohled     | Úroveň   | Vstup         | Očekávaný výstup           |
+% |--------|---------|------------|-----------|---------------|----------------------------|
+% | TC-01  | kraul   | side       | pokročilý | 30s MP4       | Metriky + skóre + feedback |
+% | TC-02  | kraul   | side       | dítě      | 30s MP4       | Metriky + širší tolerance  |
+% | TC-03  | kraul   | front      | pokročilý | 30s MP4       | Subset metrik (rotace)     |
+% | TC-04  | —       | —          | —         | neplatný AVI  | HTTP 422 chyba             |
+% | TC-05  | —       | —          | —         | >500MB video  | HTTP 413 chyba             |
+% | TC-06  | —       | —          | —         | 0s video      | HTTP 422 chyba             |
+
+\subsection{Automatizované testy}
+
+% TODO: Výsledky testů
+% - Počet unit testů, integračních testů, E2E testů
+% - Code coverage (celkový + per-modul)
+% - Tabulka: modul | testy | coverage
+% - Screenshot: coverage report
+
+\section{Výkonnostní testování}
+\label{sec:vykonnostni_testovani}
+
+% TODO: Benchmark systému
+
+\subsection{Throughput}
+
+% TODO: Měření propustnosti
+% - Metriky: videí zpracovaných za hodinu, průměrná doba zpracování
+% - Testovací podmínky: RTX 3060, 32 GB RAM, SSD
+% - Tabulka: délka videa | rozlišení | PE model | čas zpracování
+% - Graf: čas zpracování vs. délka videa (figure)
+
+\subsection{Latence jednotlivých kroků}
+
+% TODO: Breakdown latence pipeline
+% - Tabulka: krok pipeline | průměrný čas | % celku
+% - Kroky: upload, validace, frame extraction, PE inference, ragdoll,
+%           biomechanics, segmentace, DTW, feedback, DB save
+% - Identifikace bottlenecku (typicky PE inference)
+
+\subsection{Paměťové nároky}
+
+% TODO: Měření paměti
+% - Peak RAM usage při zpracování videa
+% - GPU VRAM usage pro PE model
+% - Vliv batch size na paměť vs. rychlost
+
+\section{Škálovatelnost}
+\label{sec:skalovatelnost}
+
+% TODO: Testování škálovatelnosti
+
+% - Souběžné analýzy: 1, 2, 5, 10 videí současně
+% - Vliv na čas zpracování (degradace?)
+% - Worker scaling: 1 vs. 2 vs. 4 Celery workers
+% - Bottleneck analýza: GPU (PE inference) vs. CPU (DTW, biomechanics) vs. I/O (video čtení)
+% - Tabulka: workers | souběžných videí | průměrný čas | GPU utilization
+
+%===============================================================
+% VALIDACE ML KOMPONENT
+%===============================================================
+
 \section{Přesnost odhadu pózy na plaveckých datech}
 \label{sec:presnost_pe}
-% TODO: Benchmark MediaPipe vs RTMPose vs ViTPose na SwimXYZ
-% - Metriky: PCK, AP, MPJPE
-% - Tabulka výsledků
-% - Vliv fine-tuningu
+
+% TODO: Benchmark PE modelů jako validace SW komponenty
+
+% Benchmark MediaPipe vs RTMPose vs ViTPose na SwimXYZ:
+% - Metriky: PCK@5, PCK@10, COCO AP
+% - Tabulka: model | PCK@5 | PCK@10 | AP | FPS (GPU) | FPS (CPU)
+% - Vliv fine-tuningu: before vs. after (ViTPose)
+% - Per-joint analýza: které klouby jsou problematické
+% - Cross-view: trénink na side-view, test na front-view
 
 \section{Kvalita detekce chyb}
 \label{sec:kvalita_detekce}
-% TODO: Porovnání s hodnocením trenéra
-% - Metodika evaluace
-% - Precision/Recall detekce chyb
-% - Confusion matrix
+
+% TODO: Validace pravidlového systému
+
+% Metodika:
+% - Expert annotation protokol: 2 nezávislí trenéři
+% - Minimálně 50 záběrů, 7 typů chyb (dle Virag et al.)
+% - Inter-rater reliability: Cohen's kappa
+%
+% Metriky:
+% - Precision: kolik detekovaných chyb je skutečných
+% - Recall: kolik skutečných chyb systém detekoval
+% - Per-error-type: precision/recall pro každý typ chyby
+% - Confusion matrix: systém vs. trenér
+%
+% Threshold sensitivity analysis:
+% - Posun prahu o ±10° pro extrapolované metriky (kategorie dítě)
+% - Vyhodnocení podílu záběrů se změněnou klasifikací
 
 \section{Testování na reálných videích}
 \label{sec:realna_videa}
-% TODO: Různé úrovně plavců, různé pohledy kamery
-% - Autorova vlastní videa (triatlonista)
-% - Různé podmínky nahrávání
-% - Kvalitativní analýza výstupů
+
+% TODO: Kvalitativní analýza na reálných datech
+
+% - Autorova vlastní videa (triatlonista, kraul)
+% - Různé podmínky: indoor bazén, venkovní bazén, různé osvětlení
+% - Různé pohledy kamery: side-view (primární), front-view
+% - Kvalitativní analýza: shoduje se feedback se subjektivním hodnocením autora?
+% - Ukázkové výstupy systému (screenshots, figure)
+% - Domain gap: jak se liší výsledky na syntetických vs. reálných datech
+
+%===============================================================
+% UŽIVATELSKÉ TESTOVÁNÍ A LIMITY
+%===============================================================
+
+\section{Uživatelské testování}
+\label{sec:uzivatelske_testovani}
+
+% TODO: Alespoň návrh protokolu, ideálně pilotní testování
+
+% Návrh protokolu:
+% - 5–10 účastníků (plavci různých úrovní)
+% - Scénář: nahrát video → prohlédnout výsledky → vyhodnotit užitečnost
+% - SUS (System Usability Scale) dotazník
+% - Polostrukturovaný rozhovor: co bylo užitečné? co chybí? co je matoucí?
+%
+% Pokud pilotní testování proběhne:
+% - SUS skóre (průměr, SD)
+% - Kvalitativní poznatky z rozhovorů
+% - Navrhované vylepšení na základě zpětné vazby
 
 \section{Limity systému}
 \label{sec:limity}
+
 % TODO: Kde systém selhává, jaké podmínky potřebuje
-% - Minimální kvalita videa
-% - Problémy s podvodními záběry
-% - Omezení na 4 styly
-% - Závislost na kvalitě referenčních vzorů
+
+% Technické limity:
+% - Minimální kvalita videa (rozlišení, FPS, osvětlení)
+% - Problémy s podvodními záběry (refrakce, bubliny, nízký kontrast)
+% - Závislost na kvalitě referenčních vzorů (SwimXYZ = syntetická data)
+% - 2D projekce: omezení měřitelných metrik podle pohledu kamery
+%
+% Doménové limity:
+% - Pouze kraul (freestyle) plně validován
+% - 2 úrovně plavců (dítě + pokročilý) — profesionál jako budoucí rozšíření
+% - Pediatrické prahy extrapolované z dospělé literatury
+% - Validace na malém vzorku (autorova videa + případně pilotní test)
+%
+% SW limity:
+% - Jednouživatelský systém (bez autentizace v MVP)
+% - Lokální deployment (bez cloud škálování)
+% - Závislost na GPU pro rozumný výkon PE inference

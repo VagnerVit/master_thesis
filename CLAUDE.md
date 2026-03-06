@@ -1,6 +1,6 @@
 # CLAUDE.md — SwimAth: Diplomová práce
 
-**Projekt**: SwimAth — Analýza plavecké techniky z videa s využitím pose estimation a ML
+**Projekt**: SwimAth — Návrh a implementace webového systému pro automatickou analýzu plavecké techniky z videa
 **Autor**: Vít Vagner (vit.vagner@memos.cz)
 **Typ**: Diplomová práce (master thesis)
 **Jazyk kódu**: Python 3.11+
@@ -47,11 +47,13 @@ master_thesis/
 │   ├── pose_estimation/   ← 5 PDF (ViTPose, RTMPose, Einfalt, SwimmerNET, DeepLabCut)
 │   ├── rag_llm_sport/     ← 4 PDF (RAG Lewis, Comendant, Talking Tennis, BoxingPro)
 │   └── datasets/          ← 1 PDF (SwimXYZ Fiche 2023)
-├── paper/                 ← text diplomky (LaTeX, XeLaTeX + natbib)
-│   ├── main.tex           ← hlavní soubor
-│   ├── references.bib     ← bibliografie (15 záznamů)
+├── paper/                 ← text diplomky (FITthesis-LaTeX šablona, XeLaTeX + biblatex)
+│   ├── main.tex           ← hlavní soubor (ctufit-thesis document class)
+│   ├── ctufit-thesis.cls  ← oficiální FIT ČVUT šablona v1.6.2
+│   ├── references.bib     ← bibliografie (biblatex formát)
 │   ├── chapters/          ← kapitoly (01-06 + appendix)
 │   ├── figures/           ← obrázky a diagramy
+│   ├── images/            ← šablonové obrázky (ČVUT logo)
 │   └── tables/            ← tabulky
 └── prototyp/              ← funkční prototyp (desktop app, PySide6)
     ├── src/               ← zdrojový kód aplikace
@@ -182,14 +184,16 @@ StyleClassifierConfig(
 
 ## Plán diplomové práce
 
-### Struktura textu
+### Struktura textu (SW inženýrství zaměření)
 
-1. Úvod — motivace, cíl, přínos
-2. Rešerše — biomechanika plavání, pose estimation architektury, datasety, ML ve sportu, podvodní výzvy
-3. Návrh řešení — architektura, referenční model, výběr modelu, metriky, porovnávací metoda
-4. Implementace — předzpracování videa, ML pipeline, webová aplikace, referenční databáze
-5. Experimenty a vyhodnocení — přesnost PE, kvalita detekce chyb, testování na reálných videích
+1. Úvod — motivace, cíl, přínos (SW systém, ne ML výzkum)
+2. Analýza problému — doménová analýza (stručně), existující řešení, požadavky (FR/NFR), technologická rešerše
+3. Návrh řešení ← JÁDRO PRÁCE — požadavky, architektura (C4), API design, datový model, async pipeline, bezpečnost/GDPR, ML pipeline jako SW komponenta, PE model, ragdoll, metriky, DTW, klasifikátor
+4. Implementace — předzpracování videa, ML pipeline (ONNX), backend (FastAPI), frontend (Vue.js), async (Celery), DB, testovací strategie, CI/CD
+5. Experimenty — funkční testování, výkonnostní testování, škálovatelnost, validace ML pipeline, reálná videa, uživatelské testování
 6. Závěr
+
+**Důraz:** SW architektura a implementace dominují (60%+ práce). ML/PE je použitá technologie, ne předmět výzkumu.
 
 ### Pracovní balíky (TODO)
 
@@ -395,6 +399,17 @@ python scripts/download_dataset.py --dataset swimxyz --style freestyle --all-par
 1. ~~**Desktop vs. Web**~~ → **ROZHODNUTO: Web aplikace** — server zpracovává video i veškerou ML inference. Prototyp (PySide6) slouží jen jako proof-of-concept.
 2. ~~**RAG implementace**~~ → **ROZHODNUTO: Bez LLM/RAG** — feedback bude generovaný čistě ML pipeline (pravidlový systém + natrénované modely), ne LLM. Důvody proti LLM/RAG: závislost na externích API (OpenAI, Anthropic) = single point of failure; nedeterministické výstupy (stejný vstup → různý feedback); latence a náklady na inference; nemožnost plně fungovat offline; obtížná reprodukovatelnost experimentů. V diplomce diskutovat jako alternativní přístup s rozborem trade-offs, ne jako budoucí rozšíření.
 
+## FIT ČVUT — formální požadavky
+
+- **Specializace**: Softwarové inženýrství → SW aspekty musí dominovat (architektura, API, testování)
+- **LaTeX šablona**: FITthesis-LaTeX (`ctufit-thesis.cls`), kompilace: `xelatex + bibtex + xelatex + xelatex`
+- **Bibliografie**: biblatex s `backend=bibtex`, styl `numeric`, `natbib=true` (kompatibilita `\citep`/`\citet`)
+- **Rozsah**: 50–150 normostran (90k–270k znaků)
+- **Vedoucí**: musí mít Ph.D. — TODO: zajistit
+- **Obhajoba**: 20 minut celkem, prezentace max 12 minut
+- **Odevzdání**: elektronicky v KOS (PDF + .zip přílohy), 1 fyzický výtisk
+- **Detaily**: viz `claude_doc/koncept/fit_cvut_pozadavky.md`
+
 ---
 
 ## DTW rešerše (únor 2026)
@@ -479,5 +494,5 @@ Stávající LSTM v `prototyp/training/models/style_classifier.py` = proof-of-co
 
 ---
 
-_Last Updated: 2026-03-02_
-_Status: Prototyp Phase 0-2 kompletní. Diplomka ve fázi plánování. Kategorie plavců: 2 (Dítě + Pokročilý)._
+_Last Updated: 2026-03-06_
+_Status: Prototyp Phase 0-2 kompletní. Migrace na FITthesis-LaTeX šablonu dokončena. Kapitoly restrukturalizovány pro SW inženýrství. Kategorie plavců: 2 (Dítě + Pokročilý)._
